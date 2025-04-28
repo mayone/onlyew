@@ -22,41 +22,39 @@ pub struct Pagination {
 }
 
 impl Pagination {
-    // fn handle_change(&mut self, event: &Event, ctx: &Context<Self>) -> bool {
-    //     let target = event.target().unwrap();
-    //     let page = target.value().parse::<usize>().unwrap_or(1);
-    //     if page != self.current_page {
-    //         self.set_page(page);
-    //         ctx.props().on_change.emit(self.current_page);
-    //         true
-    //     } else {
-    //         false
-    //     }
-    // }
-    pub fn set_page(&mut self, page: usize) {
-        if page > 0 && page <= self.total_pages {
+    pub fn set_page(&mut self, page: usize) -> bool {
+        if page > 0 && page <= self.total_pages && page != self.current_page {
             self.current_page = page;
+            true
+        } else {
+            false
         }
     }
 
-    pub fn next_page(&mut self) {
+    pub fn next_page(&mut self) -> bool {
         if self.current_page < self.total_pages {
             self.current_page += 1;
+            true
+        } else {
+            false
         }
     }
 
-    pub fn prev_page(&mut self) {
+    pub fn prev_page(&mut self) -> bool {
         if self.current_page > 1 {
             self.current_page -= 1;
+            true
+        } else {
+            false
         }
     }
 
-    pub fn first_page(&mut self) {
-        self.current_page = 1;
+    pub fn first_page(&mut self) -> bool {
+        self.set_page(1)
     }
 
-    pub fn last_page(&mut self) {
-        self.current_page = self.total_pages;
+    pub fn last_page(&mut self) -> bool {
+        self.set_page(self.total_pages)
     }
 }
 
@@ -72,11 +70,10 @@ impl Component for Pagination {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, _msg: Self::Message) -> bool {
-        match _msg {
+    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+        match msg {
             PaginationMessage::Next => {
-                if self.current_page < self.total_pages {
-                    self.current_page += 1;
+                if self.next_page() {
                     ctx.props().on_change.emit(self.current_page);
                     true
                 } else {
@@ -84,8 +81,7 @@ impl Component for Pagination {
                 }
             }
             PaginationMessage::Prev => {
-                if self.current_page > 1 {
-                    self.current_page -= 1;
+                if self.prev_page() {
                     ctx.props().on_change.emit(self.current_page);
                     true
                 } else {
@@ -93,8 +89,7 @@ impl Component for Pagination {
                 }
             }
             PaginationMessage::First => {
-                if self.current_page > 1 {
-                    self.current_page = 1;
+                if self.first_page() {
                     ctx.props().on_change.emit(self.current_page);
                     true
                 } else {
@@ -102,8 +97,7 @@ impl Component for Pagination {
                 }
             }
             PaginationMessage::Last => {
-                if self.current_page < self.total_pages {
-                    self.current_page = self.total_pages;
+                if self.last_page() {
                     ctx.props().on_change.emit(self.current_page);
                     true
                 } else {
@@ -111,36 +105,56 @@ impl Component for Pagination {
                 }
             }
             PaginationMessage::Set(page) => {
-                if page != self.current_page {
-                    self.set_page(page);
+                if self.set_page(page) {
                     ctx.props().on_change.emit(self.current_page);
                     true
                 } else {
                     false
                 }
             }
-            _ => false,
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <div>
-                <button onclick={ctx.link().callback(|_| Self::Message::First)} disabled={self.current_page <= 1}>{ "First" }</button>
-                <button onclick={ctx.link().callback(|_| Self::Message::Prev)} disabled={self.current_page <= 1}>{ "Prev" }</button>
+                <button
+                    onclick={ctx.link().callback(|_| Self::Message::First)}
+                    disabled={self.current_page <= 1}
+                >
+                    { "First" }
+                </button>
+                <button
+                    onclick={ctx.link().callback(|_| Self::Message::Prev)}
+                    disabled={self.current_page <= 1}
+                >
+                    { "Prev" }
+                </button>
                 <span>
                     { (1..=self.total_pages).map(|page| {
                         let is_active = page == self.current_page;
                         html! {
-                            <button class={if is_active { "active" } else { "" }} onclick={ctx.link().callback(move |_| Self::Message::Set(page))}>
+                            <button
+                                class={if is_active { "active" } else { "" }}
+                                onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
+                            >
                                 { page }
                             </button>
                         }
                     }).collect::<Html>() }
                 </span>
-                <button onclick={ctx.link().callback(|_| Self::Message::Next)} disabled={self.current_page == self.total_pages}>{ "Next" }</button>
-                <button onclick={ctx.link().callback(|_| Self::Message::Last)} disabled={self.current_page == self.total_pages}>{ "Last" }</button>
-                <div>{ format!("Page {} of {}", self.current_page, self.total_pages) }</div>
+                <button
+                    onclick={ctx.link().callback(|_| Self::Message::Next)}
+                    disabled={self.current_page == self.total_pages}
+                >
+                    { "Next" }
+                </button>
+                <button
+                    onclick={ctx.link().callback(|_| Self::Message::Last)}
+                    disabled={self.current_page == self.total_pages}
+                >
+                    { "Last" }
+                </button>
             </div>
         }
     }
