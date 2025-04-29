@@ -4,6 +4,10 @@ use yew::prelude::*;
 pub struct PaginationProperties {
     pub total_pages: Option<usize>,
     pub on_change: Callback<usize>,
+    #[prop_or(1)]
+    pub edge_page_count: usize,
+    #[prop_or(1)]
+    pub sibling_page_count: usize,
 }
 
 #[derive(Debug)]
@@ -15,7 +19,7 @@ pub enum PaginationMessage {
     Set(usize),
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct Pagination {
     total_pages: usize,
     current_page: usize,
@@ -23,7 +27,16 @@ pub struct Pagination {
 
 impl Pagination {
     pub fn set_page(&mut self, page: usize) -> bool {
-        if page > 0 && page <= self.total_pages && page != self.current_page {
+        // NOTE: Relocate the page to be in range
+        let page = if page <= 0 {
+            1
+        } else if page > self.total_pages {
+            self.total_pages
+        } else {
+            page
+        };
+
+        if page != self.current_page {
             self.current_page = page;
             true
         } else {
@@ -116,6 +129,119 @@ impl Component for Pagination {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let edge_page_count = ctx.props().edge_page_count;
+        let sibling_page_count = ctx.props().sibling_page_count;
+
+        let front_breakpoint = edge_page_count + 2 + sibling_page_count;
+        let rear_breakpoint = self
+            .total_pages
+            .saturating_sub(edge_page_count + 2 - 1 + sibling_page_count);
+
+        let mid_page = if self.current_page < front_breakpoint {
+            if front_breakpoint < self.total_pages {
+                front_breakpoint
+            } else {
+                self.total_pages
+            }
+        } else if self.current_page > rear_breakpoint {
+            rear_breakpoint
+        } else {
+            self.current_page
+        };
+
+        let is_front_truncated = mid_page > front_breakpoint;
+        let is_rear_truncated = mid_page < rear_breakpoint;
+
+        let front_items = html! {
+            if is_front_truncated {
+                { (1..=edge_page_count).map(|page| {
+                        let is_active = page == self.current_page;
+                        html! {
+                            <button
+                                class={is_active.then(|| "active")}
+                                onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
+                            >
+                                { page }
+                            </button>
+                        }
+                    }).collect::<Html>() }
+                <button
+                    onclick={let current_page = self.current_page.clone();
+                        ctx.link().callback(move |_| Self::Message::Set(current_page - 5))}
+                >
+                    { "..." }
+                </button>
+                { (mid_page-sibling_page_count..=mid_page).map(|page| {
+                        let is_active = page == self.current_page;
+                        html! {
+                            <button
+                                class={is_active.then(|| "active")}
+                                onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
+                            >
+                                { page }
+                            </button>
+                        }
+                    }).collect::<Html>() }
+            } else {
+                { (1..=mid_page).map(|page| {
+                        let is_active = page == self.current_page;
+                        html! {
+                            <button
+                                class={is_active.then(|| "active")}
+                                onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
+                            >
+                                { page }
+                            </button>
+                        }
+                    }).collect::<Html>() }
+            }
+        };
+
+        let rear_items = html! {
+            if is_rear_truncated {
+                { (mid_page+1..=mid_page+sibling_page_count).map(|page| {
+                        let is_active = page == self.current_page;
+                        html! {
+                            <button
+                                class={is_active.then(|| "active")}
+                                onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
+                            >
+                                { page }
+                            </button>
+                        }
+                    }).collect::<Html>() }
+                <button
+                    onclick={let current_page = self.current_page.clone();
+                    ctx.link().callback(move |_| Self::Message::Set(current_page + 5))}
+                >
+                    { "..." }
+                </button>
+                { (self.total_pages-edge_page_count+1..=self.total_pages).map(|page| {
+                        let is_active = page == self.current_page;
+                        html! {
+                            <button
+                                class={is_active.then(|| "active")}
+                                onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
+                            >
+                                { page }
+                            </button>
+                        }
+                    }).collect::<Html>() }
+            } else {
+                { (mid_page+1..=self.total_pages).map(|page| {
+                        let is_active = page == self.current_page;
+                        html! {
+                            <button
+                                class={is_active.then(|| "active")}
+                                onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
+                            >
+                                { page }
+                            </button>
+                        }
+                    }).collect::<Html>() }
+            }
+        };
+
         html! {
             <div class="pagination-container">
                 <button
@@ -130,19 +256,8 @@ impl Component for Pagination {
                 >
                     { "Prev" }
                 </button>
-                <>
-                    { (1..=self.total_pages).map(|page| {
-                        let is_active = page == self.current_page;
-                        html! {
-                            <button
-                                class={is_active.then(|| "active")}
-                                onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
-                            >
-                                { page }
-                            </button>
-                        }
-                    }).collect::<Html>() }
-                </>
+                { front_items }
+                { rear_items }
                 <button
                     onclick={ctx.link().callback(|_| Self::Message::Next)}
                     disabled={self.current_page == self.total_pages}

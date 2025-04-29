@@ -5,7 +5,7 @@ use yew::prelude::*;
 
 #[function_component(App)]
 fn app() -> Html {
-    let total_pages = 6;
+    let total_pages = 10;
     let current_page = use_state(|| if total_pages > 0 { 1 } else { 0 });
     let on_change = {
         let current_page = current_page.clone();
@@ -14,7 +14,7 @@ fn app() -> Html {
 
     html! {
         <>
-            <div>{ format!("Page {} of {}", *current_page, total_pages) }</div>
+            <div style="color: white">{ format!("Page {} of {}", *current_page, total_pages) }</div>
             <Pagination total_pages={total_pages} on_change={on_change} />
         </>
     }
