@@ -1,0 +1,46 @@
+:root {
+  --border-color: #edeef0;
+  --color: #edeef0;
+  --hover-border-color: #edeef0;
+  --hover-bg-color: #7f7f81;
+  --active-bg-color: #edeef0;
+  --active-color: #111113;
+  --disabled-border-color: #7f7f81;
+  --disabled-color: #7f7f81;
+}
+
+body {
+  background-color: black;
+}
+
+.pagination-container {
+  display: inline-flex;
+  column-gap: 10px;
+}
+
+.pagination-container > button {
+  background: transparent;
+  color: var(--color);
+  padding: 5px 10px;
+  border-radius: 5px;
+  border-width: 1px;
+}
+
+.pagination-container > button:hover {
+  background: var(--hover-bg-color);
+  color: var(--color);
+  border-color: var(--hover-border-color);
+  cursor: pointer;
+}
+
+.pagination-container > button:disabled {
+  background: transparent;
+  color: var(--disabled-color);
+  border-color: var(--disabled-border-color);
+  cursor: default;
+}
+
+.pagination-container > button.active {
+  background: var(--active-bg-color);
+  color: var(--active-color);
+}

@@ -117,7 +117,7 @@ impl Component for Pagination {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <div>
+            <div class="pagination-container">
                 <button
                     onclick={ctx.link().callback(|_| Self::Message::First)}
                     disabled={self.current_page <= 1}
@@ -130,19 +130,19 @@ impl Component for Pagination {
                 >
                     { "Prev" }
                 </button>
-                <span>
+                <>
                     { (1..=self.total_pages).map(|page| {
                         let is_active = page == self.current_page;
                         html! {
                             <button
-                                class={if is_active { "active" } else { "" }}
+                                class={is_active.then(|| "active")}
                                 onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                             >
                                 { page }
                             </button>
                         }
                     }).collect::<Html>() }
-                </span>
+                </>
                 <button
                     onclick={ctx.link().callback(|_| Self::Message::Next)}
                     disabled={self.current_page == self.total_pages}
