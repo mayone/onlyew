@@ -13,10 +13,14 @@ fn app() -> Html {
     };
 
     html! {
-        <>
-            <div style="color: white">{ format!("Page {} of {}", *current_page, total_pages) }</div>
+        <div style="display: flex; flex-direction: column; gap: 20px">
+            <Pagination total_pages=0 />
+            <Pagination total_pages=1 />
+            <Pagination total_pages=3 />
+            <Pagination total_pages=5 />
             <Pagination total_pages={total_pages} on_change={on_change} />
-        </>
+            <div style="color: white">{ format!("Page {} of {}", *current_page, total_pages) }</div>
+        </div>
     }
 }
 

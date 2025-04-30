@@ -24,20 +24,18 @@ body {
   padding: 5px 10px;
   border-radius: 5px;
   border-width: 1px;
-}
-
-.pagination-container > button:hover {
-  background: var(--hover-bg-color);
-  color: var(--color);
-  border-color: var(--hover-border-color);
-  cursor: pointer;
-}
-
-.pagination-container > button:disabled {
-  background: transparent;
-  color: var(--disabled-color);
-  border-color: var(--disabled-border-color);
-  cursor: default;
+  &:hover {
+    background: var(--hover-bg-color);
+    color: var(--color);
+    border-color: var(--hover-border-color);
+    cursor: pointer;
+  }
+  &:disabled {
+    background: transparent;
+    color: var(--disabled-color);
+    border-color: var(--disabled-border-color);
+    cursor: default;
+  }
 }
 
 .pagination-container > button.active {

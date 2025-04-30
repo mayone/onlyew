@@ -3,6 +3,7 @@ use yew::prelude::*;
 #[derive(Properties, Clone, PartialEq)]
 pub struct PaginationProperties {
     pub total_pages: Option<usize>,
+    #[prop_or_default]
     pub on_change: Callback<usize>,
     #[prop_or(1)]
     pub edge_page_count: usize,
