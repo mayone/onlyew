@@ -159,7 +159,7 @@ impl Component for Pagination {
                         let is_active = page == self.current_page;
                         html! {
                             <button
-                                class={is_active.then_some("active")}
+                                class={classes!(is_active.then_some("active"))}
                                 onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                             >
                                 { page }
@@ -176,7 +176,7 @@ impl Component for Pagination {
                         let is_active = page == self.current_page;
                         html! {
                             <button
-                                class={is_active.then_some("active")}
+                                class={classes!(is_active.then_some("active"))}
                                 onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                             >
                                 { page }
@@ -188,7 +188,7 @@ impl Component for Pagination {
                         let is_active = page == self.current_page;
                         html! {
                             <button
-                                class={is_active.then_some("active")}
+                                class={classes!(is_active.then_some("active"))}
                                 onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                             >
                                 { page }
@@ -204,7 +204,7 @@ impl Component for Pagination {
                         let is_active = page == self.current_page;
                         html! {
                             <button
-                                class={is_active.then_some("active")}
+                                class={classes!(is_active.then_some("active"))}
                                 onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                             >
                                 { page }
@@ -221,7 +221,7 @@ impl Component for Pagination {
                         let is_active = page == self.current_page;
                         html! {
                             <button
-                                class={is_active.then_some("active")}
+                                class={classes!(is_active.then_some("active"))}
                                 onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                             >
                                 { page }
@@ -233,7 +233,7 @@ impl Component for Pagination {
                         let is_active = page == self.current_page;
                         html! {
                             <button
-                                class={is_active.then_some("active")}
+                                class={classes!(is_active.then_some("active"))}
                                 onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                             >
                                 { page }

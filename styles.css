@@ -1,12 +1,12 @@
 :root {
   --border-color: #edeef0;
   --color: #edeef0;
-  --hover-border-color: #edeef0;
-  --hover-bg-color: #7f7f81;
-  --active-bg-color: #edeef0;
-  --active-color: #111113;
-  --disabled-border-color: #7f7f81;
-  --disabled-color: #7f7f81;
+  --border-color-hover: #edeef0;
+  --bg-color-hover: #7f7f81;
+  --bg-color-active: #edeef0;
+  --color-active: #111113;
+  --border-color-disabled: #7f7f81;
+  --color-disabled: #7f7f81;
 }
 
 body {
@@ -21,24 +21,30 @@ body {
 .pagination-container > button {
   background: transparent;
   color: var(--color);
-  padding: 5px 10px;
+  border-color: var(--border-color);
   border-radius: 5px;
   border-width: 1px;
+  padding: 5px 10px;
+  font-size: 20px;
   &:hover {
-    background: var(--hover-bg-color);
+    background: var(--bg-color-hover);
     color: var(--color);
-    border-color: var(--hover-border-color);
+    border-color: var(--border-color-hover);
     cursor: pointer;
+  }
+  &:active {
+    background: var(--bg-color-active);
+    color: var(--color-active);
   }
   &:disabled {
     background: transparent;
-    color: var(--disabled-color);
-    border-color: var(--disabled-border-color);
+    color: var(--color-disabled);
+    border-color: var(--border-color-disabled);
     cursor: default;
   }
 }
 
 .pagination-container > button.active {
-  background: var(--active-bg-color);
-  color: var(--active-color);
+  background: var(--bg-color-active);
+  color: var(--color-active);
 }
