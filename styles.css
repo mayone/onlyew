@@ -15,7 +15,7 @@ body {
 
 .pagination-container {
   display: inline-flex;
-  column-gap: 10px;
+  gap: 10px;
 }
 
 .pagination-container > button {
