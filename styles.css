@@ -10,7 +10,8 @@
 }
 
 body {
-  background-color: black;
+  background-color: #111113;
+  color: #edeef0;
 }
 
 .pagination-container {

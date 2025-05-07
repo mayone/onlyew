@@ -5,5 +5,6 @@ edition = "2024"
 
 [dependencies]
 yew = { git = "https://github.com/yewstack/yew/", features = ["csr"] }
+yew-router = { git = "https://github.com/yewstack/yew.git" }
 log = "0.4.27"
 wasm-logger = "0.2.0"
