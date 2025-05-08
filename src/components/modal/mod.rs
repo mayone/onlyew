@@ -6,6 +6,10 @@ use yew::prelude::*;
 pub struct ModalProperties {
     #[prop_or_default]
     pub children: Html,
+    #[prop_or_default]
+    pub default_open: bool,
+    #[prop_or_default]
+    pub modal_ref: NodeRef,
 }
 
 #[derive(Debug)]
@@ -40,12 +44,13 @@ impl Component for Modal {
     type Properties = ModalProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
+        let modal_ref = ctx.props().modal_ref.clone();
         let modal_root = gloo::utils::document()
             .get_element_by_id("modal-root")
             .expect("Expected to find a #modal-root element");
         Self {
-            modal_root: modal_root,
-            modal_ref: NodeRef::default(),
+            modal_ref,
+            modal_root,
         }
     }
 
@@ -63,10 +68,14 @@ impl Component for Modal {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let Self::Properties { children, .. } = ctx.props();
+        let Self::Properties {
+            children,
+            default_open,
+            ..
+        } = ctx.props();
 
         let content = html! {
-            <dialog id="heather-ui-modal" ref={self.modal_ref.clone()} open=true>
+            <dialog id="heather-ui-modal" ref={self.modal_ref.clone()} open={*default_open}>
                 <div
                     class={classes!("modal-overlay")}
                     onclick={ctx.link().callback(move |_| Self::Message::Close)}
