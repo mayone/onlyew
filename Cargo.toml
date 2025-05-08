@@ -4,7 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+web-sys = { version = "0.3.77", features = ["HtmlDialogElement"] }
 yew = { git = "https://github.com/yewstack/yew/", features = ["csr"] }
 yew-router = { git = "https://github.com/yewstack/yew.git" }
 log = "0.4.27"
 wasm-logger = "0.2.0"
+gloo = "0.11.0"
