@@ -72,6 +72,7 @@ body {
   /* backdrop-filter: blur(2px); */
 }
 
+/* #NOTE: For the overlay MUI is using z-index: 1300; HeroUI is using z-index: 50; */
 .modal-overlay {
   display: flex;
   justify-content: center;
