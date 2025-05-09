@@ -54,7 +54,7 @@ impl Component for Modal {
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             ModalMessage::Close => {
                 self.close_modal();
@@ -75,7 +75,12 @@ impl Component for Modal {
         } = ctx.props();
 
         let content = html! {
-            <dialog id="heather-ui-modal" ref={self.modal_ref.clone()} open={*default_open}>
+            <dialog
+                id="heather-ui-modal"
+                tabindex="-1"
+                ref={self.modal_ref.clone()}
+                open={*default_open}
+            >
                 <div
                     class={classes!("modal-overlay")}
                     onclick={ctx.link().callback(move |_| Self::Message::Close)}
@@ -87,6 +92,6 @@ impl Component for Modal {
             </dialog>
         };
 
-        create_portal(content, self.modal_root.clone().into())
+        create_portal(content, self.modal_root.clone())
     }
 }

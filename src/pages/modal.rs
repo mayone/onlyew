@@ -16,10 +16,7 @@ pub fn modal() -> Html {
     };
 
     html! {
-        <div
-            id="modal-root"
-            style="display: flex; flex-direction: column; gap: 20px; padding: 20px"
-        >
+        <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
             <h1>{ "Modal Showcase" }</h1>
             <button style="width: fit-content" onclick={open_modal}>{ "Open Modal" }</button>
             <Modal modal_ref={modal_ref}>

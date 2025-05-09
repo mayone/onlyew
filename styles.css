@@ -55,6 +55,7 @@ body {
 #heather-ui-modal {
   background-color: transparent;
   border: none;
+  padding: 0;
 }
 
 #heather-ui-modal::backdrop {

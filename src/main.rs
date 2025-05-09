@@ -12,6 +12,7 @@ use route::switch;
 fn app() -> Html {
     html! {
         <BrowserRouter>
+            <div id="modal-root" />
             <Switch<Route> render={switch} />
         </BrowserRouter>
     }
