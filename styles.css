@@ -87,6 +87,10 @@ body {
 }
 
 .modal-content {
+  animation: transform-fade-in 0.2s ease-out forwards;
+}
+
+.dialog {
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -95,7 +99,6 @@ body {
   padding: 40px;
   max-width: 500px;
   color: #ffffff;
-  animation: transform-fade-in 0.2s ease-out forwards;
 }
 
 @keyframes opacity-fade-in {

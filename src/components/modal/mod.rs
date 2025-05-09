@@ -84,10 +84,12 @@ impl Component for Modal {
                 <div
                     class={classes!("modal-overlay")}
                     onclick={ctx.link().callback(move |_| Self::Message::Close)}
+                />
+                <div
+                    class={classes!("modal-content")}
+                    onclick={Callback::from(|e: MouseEvent| e.stop_propagation())}
                 >
-                    <div onclick={Callback::from(|e: MouseEvent| e.stop_propagation())}>
-                        { children.clone() }
-                    </div>
+                    { children.clone() }
                 </div>
             </dialog>
         };

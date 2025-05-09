@@ -20,7 +20,7 @@ pub fn modal() -> Html {
             <h1>{ "Modal Showcase" }</h1>
             <button style="width: fit-content" onclick={open_modal}>{ "Open Modal" }</button>
             <Modal modal_ref={modal_ref}>
-                <div class={classes!("modal-content")}>
+                <div class={classes!("dialog")}>
                     <h2>{ "This is a modal" }</h2>
                     <h3>{ "Hello World" }</h3>
                 </div>
