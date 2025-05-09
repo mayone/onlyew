@@ -33,12 +33,12 @@ pub enum PaginationMessage {
 /// Usage:
 /// ```ignore
 /// <Pagination
-/// 	// Optional
-/// 	edge_page_count=1
-/// 	// Optional
-/// 	sibling_page_count=2
-/// 	total_pages=24
-/// 	on_change={|page| log::info!("current page: {page}")}
+///     // Optional
+///     edge_page_count=1
+///     // Optional
+///     sibling_page_count=2
+///     total_pages=24
+///     on_change={|page| log::info!("current page: {page}")}
 /// />
 /// ```
 #[derive(Debug)]
