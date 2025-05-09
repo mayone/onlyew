@@ -94,7 +94,7 @@ impl Component for Pagination {
         let total_pages = ctx.props().total_pages.unwrap_or_default();
         Self {
             total_pages,
-            current_page: if total_pages > 0 { 1 } else { 0 },
+            current_page: usize::from(total_pages > 0),
         }
     }
 
@@ -242,6 +242,38 @@ impl Component for Pagination {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_render_no_page() {
+        let _ = html! { <Pagination total_pages=0 /> };
+    }
+
+    #[test]
+    fn test_current_page_when_no_page() {
+        let total_pages = 0;
+        let pagination = Pagination {
+            total_pages,
+            current_page: usize::from(total_pages > 0),
+        };
+        assert_eq!(pagination.current_page, total_pages);
+    }
+
+    #[test]
+    fn test_current_page_when_has_page() {
+        let total_pages = 1;
+        let pagination = Pagination {
+            total_pages,
+            current_page: usize::from(total_pages > 0),
+        };
+        assert_eq!(pagination.current_page, 1);
+
+        let total_pages = 100;
+        let pagination = Pagination {
+            total_pages,
+            current_page: usize::from(total_pages > 0),
+        };
+        assert_eq!(pagination.current_page, 1);
+    }
 
     #[test]
     fn test_pagination() {
