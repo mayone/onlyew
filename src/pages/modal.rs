@@ -1,5 +1,4 @@
-use crate::components::modal::Modal;
-use web_sys::HtmlDialogElement;
+use crate::components::modal::{Modal, close_modal, open_modal};
 use yew::prelude::*;
 
 #[function_component(ModalPage)]
@@ -9,9 +8,7 @@ pub fn modal() -> Html {
     let open_modal = {
         let modal_ref = modal_ref.clone();
         Callback::from(move |_| {
-            if let Some(dialog) = modal_ref.cast::<HtmlDialogElement>() {
-                let _ = dialog.show_modal();
-            }
+            open_modal(&modal_ref);
         })
     };
 

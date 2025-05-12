@@ -27,16 +27,24 @@ pub struct Modal {
     modal_root: Element,
 }
 
-impl Modal {
-    pub fn close_modal(&mut self) {
-        if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
-            dialog.close();
-        }
+pub fn close_modal(modal_ref: &NodeRef) {
+    if let Some(dialog) = modal_ref.cast::<HtmlDialogElement>() {
+        dialog.close();
     }
-    pub fn open_modal(&mut self) {
-        if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
-            let _ = dialog.show_modal();
-        }
+}
+
+pub fn open_modal(modal_ref: &NodeRef) {
+    if let Some(dialog) = modal_ref.cast::<HtmlDialogElement>() {
+        let _ = dialog.show_modal();
+    }
+}
+
+impl Modal {
+    pub fn close(&mut self) {
+        close_modal(&self.modal_ref);
+    }
+    pub fn open(&mut self) {
+        open_modal(&self.modal_ref);
     }
 }
 
@@ -58,11 +66,11 @@ impl Component for Modal {
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             ModalMessage::Close => {
-                self.close_modal();
+                self.close();
                 true
             }
             ModalMessage::Open => {
-                self.open_modal();
+                self.open();
                 true
             }
         }
