@@ -3,10 +3,12 @@ use gloo;
 use web_sys::{Element, HtmlDialogElement};
 use yew::prelude::*;
 
+const MODAL_ROOT_ID: &str = "modal-root";
+
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
     #[prop_or_default]
-    pub children: Html,
+    pub children: Children,
     #[prop_or_default]
     pub default_open: bool,
     #[prop_or_default]
@@ -27,13 +29,11 @@ pub struct Modal {
 
 impl Modal {
     pub fn close_modal(&mut self) {
-        log::info!("close");
         if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
             dialog.close()
         }
     }
     pub fn open_modal(&mut self) {
-        log::info!("open");
         if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
             let _ = dialog.show_modal();
         }
@@ -47,7 +47,7 @@ impl Component for Modal {
     fn create(ctx: &Context<Self>) -> Self {
         let modal_ref = ctx.props().modal_ref.clone();
         let modal_root = gloo::utils::document()
-            .get_element_by_id("modal-root")
+            .get_element_by_id(MODAL_ROOT_ID)
             .expect("Expected to find a #modal-root element");
         Self {
             modal_ref,
