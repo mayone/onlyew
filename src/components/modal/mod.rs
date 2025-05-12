@@ -1,4 +1,5 @@
 use gloo;
+// use wasm_bindgen::JsCast;
 use web_sys::{Element, HtmlDialogElement};
 use yew::prelude::*;
 
@@ -75,21 +76,20 @@ impl Component for Modal {
         } = ctx.props();
 
         let content = html! {
-            <dialog
-                id="heather-ui-modal"
-                tabindex="-1"
-                ref={self.modal_ref.clone()}
-                open={*default_open}
-            >
+            <dialog id="heather-ui-modal" ref={self.modal_ref.clone()} open={*default_open}>
                 <div
                     class={classes!("modal-overlay")}
                     onclick={ctx.link().callback(move |_| Self::Message::Close)}
-                />
-                <div
-                    class={classes!("modal-content")}
-                    onclick={Callback::from(|e: MouseEvent| e.stop_propagation())}
                 >
-                    { children.clone() }
+                    <div
+                        class={classes!("modal-content")}
+                        onclick={Callback::from(|e: MouseEvent| e.stop_propagation())}
+                    >
+                        { children.clone() }
+                    </div>
+                    // When default_open is enabled. The position of the first time rendered component inside dialog will be off vertically (not center).
+                    // To address this, modal-content need to stay in modal-overlay to be aligned by it instead of dialog.
+                    // The default open dialog also cannot be closed by ESC key and we have not resolved it yet.
                 </div>
             </dialog>
         };
