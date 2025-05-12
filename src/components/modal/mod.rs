@@ -23,14 +23,14 @@ pub enum ModalMessage {
 
 #[derive(Debug)]
 pub struct Modal {
-    modal_root: Element,
     modal_ref: NodeRef,
+    modal_root: Element,
 }
 
 impl Modal {
     pub fn close_modal(&mut self) {
         if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
-            dialog.close()
+            dialog.close();
         }
     }
     pub fn open_modal(&mut self) {
