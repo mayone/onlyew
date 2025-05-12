@@ -40,10 +40,10 @@ pub fn open_modal(modal_ref: &NodeRef) {
 }
 
 impl Modal {
-    pub fn close(&mut self) {
+    fn close(&mut self) {
         close_modal(&self.modal_ref);
     }
-    pub fn open(&mut self) {
+    fn open(&mut self) {
         open_modal(&self.modal_ref);
     }
 }
