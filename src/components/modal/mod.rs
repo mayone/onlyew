@@ -56,7 +56,7 @@ impl Component for Modal {
         let modal_ref = ctx.props().modal_ref.clone();
         let modal_root = gloo::utils::document()
             .get_element_by_id(MODAL_ROOT_ID)
-            .expect("Expected to find a #modal-root element");
+            .expect(&format!("Expected to find a #{} element", MODAL_ROOT_ID));
         Self {
             modal_ref,
             modal_root,

@@ -7,9 +7,12 @@ pub fn modal() -> Html {
 
     let open_modal = {
         let modal_ref = modal_ref.clone();
-        Callback::from(move |_| {
-            open_modal(&modal_ref);
-        })
+        Callback::from(move |_| open_modal(&modal_ref))
+    };
+
+    let close_modal = {
+        let modal_ref = modal_ref.clone();
+        Callback::from(move |_| close_modal(&modal_ref))
     };
 
     html! {
@@ -20,6 +23,7 @@ pub fn modal() -> Html {
                 <div class={classes!("dialog")}>
                     <h2>{ "This is a modal" }</h2>
                     <h3>{ "Hello World" }</h3>
+                    <button onclick={close_modal}>{ "Close Modal" }</button>
                 </div>
             </Modal>
         </div>
