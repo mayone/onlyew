@@ -5,6 +5,12 @@ use yew::prelude::*;
 
 const MODAL_ROOT_ID: &str = "modal-root";
 
+/// The modal component has the following props:
+///
+/// - `children`: The children to be rendered inside the modal.
+/// - `default_open`: If enabled, the modal will be open by default.
+/// - `modal_ref`: Node reference to the modal, which will be used to control
+///   the state of the modal.
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
     #[prop_or_default]
@@ -21,6 +27,38 @@ pub enum ModalMessage {
     Open,
 }
 
+/// The modal component provides a solid foundation for creating dialogs, popovers, etc.
+///
+/// Usage:
+/// ```ignore
+/// use crate::components::modal::{Modal, close_modal, open_modal};
+///
+/// let modal_ref: NodeRef = NodeRef::default();
+///
+/// let open_modal = {
+///	    let modal_ref = modal_ref.clone();
+///	    Callback::from(move |_| open_modal(&modal_ref))
+/// };
+///
+/// let close_modal = {
+/// 	let modal_ref = modal_ref.clone();
+/// 	Callback::from(move |_| close_modal(&modal_ref))
+/// };
+///
+/// <button onclick={open_modal}>{"Open modal"}</button>
+/// <Modal modal_ref={modal_ref} default_open=false>
+///     <h1>{ "This is a modal" }</h1>
+///     <button onclick={close_modal}>{"Close modal"}</button>
+/// </Modal>
+/// ```
+///
+/// Note:
+/// 1. focus outline of dialog is manually removed by us.
+/// 2. `modal-content` need to stay in `modal-overlay` to be aligned by it
+///    instead of `dialog`. Since when `default_open` is enabled, the position
+///    of the first time rendered component inside dialog will be off
+///    vertically.
+/// 3. The default open dialog cannot be closed by ESC key.
 #[derive(Debug)]
 pub struct Modal {
     modal_ref: NodeRef,
@@ -40,10 +78,10 @@ pub fn open_modal(modal_ref: &NodeRef) {
 }
 
 impl Modal {
-    fn close(&mut self) {
+    fn close(&self) {
         close_modal(&self.modal_ref);
     }
-    fn open(&mut self) {
+    fn open(&self) {
         open_modal(&self.modal_ref);
     }
 }
@@ -95,9 +133,6 @@ impl Component for Modal {
                     >
                         { children.clone() }
                     </div>
-                    // When default_open is enabled. The position of the first time rendered component inside dialog will be off vertically (not center).
-                    // To address this, modal-content need to stay in modal-overlay to be aligned by it instead of dialog.
-                    // The default open dialog also cannot be closed by ESC key and we have not resolved it yet.
                 </div>
             </dialog>
         };
