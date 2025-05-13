@@ -89,11 +89,13 @@ body {
 .dialog {
   display: flex;
   flex-direction: column;
+  border-radius: 16px;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 40px;
   gap: 40px;
   background-color: #363636;
-  border-radius: 16px;
-  padding: 40px;
-  max-width: 500px;
   color: #ffffff;
 }
 
