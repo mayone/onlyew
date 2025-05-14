@@ -19,7 +19,7 @@ pub fn modal() -> Html {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
             <h1>{ "Modal Showcase" }</h1>
             <button style="width: fit-content" onclick={open_modal}>{ "Open Modal" }</button>
-            <Modal modal_ref={modal_ref}>
+            <Modal {modal_ref}>
                 <div class={classes!("dialog")}>
                     <h2>{ "This is a modal" }</h2>
                     <h3>{ "Hello World" }</h3>
@@ -27,5 +27,15 @@ pub fn modal() -> Html {
                 </div>
             </Modal>
         </div>
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_render_modal() {
+        let _ = html! { <Modal /> };
     }
 }
