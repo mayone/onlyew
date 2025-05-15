@@ -36,13 +36,13 @@ pub enum ModalMessage {
 /// let modal_ref: NodeRef = NodeRef::default();
 ///
 /// let open_modal = {
-///	    let modal_ref = modal_ref.clone();
-///	    Callback::from(move |_| open_modal(&modal_ref))
+///     let modal_ref = modal_ref.clone();
+///     Callback::from(move |_| open_modal(&modal_ref))
 /// };
 ///
 /// let close_modal = {
-/// 	let modal_ref = modal_ref.clone();
-/// 	Callback::from(move |_| close_modal(&modal_ref))
+///     let modal_ref = modal_ref.clone();
+///     Callback::from(move |_| close_modal(&modal_ref))
 /// };
 ///
 /// <button onclick={open_modal}>{"Open modal"}</button>
@@ -54,7 +54,7 @@ pub enum ModalMessage {
 ///
 /// Note:
 /// 1. focus outline of `dialog` is manually removed by us.
-/// 2. `modal-content` need to stay in `modal-overlay` to be aligned by it
+/// 2. `modal-content` need to stay in `modal-backdrop` to be aligned by it
 ///    instead of `dialog`. Since when `default_open` is enabled, the position
 ///    of the first time rendered component inside `dialog` will be off
 ///    vertically.
@@ -124,7 +124,7 @@ impl Component for Modal {
         let content = html! {
             <dialog id="heather-ui-modal" ref={self.modal_ref.clone()} open={*default_open}>
                 <div
-                    class={classes!("modal-overlay")}
+                    class={classes!("modal-backdrop")}
                     onclick={ctx.link().callback(move |_| Self::Message::Close)}
                 >
                     <div
