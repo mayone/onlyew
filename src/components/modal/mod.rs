@@ -53,12 +53,12 @@ pub enum ModalMessage {
 /// ```
 ///
 /// Note:
-/// 1. focus outline of dialog is manually removed by us.
+/// 1. focus outline of `dialog` is manually removed by us.
 /// 2. `modal-content` need to stay in `modal-overlay` to be aligned by it
 ///    instead of `dialog`. Since when `default_open` is enabled, the position
-///    of the first time rendered component inside dialog will be off
+///    of the first time rendered component inside `dialog` will be off
 ///    vertically.
-/// 3. The default open dialog cannot be closed by ESC key.
+/// 3. The default open `dialog` cannot be closed by ESC key.
 #[derive(Debug)]
 pub struct Modal {
     modal_ref: NodeRef,

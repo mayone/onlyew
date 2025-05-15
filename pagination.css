@@ -1,19 +1,3 @@
-:root {
-  --border-color: #edeef0;
-  --color: #edeef0;
-  --border-color-hover: #edeef0;
-  --bg-color-hover: #7f7f81;
-  --bg-color-active: #edeef0;
-  --color-active: #111113;
-  --border-color-disabled: #7f7f81;
-  --color-disabled: #7f7f81;
-}
-
-body {
-  background-color: #111113;
-  color: #edeef0;
-}
-
 .pagination-container {
   display: inline-flex;
   gap: 10px;
