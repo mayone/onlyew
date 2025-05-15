@@ -2,19 +2,24 @@ use yew::prelude::*;
 
 /// The pagination component has the following props:
 ///
+/// Required props:
+/// - `total_pages`: The total number of pages.
+///
+/// Optional props:
 /// - `edge_page_count`: To control number of the pages to show on the edge when
 ///   ellipsis button is shown, optional with default value `1`.
 /// - `sibling_page_count`: To control number of the pages to show before and
 ///   after the current page, optional with default value `2`
-/// - `total_pages`: The total number of pages.
+///
+/// Event handlers:
 /// - `on_change`: Callback function, called when the page number changed.
 #[derive(Debug, PartialEq, Properties)]
 pub struct PaginationProperties {
+    pub total_pages: Option<usize>,
     #[prop_or(1)]
     pub edge_page_count: usize,
     #[prop_or(1)]
     pub sibling_page_count: usize,
-    pub total_pages: Option<usize>,
     #[prop_or_default]
     pub on_change: Callback<usize>,
 }
@@ -33,11 +38,11 @@ pub enum PaginationMessage {
 /// Usage:
 /// ```ignore
 /// <Pagination
+///     total_pages=24
 ///     // Optional
 ///     edge_page_count=1
 ///     // Optional
 ///     sibling_page_count=2
-///     total_pages=24
 ///     on_change={|page| log::info!("current page: {page}")}
 /// />
 /// ```
@@ -93,8 +98,8 @@ impl Component for Pagination {
     fn create(ctx: &Context<Self>) -> Self {
         let total_pages = ctx.props().total_pages.unwrap_or_default();
         Self {
-            total_pages,
             current_page: usize::from(total_pages > 0),
+            total_pages,
         }
     }
 

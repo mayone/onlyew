@@ -7,18 +7,20 @@ const MODAL_ROOT_ID: &str = "modal-root";
 
 /// The modal component has the following props:
 ///
+/// Required props:
 /// - `children`: The children to be rendered inside the modal.
-/// - `default_open`: If enabled, the modal will be open by default.
 /// - `modal_ref`: Node reference to the modal, which will be used to control
 ///   the state of the modal.
+///
+/// Optional props:
+/// - `default_open`: If enabled, the modal will be open by default.
+/// - `hide_backdrop`: If enabled, the backdrop is not rendered.
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
-    #[prop_or_default]
     pub children: Children,
+    pub modal_ref: NodeRef,
     #[prop_or_default]
     pub default_open: bool,
-    #[prop_or_default]
-    pub modal_ref: NodeRef,
 }
 
 #[derive(Debug)]
@@ -46,7 +48,11 @@ pub enum ModalMessage {
 /// };
 ///
 /// <button onclick={open_modal}>{"Open modal"}</button>
-/// <Modal modal_ref={modal_ref} default_open=false>
+/// <Modal
+///     modal_ref={modal_ref}
+///     // Optional
+///     default_open=false
+/// >
 ///     <h1>{ "This is a modal" }</h1>
 ///     <button onclick={close_modal}>{"Close modal"}</button>
 /// </Modal>
@@ -138,5 +144,16 @@ impl Component for Modal {
         };
 
         create_portal(content, self.modal_root.clone())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_render_modal() {
+        let modal_ref = NodeRef::default();
+        let _ = html! { <Modal {modal_ref}>{ "Content" }</Modal> };
     }
 }

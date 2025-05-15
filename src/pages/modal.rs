@@ -29,13 +29,3 @@ pub fn modal() -> Html {
         </div>
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_render_modal() {
-        let _ = html! { <Modal /> };
-    }
-}
