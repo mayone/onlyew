@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-/// The pagination component has the following props:
+/// The Pagination component has the following props:
 ///
 /// Required props:
 /// - `total_pages`: The total number of pages.

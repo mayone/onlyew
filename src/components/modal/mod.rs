@@ -5,16 +5,15 @@ use yew::prelude::*;
 
 const MODAL_ROOT_ID: &str = "modal-root";
 
-/// The modal component has the following props:
+/// The Modal component has the following props:
 ///
 /// Required props:
-/// - `children`: The children to be rendered inside the modal.
-/// - `modal_ref`: Node reference to the modal, which will be used to control
-///   the state of the modal.
+/// - `children`: The children to be rendered inside the Modal.
+/// - `modal_ref`: Node reference to the Modal, which will be used to control
+///   the state of the it.
 ///
 /// Optional props:
-/// - `default_open`: If enabled, the modal will be open by default.
-/// - `hide_backdrop`: If enabled, the backdrop is not rendered.
+/// - `default_open`: If enabled, the Modal will be open by default.
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
     pub children: Children,
