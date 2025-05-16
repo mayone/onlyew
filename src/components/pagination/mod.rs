@@ -3,15 +3,18 @@ use yew::prelude::*;
 /// The Pagination component has the following props:
 ///
 /// Required props:
+///
 /// - `total_pages`: The total number of pages.
 ///
 /// Optional props:
+///
 /// - `edge_page_count`: To control number of the pages to show on the edge when
 ///   ellipsis button is shown, optional with default value `1`.
 /// - `sibling_page_count`: To control number of the pages to show before and
 ///   after the current page, optional with default value `2`
 ///
 /// Event handlers:
+///
 /// - `on_change`: Callback function, called when the page number changed.
 #[derive(Debug, PartialEq, Properties)]
 pub struct PaginationProperties {

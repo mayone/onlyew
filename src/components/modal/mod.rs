@@ -8,11 +8,13 @@ const MODAL_ROOT_ID: &str = "modal-root";
 /// The Modal component has the following props:
 ///
 /// Required props:
+///
 /// - `children`: The children to be rendered inside the Modal.
 /// - `modal_ref`: Node reference to the Modal, which will be used to control
 ///   the state of the it.
 ///
 /// Optional props:
+///
 /// - `default_open`: If enabled, the Modal will be open by default.
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
