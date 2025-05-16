@@ -1,13 +1,15 @@
 .dialog {
   background: #222226;
-  border-radius: 24px;
+  border-radius: 16px;
+  color: #edeef0;
 }
 
 .dialog-header {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 48px;
+  padding-block: 16px;
+  padding-inline: 24px;
 }
 
 .dialog-title {
@@ -17,15 +19,17 @@
 
 .dialog-content {
   display: inline-block;
-  max-height: 60vh;
+  max-width: 500px;
+  max-height: 80vh;
   overflow-y: auto;
-  padding-block: 24px;
-  padding-inline: 48px;
+  padding-block: 8px;
+  padding-inline: 24px;
 }
 
 .dialog-footer {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 48px;
+  padding-block: 16px;
+  padding-inline: 24px;
 }
