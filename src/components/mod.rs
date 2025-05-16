@@ -1,2 +1,5 @@
+pub mod dialog;
 pub mod modal;
 pub mod pagination;
+
+pub use modal::*;

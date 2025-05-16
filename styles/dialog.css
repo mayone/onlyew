@@ -1,0 +1,31 @@
+.dialog {
+  background: #222226;
+  border-radius: 24px;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 48px;
+}
+
+.dialog-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.dialog-content {
+  display: inline-block;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-block: 24px;
+  padding-inline: 48px;
+}
+
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 48px;
+}
