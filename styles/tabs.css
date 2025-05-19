@@ -7,8 +7,6 @@
 .tabs-indicator {
   position: absolute;
   bottom: 0;
-  /* left: 100px; */
-  /* width: 100px; */
   height: 2px;
   background-color: var(--tabs-indicator);
   transition: all 0.3s ease;
@@ -30,5 +28,4 @@
 
 .tab-button.selected {
   color: var(--color);
-  /* border-bottom: 2px solid var(--tab-border-bottom-active); */
 }

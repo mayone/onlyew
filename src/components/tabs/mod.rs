@@ -69,9 +69,6 @@ impl Component for Tabs {
         } = ctx.props();
         let on_select = ctx.link().callback(TabsMessage::Select);
 
-        // let indicator_left = 100;
-        // let indicator_width = 100;
-
         html! {
             <div class={classes!("tabs", class.clone())} style={style.clone()}>
                 <div>
@@ -104,8 +101,7 @@ impl Component for Tabs {
                     //     }
                     // }).collect::<Vec<_>>() }
                 </div>
-                <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} // style={format!("left: {}px; width: {}px", indicator_left, indicator_width)}
-                />
+                <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
             </div>
         }
     }
@@ -114,17 +110,8 @@ impl Component for Tabs {
         let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
 
         if let Some(element) = self.tab_refs[self.selected_tab].cast::<HtmlElement>() {
-            // let indicator_style = format!(
-            //     "height: {}px; width: {}px; \
-            //                         transform: translateX({}px) translateY({}px);",
-            //     element.client_height(),
-            //     element.client_width(),
-            //     element.offset_left(),
-            //     element.offset_top(),
-            // );
             let indicator_style = format!(
-                "width: {}px; \
-                                    transform: translateX({}px) ",
+                "width: {}px; transform: translateX({}px)",
                 element.client_width(),
                 element.offset_left(),
             );
