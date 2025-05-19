@@ -10,7 +10,8 @@
   --color-disabled: #7f7f81;
   --tab-bg-background-hover: #edeef010;
   --tabs-border-bottom: #edeef060;
-  --tab-border-bottom-active: #9EB1FF;
+  --tab-border-bottom-active: #9eb1ff;
+  --tabs-indicator: #9eb1ff;
 }
 
 body {
