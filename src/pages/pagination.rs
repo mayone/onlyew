@@ -1,4 +1,4 @@
-use crate::components::pagination::Pagination;
+use crate::components::Pagination;
 use yew::prelude::*;
 
 #[function_component(PaginationPage)]

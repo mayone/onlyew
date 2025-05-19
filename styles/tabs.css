@@ -7,6 +7,7 @@
 .tabs-indicator {
   position: absolute;
   bottom: 0;
+  left: 0;
   height: 2px;
   background-color: var(--tabs-indicator);
   transition: all 0.3s ease;
@@ -20,10 +21,9 @@
   color: var(--color-60);
   cursor: pointer;
   transition: all 0.3s ease;
-}
-
-.tab-button:hover {
-  background: var(--tab-bg-background-hover);
+  &:hover {
+    background-color: var(--tab-bg-background-hover);
+  }
 }
 
 .tab-button.selected {

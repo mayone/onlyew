@@ -109,11 +109,11 @@ impl Component for Tabs {
     fn rendered(&mut self, _ctx: &Context<Self>, _first_render: bool) {
         let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
 
-        if let Some(element) = self.tab_refs[self.selected_tab].cast::<HtmlElement>() {
+        if let Some(tab) = self.tab_refs[self.selected_tab].cast::<HtmlElement>() {
             let indicator_style = format!(
                 "width: {}px; transform: translateX({}px)",
-                element.client_width(),
-                element.offset_left(),
+                tab.client_width(),
+                tab.offset_left(),
             );
             let _ = indicator.set_attribute("style", &indicator_style);
         }

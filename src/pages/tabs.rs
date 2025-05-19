@@ -1,4 +1,4 @@
-use crate::components::tabs::Tabs;
+use crate::components::Tabs;
 use yew::prelude::*;
 
 #[function_component(TabsPage)]

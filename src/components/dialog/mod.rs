@@ -67,7 +67,7 @@ pub struct DialogProperties {
 ///     <DialogContent>
 ///         { "..." }
 ///     </DialogContent>
-/// 	// Optional
+///     // Optional
 ///     <DialogFooter>
 ///         { "..." }
 ///     </DialogFooter>
