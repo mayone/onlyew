@@ -1,6 +1,21 @@
 use web_sys::HtmlElement;
 use yew::prelude::*;
 
+/// The Tabs component has the following props:
+///
+/// Required props:
+///
+/// - `children`: The children (tabs) to be rendered inside the Tabs.
+///
+/// Optional props:
+///
+/// - `default_tab`: The index of the default tab to be selected.
+/// - `class`: `yew::Classes`
+/// - `style`: The style attribute.
+///
+/// Event handlers:
+///
+/// - `on_change`: A callback function that is called when the selected tab changes.
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabsProperties {
     #[prop_or_default]
@@ -20,6 +35,22 @@ pub enum TabsMessage {
     Select(usize),
 }
 
+/// A component to display tabs.
+///
+/// It has the following purposes:
+///
+/// - To provide the tabs in a Tabs component.
+///
+/// Usage:
+/// ```ignore
+///
+/// html! {
+///     <Tabs on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}>
+///         <span>{"Tab 1"}</span>
+///         <span>{"Tab 2"}</span>
+///     </Tabs>
+/// }
+/// ```
 #[derive(Debug)]
 pub struct Tabs {
     indicator_ref: NodeRef,
