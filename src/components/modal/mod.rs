@@ -1,5 +1,4 @@
 use gloo;
-// use wasm_bindgen::JsCast;
 use web_sys::{Element, HtmlDialogElement};
 use yew::prelude::*;
 
@@ -129,7 +128,7 @@ impl Component for Modal {
         } = ctx.props();
 
         let content = html! {
-            <dialog id="heather-ui-modal" ref={self.modal_ref.clone()} open={*default_open}>
+            <dialog class="modal" ref={self.modal_ref.clone()} open={*default_open}>
                 <div
                     class={classes!("modal-backdrop")}
                     onclick={ctx.link().callback(move |_| Self::Message::Close)}
