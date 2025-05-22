@@ -1,7 +1,11 @@
 .dialog {
+  display: flex;
+  flex-direction: column;
   background: #222226;
   border-radius: 16px;
   color: #edeef0;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
 }
 
 .dialog-header {
@@ -20,7 +24,6 @@
 .dialog-content {
   display: inline-block;
   max-width: 500px;
-  max-height: 80vh;
   overflow-y: auto;
   padding-block: 8px;
   padding-inline: 24px;
