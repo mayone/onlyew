@@ -100,6 +100,7 @@ impl Component for Pagination {
 
     fn create(ctx: &Context<Self>) -> Self {
         let total_pages = ctx.props().total_pages.unwrap_or_default();
+
         Self {
             current_page: usize::from(total_pages > 0),
             total_pages,

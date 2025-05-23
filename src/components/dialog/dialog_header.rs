@@ -16,7 +16,7 @@ pub struct DialogHeaderProperties {
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
-    pub style: Option<String>,
+    pub style: Option<AttrValue>,
 }
 
 #[derive(Debug)]
@@ -42,7 +42,7 @@ impl Component for DialogHeader {
                 class={classes!("dialog-header",
                     class.clone()
                 )}
-                style={style.clone()}
+                {style}
             >
                 { children.clone() }
             </div>

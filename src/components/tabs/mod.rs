@@ -25,7 +25,7 @@ pub struct TabsProperties {
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
-    pub style: Option<String>,
+    pub style: Option<AttrValue>,
     #[prop_or_default]
     pub on_change: Callback<usize>,
 }
@@ -70,6 +70,7 @@ impl Component for Tabs {
             .iter()
             .map(|_| NodeRef::default())
             .collect::<Vec<_>>();
+
         Self {
             indicator_ref: NodeRef::default(),
             selected_tab,
@@ -101,7 +102,7 @@ impl Component for Tabs {
         let on_select = ctx.link().callback(TabsMessage::Select);
 
         html! {
-            <div class={classes!("tabs", class.clone())} style={style.clone()}>
+            <div class={classes!("tabs", class.clone())} {style}>
                 <div>
                     { for children.iter().enumerate().map(|(index, child)| {
                         let is_selected = index == self.selected_tab;

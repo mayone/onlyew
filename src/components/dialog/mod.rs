@@ -35,7 +35,7 @@ pub struct DialogProperties {
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
-    pub style: Option<String>,
+    pub style: Option<AttrValue>,
 }
 
 /// A container component to display content in a Dialog.
@@ -104,7 +104,7 @@ impl Component for Dialog {
                     class={classes!("dialog",
                         class.clone()
                     )}
-                    style={style.clone()}
+                    {style}
                 >
                     { children.clone() }
                 </div>

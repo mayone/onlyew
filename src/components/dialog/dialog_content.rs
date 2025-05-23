@@ -16,7 +16,7 @@ pub struct DialogContentProperties {
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
-    pub style: Option<String>,
+    pub style: Option<AttrValue>,
 }
 
 #[derive(Debug)]
@@ -42,7 +42,7 @@ impl Component for DialogContent {
                 class={classes!("dialog-content",
                     class.clone()
                 )}
-                style={style.clone()}
+                {style}
             >
                 { children.clone() }
             </div>
