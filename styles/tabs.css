@@ -21,6 +21,11 @@
   color: var(--color-60);
   cursor: pointer;
   transition: all 0.3s ease;
+
+  &:active {
+    background-color: var(--tab-bg-background-active);
+  }
+
   &:hover {
     background-color: var(--tab-bg-background-hover);
   }
