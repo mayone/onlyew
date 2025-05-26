@@ -11,15 +11,15 @@ pub fn tabs() -> Html {
                     default_tab={1}
                     on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}
                 >
-                    <Tab>{"Dandelion"}</Tab>
-                    <Tab>{"Heather"}</Tab>
-                    <Tab>{"Lavender"}</Tab>
-                    <Tab>{"Lilac"}</Tab>
-                    <Tab>{"Marigold"}</Tab>
-                    <Tab>{"Narcissus"}</Tab>
-                    <Tab>{"Orchid"}</Tab>
-                    <Tab disabled={true}>{"Poppy"}</Tab>
-                    <Tab>{"Rose"}</Tab>
+                    <Tab panel={html!{<div>{"Dandelion"}</div>}}>{"Dandelion"}</Tab>
+                    <Tab panel={html!{<div>{"Heather"}</div>}}>{"Heather"}</Tab>
+                    <Tab panel={html!{<div>{"Lavender"}</div>}}>{"Lavender"}</Tab>
+                    <Tab panel={html!{<div>{"Lilac"}</div>}}>{"Lilac"}</Tab>
+                    <Tab panel={html!{<div>{"Marigold"}</div>}}>{"Marigold"}</Tab>
+                    <Tab panel={html!{<div>{"Narcissus"}</div>}}>{"Narcissus"}</Tab>
+                    <Tab panel={html!{<div>{"Orchid"}</div>}}>{"Orchid"}</Tab>
+                    <Tab disabled={true} panel={html!{<div>{"Poppy"}</div>}}>{"Poppy"}</Tab>
+                    <Tab panel={html!{<div>{"Rose"}</div>}}>{"Rose"}</Tab>
                 </Tabs>
             </div>
         </div>

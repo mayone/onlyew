@@ -4,16 +4,19 @@ use yew::prelude::*;
 ///
 /// Required props:
 ///
-/// - `children`: The children to be rendered inside.
+/// - `children`: The children to be rendered inside the tab button.
+/// - `panel`: The content to be rendered in the panel when this tab is selected.
 ///
 /// Optional props:
 ///
+/// - `disabled`: Whether the tab is disabled.
 /// - `class`: `yew::Classes`
 /// - `style`: The style attribute.
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabProperties {
     #[prop_or_default]
     pub children: Children,
+    pub panel: Html,
     #[prop_or_default]
     pub disabled: bool,
     #[prop_or_default]
@@ -28,8 +31,8 @@ pub struct TabProperties {
 /// ```ignore
 /// html! {
 ///     <Tabs>
-///         <Tab>{"Tab 1"}</Tab>
-///         <Tab>{"Tab 2"}</Tab>
+///         <Tab panel={html!{<div>{"Panel 1"}</div>}}>{"Tab 1"}</Tab>
+///         <Tab panel={html!{<div>{"Panel 2"}</div>}}>{"Tab 2"}</Tab>
 ///     </Tabs>
 /// }
 /// ```
@@ -54,10 +57,11 @@ impl Component for Tab {
             disabled,
             class,
             style,
+            ..
         } = ctx.props();
 
         html! {
-            <div class={classes!("tab", class.clone())} {style}>
+            <div class={classes!("tab", class.clone(), disabled.then_some("disabled"))} {style}>
                 { children.clone() }
             </div>
         }

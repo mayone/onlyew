@@ -49,8 +49,8 @@ pub enum TabsMessage {
 ///
 /// html! {
 ///     <Tabs on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}>
-///         <Tab>{"Tab 1"}</Tab>
-///         <Tab>{"Tab 2"}</Tab>
+///         <Tab panel={html!{<div>{"Panel 1"}</div>}}>{"Tab 1"}</Tab>
+///         <Tab panel={html!{<div>{"Panel 2"}</div>}}>{"Tab 2"}</Tab>
 ///     </Tabs>
 /// }
 /// ```
@@ -105,25 +105,33 @@ impl Component for Tabs {
         let on_select = ctx.link().callback(TabsMessage::Select);
 
         html! {
-            <div class={classes!("tabs", class.clone())} {style}>
-                <div>
-                    { for children.iter().enumerate().map(|(index, child)| {
-                        let is_selected = index == self.selected_tab;
-                        html! {
-                            <button
-                                disabled={child.props.disabled}
-                                class={classes!("tab-button", is_selected.then_some("selected"))}
-                                aria-selected={is_selected.to_string()}
-                                ref={self.tab_refs[index].clone()}
-                                onclick={let on_select = on_select.clone();
-                                    Callback::from(move |_| on_select.emit(index))}
-                            >
-                                { child }
-                            </button>
-                        }
-                    }) }
+            <div class="tabs-container">
+                <div class={classes!("tabs", class.clone())} {style}>
+                    <div>
+                        { for children.iter().enumerate().map(|(index, child)| {
+                            let is_selected = index == self.selected_tab;
+                            html! {
+                                <button
+                                    disabled={child.props.disabled}
+                                    class={classes!("tab-button", is_selected.then_some("selected"))}
+                                    aria-selected={is_selected.to_string()}
+                                    ref={self.tab_refs[index].clone()}
+                                    onclick={let on_select = on_select.clone();
+                                        Callback::from(move |_| on_select.emit(index))}
+                                >
+                                    { child.props.children.clone() }
+                                </button>
+                            }
+                        }) }
+                    </div>
+                    <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
                 </div>
-                <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
+                <div class="tabs-panel">
+                { children.iter().enumerate().find(|(index, _)| *index == self.selected_tab)
+                    .map(|(_, child)| child.props.panel.clone())
+                        .unwrap_or_default()
+                    }
+            </div>
             </div>
         }
     }
@@ -149,8 +157,8 @@ mod tests {
     #[test]
     fn test_render_tabs() {
         let _ = html! { <Tabs>
-            <Tab>{"Tab 1"}</Tab>
-            <Tab>{"Tab 2"}</Tab>
+            <Tab panel={html!{<div>{"Panel 1"}</div>}}>{"Tab 1"}</Tab>
+            <Tab panel={html!{<div>{"Panel 2"}</div>}}>{"Tab 2"}</Tab>
         </Tabs> };
     }
 }

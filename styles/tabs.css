@@ -1,3 +1,9 @@
+.tabs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .tabs {
   display: flex;
   position: relative;
@@ -39,4 +45,8 @@
 
 .tab-button.selected {
   color: var(--color);
+}
+
+.tabs-panel {
+  padding: 16px 24px;
 }
