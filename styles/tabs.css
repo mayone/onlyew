@@ -17,9 +17,9 @@
   border: none;
   padding: 16px 24px;
   background-color: transparent;
-  font-size: 16px;
   color: var(--color-60);
   cursor: pointer;
+  font-size: 16px;
   transition: all 0.3s ease;
 
   &:hover {
@@ -28,6 +28,12 @@
 
   &:active {
     background-color: var(--tab-bg-background-active);
+  }
+
+  &:disabled {
+    background-color: transparent;
+    color: var(--color-30);
+    cursor: default;
   }
 }
 

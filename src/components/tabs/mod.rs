@@ -1,6 +1,9 @@
 use web_sys::HtmlElement;
 use yew::prelude::*;
 
+mod tab;
+pub use tab::Tab;
+
 /// The Tabs component has the following props:
 ///
 /// Required props:
@@ -19,7 +22,7 @@ use yew::prelude::*;
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabsProperties {
     #[prop_or_default]
-    pub children: Children,
+    pub children: ChildrenWithProps<Tab>,
     #[prop_or_default]
     pub default_tab: Option<usize>,
     #[prop_or_default]
@@ -46,8 +49,8 @@ pub enum TabsMessage {
 ///
 /// html! {
 ///     <Tabs on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}>
-///         <span>{"Tab 1"}</span>
-///         <span>{"Tab 2"}</span>
+///         <Tab>{"Tab 1"}</Tab>
+///         <Tab>{"Tab 2"}</Tab>
 ///     </Tabs>
 /// }
 /// ```
@@ -108,6 +111,7 @@ impl Component for Tabs {
                         let is_selected = index == self.selected_tab;
                         html! {
                             <button
+                                disabled={child.props.disabled}
                                 class={classes!("tab-button", is_selected.then_some("selected"))}
                                 aria-selected={is_selected.to_string()}
                                 ref={self.tab_refs[index].clone()}
@@ -118,20 +122,6 @@ impl Component for Tabs {
                             </button>
                         }
                     }) }
-                    // { children.iter().enumerate().map(|(index, child)| {
-                    //     let is_selected = index == self.selected_tab;
-                    //     html! {
-                    //         <button
-                    //             class={classes!("tab-button", is_selected.then_some("selected"))}
-                    //             aria-selected={is_selected.to_string()}
-                    //             ref={self.tab_refs[index].clone()}
-                    //             onclick={let on_select = on_select.clone();
-                    //                 Callback::from(move |_| on_select.emit(index))}
-                    //         >
-                    //             { child }
-                    //         </button>
-                    //     }
-                    // }).collect::<Vec<_>>() }
                 </div>
                 <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
             </div>
@@ -158,6 +148,9 @@ mod tests {
 
     #[test]
     fn test_render_tabs() {
-        let _ = html! { <Tabs>{ "Tab 1" }</Tabs> };
+        let _ = html! { <Tabs>
+            <Tab>{"Tab 1"}</Tab>
+            <Tab>{"Tab 2"}</Tab>
+        </Tabs> };
     }
 }

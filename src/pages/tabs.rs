@@ -1,4 +1,4 @@
-use crate::components::Tabs;
+use crate::components::{Tab, Tabs};
 use yew::prelude::*;
 
 #[function_component(TabsPage)]
@@ -11,15 +11,15 @@ pub fn tabs() -> Html {
                     default_tab={1}
                     on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}
                 >
-                    <span>{"Dandelion"}</span>
-                    <span>{"Heather"}</span>
-                    <span>{"Lavender"}</span>
-                    <span>{"Lilac"}</span>
-                    <span>{"Marigold"}</span>
-                    <span>{"Narcissus"}</span>
-                    <span>{"Orchid"}</span>
-                    <span>{"Poppy"}</span>
-                    <span>{"Rose"}</span>
+                    <Tab>{"Dandelion"}</Tab>
+                    <Tab>{"Heather"}</Tab>
+                    <Tab>{"Lavender"}</Tab>
+                    <Tab>{"Lilac"}</Tab>
+                    <Tab>{"Marigold"}</Tab>
+                    <Tab>{"Narcissus"}</Tab>
+                    <Tab>{"Orchid"}</Tab>
+                    <Tab disabled={true}>{"Poppy"}</Tab>
+                    <Tab>{"Rose"}</Tab>
                 </Tabs>
             </div>
         </div>
