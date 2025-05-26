@@ -16,18 +16,18 @@
 .tab-button {
   border: none;
   padding: 16px 24px;
-  background: transparent;
+  background-color: transparent;
   font-size: 16px;
   color: var(--color-60);
   cursor: pointer;
   transition: all 0.3s ease;
 
-  &:active {
-    background-color: var(--tab-bg-background-active);
-  }
-
   &:hover {
     background-color: var(--tab-bg-background-hover);
+  }
+
+  &:active {
+    background-color: var(--tab-bg-background-active);
   }
 }
 
