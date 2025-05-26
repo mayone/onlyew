@@ -1,9 +1,9 @@
 .dialog {
   display: flex;
   flex-direction: column;
-  background-color: #222226;
+  background-color: var(--dialog-bg-color);
   border-radius: 16px;
-  color: #edeef0;
+  color: var(--color);
   max-width: 500px;
   max-height: calc(100dvh - 8rem);
   overflow-y: auto;

@@ -4,7 +4,7 @@
 }
 
 .pagination-container > button {
-  background: transparent;
+  background-color: transparent;
   color: var(--color);
   border-color: var(--border-color);
   border-radius: 5px;
@@ -13,18 +13,21 @@
   padding: 5px 10px;
   font-size: 20px;
   transition: all 0.3s ease;
+
   &:hover {
-    background: var(--bg-color-hover);
+    background-color: var(--bg-color-hover);
     color: var(--color);
     border-color: var(--border-color-hover);
     cursor: pointer;
   }
+
   &:active {
-    background: var(--bg-color-active);
+    background-color: var(--bg-color-active);
     color: var(--color-active);
   }
+
   &:disabled {
-    background: transparent;
+    background-color: transparent;
     color: var(--color-disabled);
     border-color: var(--border-color-disabled);
     cursor: default;
@@ -32,6 +35,6 @@
 }
 
 .pagination-container > button.active {
-  background: var(--bg-color-active);
+  background-color: var(--bg-color-active);
   color: var(--color-active);
 }
