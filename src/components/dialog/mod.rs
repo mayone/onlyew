@@ -26,6 +26,10 @@ pub use crate::components::{close_modal as close_dialog, open_modal as open_dial
 /// - `default_open`: If enabled, the Dialog will be open by default.
 /// - `class`: `yew::Classes`
 /// - `style`: The style attribute.
+///
+/// Event handlers:
+///
+/// - `on_close`: Callback function, called when the Dialog is closed.
 #[derive(Debug, PartialEq, Properties)]
 pub struct DialogProperties {
     pub children: Children,
@@ -36,6 +40,8 @@ pub struct DialogProperties {
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
+    #[prop_or_default]
+    pub on_close: Callback<()>,
 }
 
 /// A container component to display content in a Dialog.
@@ -96,10 +102,11 @@ impl Component for Dialog {
             default_open,
             class,
             style,
+            on_close,
         } = ctx.props();
 
         html! {
-            <Modal modal_ref={dialog_ref} {default_open}>
+            <Modal modal_ref={dialog_ref} {default_open} on_close={on_close}>
                 <div
                     class={classes!("dialog",
                         class.clone()

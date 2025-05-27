@@ -15,12 +15,18 @@ const MODAL_ROOT_ID: &str = "modal-root";
 /// Optional props:
 ///
 /// - `default_open`: If enabled, the Modal will be open by default.
+///
+/// Event handlers:
+///
+/// - `on_close`: Callback function, called when the Modal is closed.
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
     pub children: Children,
     pub modal_ref: NodeRef,
     #[prop_or_default]
     pub default_open: bool,
+    #[prop_or_default]
+    pub on_close: Callback<()>,
 }
 
 #[derive(Debug)]
@@ -108,10 +114,11 @@ impl Component for Modal {
         }
     }
 
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             ModalMessage::Close => {
                 self.close();
+                ctx.props().on_close.emit(());
                 true
             }
             ModalMessage::Open => {
