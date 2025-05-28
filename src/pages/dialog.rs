@@ -22,19 +22,17 @@ pub fn dialog() -> Html {
     let form_dialog_ref: NodeRef = NodeRef::default();
 
     let open_long_dialog = make_open_dialog!(long_dialog_ref);
-
     let close_long_dialog = make_close_dialog!(long_dialog_ref);
 
     let open_form_dialog = make_open_dialog!(form_dialog_ref);
-
     let close_form_dialog = make_close_dialog!(form_dialog_ref);
 
     html! {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
             <h1>{ "Dialog Showcase" }</h1>
             <button style="width: fit-content" onclick={open_long_dialog}>{ "Long Dialog" }</button>
-            <LongDialog dialog_ref={long_dialog_ref} close_dialog={close_long_dialog} />
             <button style="width: fit-content" onclick={open_form_dialog}>{ "Form Dialog" }</button>
+            <LongDialog dialog_ref={long_dialog_ref} close_dialog={close_long_dialog} />
             <FormDialog dialog_ref={form_dialog_ref} close_dialog={close_form_dialog} />
         </div>
     }
@@ -91,40 +89,72 @@ pub fn form_dialog(
         close_dialog,
     }: &FormDialogProps,
 ) -> Html {
+    let value = use_state(|| 0);
+
+    let on_change = {
+        let value = value.clone();
+        Callback::from(move |val| value.set(val))
+    };
+
+    let clear_value = {
+        let value = value.clone();
+        Callback::from(move |_| {
+            value.set(0);
+        })
+    };
+
+    let handle_submit = {
+        let value = value.clone();
+        let clear_value = clear_value.clone();
+        let close_dialog = close_dialog.clone();
+        Callback::from(move |e: MouseEvent| {
+            log::info!("Submit: {}", *value);
+            clear_value.emit(e.clone());
+            close_dialog.emit(e);
+        })
+    };
+
     html! {
         <Dialog {dialog_ref}>
             <DialogHeader>
                 <DialogTitle>{ "This is a dialog with form" }</DialogTitle>
             </DialogHeader>
             <DialogContent>
-                <Form />
+                <Counter value={*value} {on_change} />
+                // <button onclick={close_dialog.clone()}>{ "Hide" }</button>
             </DialogContent>
             <DialogFooter>
-                <button onclick={close_dialog}>{ "Cancel" }</button>
-                // <button onclick={close_dialog}>{ "Submit" }</button>
+                <button onclick={close_dialog.clone()}>{ "Cancel" }</button>
+                <button onclick={handle_submit}>{ "Submit" }</button>
             </DialogFooter>
         </Dialog>
     }
 }
 
-#[function_component(Form)]
-pub fn form() -> Html {
-    let counter = use_state(|| 0);
+#[derive(Debug, Properties, PartialEq)]
+pub struct CounterProps {
+    value: i32,
+    on_change: Callback<i32>,
+}
 
-    let decrement = {
-        let counter = counter.clone();
-        Callback::from(move |_| counter.set(*counter - 1))
+#[function_component(Counter)]
+pub fn counter(CounterProps { value, on_change }: &CounterProps) -> Html {
+    let decrement: Callback<MouseEvent> = {
+        let on_change = on_change.clone();
+        let value = *value;
+        Callback::from(move |_| on_change.emit(value - 1))
     };
 
     let increment = {
-        let counter = counter.clone();
-        Callback::from(move |_| counter.set(*counter + 1))
+        let on_change = on_change.clone();
+        let value = *value;
+        Callback::from(move |_| on_change.emit(value + 1))
     };
 
     html! {
         <div style="display: flex; align-items: center; gap: 0.5rem">
             <button onclick={decrement}>{ "-" }</button>
-            { *counter }
+            { *value }
             <button onclick={increment}>{ "+" }</button>
         </div>
     }
