@@ -117,8 +117,8 @@ impl Component for Modal {
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             ModalMessage::Close => {
-                self.close();
                 ctx.props().on_close.emit(());
+                self.close();
                 true
             }
             ModalMessage::Open => {

@@ -127,11 +127,10 @@ impl Component for Tabs {
                     <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
                 </div>
                 <div class="tabs-panel">
-                { children.iter().enumerate().find(|(index, _)| *index == self.selected_tab)
+                    { children.iter().enumerate().find(|(index, _)| *index == self.selected_tab)
                     .map(|(_, child)| child.props.panel.clone())
-                        .unwrap_or_default()
-                    }
-            </div>
+                        .unwrap_or_default() }
+                </div>
             </div>
         }
     }
@@ -156,9 +155,11 @@ mod tests {
 
     #[test]
     fn test_render_tabs() {
-        let _ = html! { <Tabs>
-            <Tab panel={html!{<div>{"Panel 1"}</div>}}>{"Tab 1"}</Tab>
-            <Tab panel={html!{<div>{"Panel 2"}</div>}}>{"Tab 2"}</Tab>
-        </Tabs> };
+        let _ = html! {
+            <Tabs>
+                <Tab panel={html!{<div>{"Panel 1"}</div>}}>{ "Tab 1" }</Tab>
+                <Tab panel={html!{<div>{"Panel 2"}</div>}}>{ "Tab 2" }</Tab>
+            </Tabs>
+        };
     }
 }
