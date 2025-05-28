@@ -21,7 +21,7 @@ const MODAL_ROOT_ID: &str = "modal-root";
 ///
 /// Event handlers:
 ///
-/// - `on_close`: Callback function, called when the Modal is closed.
+/// - `on_esc`: Callback function, called when the Modal is closed by ESC key.
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
     pub children: Children,
@@ -29,7 +29,7 @@ pub struct ModalProperties {
     #[prop_or_default]
     pub default_open: bool,
     #[prop_or_default]
-    pub on_close: Callback<()>,
+    pub on_esc: Callback<()>,
 }
 
 #[derive(Debug)]
@@ -124,7 +124,7 @@ impl Component for Modal {
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             ModalMessage::Close => {
-                ctx.props().on_close.emit(());
+                ctx.props().on_esc.emit(());
                 self.close();
                 true
             }
@@ -162,16 +162,16 @@ impl Component for Modal {
     }
 
     fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
-        let Self::Properties { on_close, .. } = ctx.props();
+        let Self::Properties { on_esc, .. } = ctx.props();
 
-        // TODO: Might need to check is on_close empty before adding event listener
         if first_render {
+            log::info!("adding event listener");
             if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
                 let on_cancel = {
-                    let on_close = on_close.clone();
+                    let on_esc = on_esc.clone();
                     Callback::from(move |_: Event| {
                         log::info!("canceled");
-                        on_close.emit(());
+                        on_esc.emit(());
                     })
                 };
 

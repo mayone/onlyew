@@ -107,29 +107,37 @@ pub fn form_dialog(
         })
     };
 
-    let handle_submit = {
-        let value = value.clone();
-        // let clear_value = clear_value.clone();
+    let handle_cancel = {
+        let clear_value = clear_value.clone();
         let close_dialog = close_dialog.clone();
         Callback::from(move |e: MouseEvent| {
-            log::info!("Submit: {}", *value);
-            // clear_value.emit(e.clone());
+            clear_value.emit(());
             close_dialog.emit(e);
         })
     };
 
-    // TODO: Add hide, which should not clear value
+    let handle_submit = {
+        let value = value.clone();
+        let clear_value = clear_value.clone();
+        let close_dialog = close_dialog.clone();
+        Callback::from(move |e: MouseEvent| {
+            log::info!("Submit: {}", *value);
+            clear_value.emit(());
+            close_dialog.emit(e);
+        })
+    };
+
     html! {
-        <Dialog {dialog_ref} on_close={clear_value}>
+        <Dialog {dialog_ref} on_esc={clear_value}>
             <DialogHeader>
                 <DialogTitle>{ "This is a dialog with form" }</DialogTitle>
             </DialogHeader>
             <DialogContent>
                 <Counter value={*value} {on_change} />
-                // <button onclick={close_dialog.clone()}>{ "Hide" }</button>
+                <button onclick={close_dialog.clone()}>{ "Hide" }</button>
             </DialogContent>
             <DialogFooter>
-                <button onclick={close_dialog.clone()}>{ "Cancel" }</button>
+                <button onclick={handle_cancel}>{ "Cancel" }</button>
                 <button onclick={handle_submit}>{ "Submit" }</button>
             </DialogFooter>
         </Dialog>

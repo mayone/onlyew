@@ -29,7 +29,7 @@ pub use crate::components::{close_modal as close_dialog, open_modal as open_dial
 ///
 /// Event handlers:
 ///
-/// - `on_close`: Callback function, called when the Dialog is closed.
+/// - `on_esc`: Callback function, called when the Dialog is closed by ESC key.
 #[derive(Debug, PartialEq, Properties)]
 pub struct DialogProperties {
     pub children: Children,
@@ -41,7 +41,7 @@ pub struct DialogProperties {
     #[prop_or_default]
     pub style: Option<AttrValue>,
     #[prop_or_default]
-    pub on_close: Callback<()>,
+    pub on_esc: Callback<()>,
 }
 
 /// A container component to display content in a Dialog.
@@ -102,11 +102,11 @@ impl Component for Dialog {
             default_open,
             class,
             style,
-            on_close,
+            on_esc,
         } = ctx.props();
 
         html! {
-            <Modal modal_ref={dialog_ref} {default_open} on_close={on_close}>
+            <Modal modal_ref={dialog_ref} {default_open} {on_esc}>
                 <div
                     class={classes!("dialog",
                         class.clone()
