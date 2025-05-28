@@ -21,7 +21,7 @@ const MODAL_ROOT_ID: &str = "modal-root";
 ///
 /// Event handlers:
 ///
-/// - `on_esc`: Callback function, called when the Modal is closed by ESC key.
+/// - `on_esc`: Callback function, called when the Modal is closed by ESC key or by clicking the backdrop.
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
     pub children: Children,

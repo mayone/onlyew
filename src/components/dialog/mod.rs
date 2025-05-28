@@ -29,7 +29,7 @@ pub use crate::components::{close_modal as close_dialog, open_modal as open_dial
 ///
 /// Event handlers:
 ///
-/// - `on_esc`: Callback function, called when the Dialog is closed by ESC key.
+/// - `on_esc`: Callback function, called when the Dialog is closed by ESC key or by clicking the backdrop.
 #[derive(Debug, PartialEq, Properties)]
 pub struct DialogProperties {
     pub children: Children,
