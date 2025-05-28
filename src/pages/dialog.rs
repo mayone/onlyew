@@ -1,4 +1,7 @@
 use yew::prelude::*;
+// use yew_router::prelude::Link;
+
+// use crate::Route;
 
 use crate::components::*;
 
@@ -32,6 +35,7 @@ pub fn dialog() -> Html {
             <h1>{ "Dialog Showcase" }</h1>
             <button style="width: fit-content" onclick={open_long_dialog}>{ "Long Dialog" }</button>
             <button style="width: fit-content" onclick={open_form_dialog}>{ "Form Dialog" }</button>
+            // <Link<Route> to={Route::Home}>{ "home" }</Link<Route>>
             <LongDialog dialog_ref={long_dialog_ref} close_dialog={close_long_dialog} />
             <FormDialog dialog_ref={form_dialog_ref} close_dialog={close_form_dialog} />
         </div>
@@ -105,17 +109,18 @@ pub fn form_dialog(
 
     let handle_submit = {
         let value = value.clone();
-        let clear_value = clear_value.clone();
+        // let clear_value = clear_value.clone();
         let close_dialog = close_dialog.clone();
         Callback::from(move |e: MouseEvent| {
             log::info!("Submit: {}", *value);
-            clear_value.emit(e.clone());
+            // clear_value.emit(e.clone());
             close_dialog.emit(e);
         })
     };
 
+    // TODO: Add hide, which should not clear value
     html! {
-        <Dialog {dialog_ref}>
+        <Dialog {dialog_ref} on_close={clear_value}>
             <DialogHeader>
                 <DialogTitle>{ "This is a dialog with form" }</DialogTitle>
             </DialogHeader>

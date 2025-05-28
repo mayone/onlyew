@@ -1,5 +1,8 @@
 use gloo;
-use web_sys::{Element, HtmlDialogElement};
+use web_sys::{
+    Element, HtmlDialogElement,
+    wasm_bindgen::{JsCast, prelude::Closure},
+};
 use yew::prelude::*;
 
 const MODAL_ROOT_ID: &str = "modal-root";
@@ -75,6 +78,7 @@ pub enum ModalMessage {
 pub struct Modal {
     modal_ref: NodeRef,
     modal_root: Element,
+    cancel_listener: Option<Closure<dyn Fn(Event)>>,
 }
 
 pub fn close_modal(modal_ref: &NodeRef) {
@@ -108,9 +112,12 @@ impl Component for Modal {
             .get_element_by_id(MODAL_ROOT_ID)
             .unwrap_or_else(|| panic!("Expected to find a #{} element", MODAL_ROOT_ID));
 
+        let mut _cancel_listener = None;
+
         Self {
             modal_ref,
             modal_root,
+            cancel_listener: _cancel_listener,
         }
     }
 
@@ -152,6 +159,46 @@ impl Component for Modal {
         };
 
         create_portal(content, self.modal_root.clone())
+    }
+
+    fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
+        let Self::Properties { on_close, .. } = ctx.props();
+
+        // TODO: Might need to check is on_close empty before adding event listener
+        if first_render {
+            if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
+                let on_cancel = {
+                    let on_close = on_close.clone();
+                    Callback::from(move |_: Event| {
+                        log::info!("canceled");
+                        on_close.emit(());
+                    })
+                };
+
+                let listener =
+                    Closure::<dyn Fn(Event)>::wrap(Box::new(move |e: Event| on_cancel.emit(e)));
+
+                dialog
+                    .add_event_listener_with_callback("cancel", listener.as_ref().unchecked_ref())
+                    .unwrap();
+
+                self.cancel_listener = Some(listener);
+            }
+        }
+    }
+
+    fn destroy(&mut self, _ctx: &yew::Context<Self>) {
+        log::warn!("destroy invoked");
+        if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
+            if let Some(listener) = self.cancel_listener.take() {
+                dialog
+                    .remove_event_listener_with_callback(
+                        "cancel",
+                        listener.as_ref().unchecked_ref(),
+                    )
+                    .unwrap();
+            }
+        }
     }
 }
 
