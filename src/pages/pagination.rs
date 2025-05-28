@@ -10,14 +10,14 @@ pub fn pagination() -> Html {
         Callback::from(move |page: usize| current_page.set(page))
     };
     html! {
-        <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px;">
-            <h1>{"Pagination Showcase"}</h1>
+        <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
+            <h1>{ "Pagination Showcase" }</h1>
             <div style="display: flex; flex-direction: column; gap: 20px">
                 <Pagination total_pages=0 />
                 <Pagination total_pages=1 />
                 <Pagination total_pages=3 />
                 <Pagination total_pages=5 />
-                <Pagination total_pages={total_pages} on_change={on_change} />
+                <Pagination {total_pages} {on_change} />
                 <div>{ format!("Page {} of {}", *current_page, total_pages) }</div>
             </div>
         </div>
