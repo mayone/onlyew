@@ -1,8 +1,5 @@
-use gloo;
-use web_sys::{
-    Element, HtmlDialogElement,
-    wasm_bindgen::{JsCast, prelude::Closure},
-};
+use gloo::events::EventListener;
+use web_sys::{Element, HtmlDialogElement};
 use yew::prelude::*;
 
 const MODAL_ROOT_ID: &str = "modal-root";
@@ -85,7 +82,7 @@ pub enum ModalMessage {
 pub struct Modal {
     modal_ref: NodeRef,
     modal_root: Element,
-    cancel_listener: Option<Closure<dyn Fn(Event)>>,
+    cancel_listener: Option<EventListener>,
 }
 
 pub fn close_modal(modal_ref: &NodeRef, on_close: Callback<()>) {
@@ -189,11 +186,7 @@ impl Component for Modal {
                 };
 
                 let listener =
-                    Closure::<dyn Fn(Event)>::wrap(Box::new(move |e: Event| on_cancel.emit(e)));
-
-                dialog
-                    .add_event_listener_with_callback("cancel", listener.as_ref().unchecked_ref())
-                    .unwrap();
+                    EventListener::new(&dialog, "cancel", move |e| on_cancel.emit(e.clone()));
 
                 self.cancel_listener = Some(listener);
             }
@@ -202,16 +195,7 @@ impl Component for Modal {
 
     fn destroy(&mut self, _ctx: &yew::Context<Self>) {
         log::warn!("destroy invoked");
-        if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
-            if let Some(listener) = self.cancel_listener.take() {
-                dialog
-                    .remove_event_listener_with_callback(
-                        "cancel",
-                        listener.as_ref().unchecked_ref(),
-                    )
-                    .unwrap();
-            }
-        }
+        self.cancel_listener = None;
     }
 }
 
