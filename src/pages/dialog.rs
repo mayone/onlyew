@@ -16,7 +16,7 @@ macro_rules! make_close_dialog {
     ($dialog_ref:expr, $on_close:expr) => {{
         let dialog_ref = $dialog_ref.clone();
         let on_close = $on_close.clone();
-        Callback::from(move |_| close_dialog(&dialog_ref, on_close.clone()))
+        Callback::from(move |_| close_dialog(&dialog_ref, &on_close))
     }};
 }
 

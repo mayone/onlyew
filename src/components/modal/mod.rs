@@ -46,7 +46,7 @@ pub enum ModalMessage {
 ///
 /// let close_modal = {
 ///     let modal_ref = modal_ref.clone();
-///     Callback::from(move |_| close_modal(&modal_ref, Callback::noop()))
+///     Callback::from(move |_| close_modal(&modal_ref, &Callback::noop()))
 /// };
 ///
 /// let hide_modal = {
@@ -85,7 +85,7 @@ pub struct Modal {
     cancel_listener: Option<EventListener>,
 }
 
-pub fn close_modal(modal_ref: &NodeRef, on_close: Callback<()>) {
+pub fn close_modal(modal_ref: &NodeRef, on_close: &Callback<()>) {
     if let Some(dialog) = modal_ref.cast::<HtmlDialogElement>() {
         on_close.emit(());
         dialog.close();
@@ -106,7 +106,7 @@ pub fn open_modal(modal_ref: &NodeRef) {
 
 impl Modal {
     fn close(&self, ctx: &Context<Self>) {
-        close_modal(&self.modal_ref, ctx.props().on_close.clone());
+        close_modal(&self.modal_ref, &ctx.props().on_close);
     }
     fn open(&self) {
         open_modal(&self.modal_ref);
@@ -123,12 +123,10 @@ impl Component for Modal {
             .get_element_by_id(MODAL_ROOT_ID)
             .unwrap_or_else(|| panic!("Expected to find a #{} element", MODAL_ROOT_ID));
 
-        let mut _cancel_listener = None;
-
         Self {
             modal_ref,
             modal_root,
-            cancel_listener: _cancel_listener,
+            cancel_listener: None,
         }
     }
 

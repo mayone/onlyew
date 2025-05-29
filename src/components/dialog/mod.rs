@@ -8,12 +8,13 @@ pub use dialog_footer::DialogFooter;
 pub use dialog_header::DialogHeader;
 pub use dialog_title::DialogTitle;
 
-use yew::prelude::*;
-
-use crate::components::Modal;
 pub use crate::components::{
     close_modal as close_dialog, hide_modal as hide_dialog, open_modal as open_dialog,
 };
+
+use yew::prelude::*;
+
+use crate::components::Modal;
 
 /// The Dialog component has the following props:
 ///
@@ -59,7 +60,7 @@ pub struct DialogProperties {
 ///
 /// let close_dialog = {
 ///     let dialog_ref = dialog_ref.clone();
-///     Callback::from(move |_| close_dialog(&dialog_ref, Callback::noop()))
+///     Callback::from(move |_| close_dialog(&dialog_ref, &Callback::noop()))
 /// };
 ///
 /// let hide_dialog = {
