@@ -73,7 +73,7 @@ pub struct DialogProperties {
 /// };
 ///
 /// <button onclick={open_dialog}>{"Open dialog"}</button>
-/// <Dialog {dialog_ref}>
+/// <Dialog {dialog_ref} on_close={Callback::noop()}>
 ///     <DialogHeader>
 ///         <DialogTitle>{ "..." }</DialogTitle>
 ///     </DialogHeader>
@@ -89,8 +89,9 @@ pub struct DialogProperties {
 ///
 /// Note:
 /// - `dialog_ref` is passed to Modal to control it
-/// - `close_dialog` is actually the re-export of `close_modal`
-/// - `open_dialog` is actually the re-export of `open_modal`
+/// - `close_dialog` is the re-export of `close_modal`
+/// - `hide_dialog` is the re-export of `hide_modal`
+/// - `open_dialog` is the re-export of `open_modal`
 #[derive(Debug)]
 pub struct Dialog;
 
