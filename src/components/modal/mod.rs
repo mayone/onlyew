@@ -175,14 +175,10 @@ impl Component for Modal {
         let Self::Properties { on_close, .. } = ctx.props();
 
         if first_render {
-            log::info!("adding event listener");
             if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
                 let on_cancel = {
                     let on_close = on_close.clone();
-                    Callback::from(move |_: Event| {
-                        log::info!("canceled");
-                        on_close.emit(());
-                    })
+                    Callback::from(move |_: Event| on_close.emit(()))
                 };
 
                 let listener =
@@ -194,7 +190,6 @@ impl Component for Modal {
     }
 
     fn destroy(&mut self, _ctx: &yew::Context<Self>) {
-        log::warn!("destroy invoked");
         self.cancel_listener = None;
     }
 }
