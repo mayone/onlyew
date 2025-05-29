@@ -11,7 +11,9 @@ pub use dialog_title::DialogTitle;
 use yew::prelude::*;
 
 use crate::components::Modal;
-pub use crate::components::{close_modal as close_dialog, open_modal as open_dialog};
+pub use crate::components::{
+    close_modal as close_dialog, hide_modal as hide_dialog, open_modal as open_dialog,
+};
 
 /// The Dialog component has the following props:
 ///
@@ -29,7 +31,7 @@ pub use crate::components::{close_modal as close_dialog, open_modal as open_dial
 ///
 /// Event handlers:
 ///
-/// - `on_esc`: Callback function, called when the Dialog is closed by ESC key or by clicking the backdrop.
+/// - `on_close`: Callback function, called when the Dialog is closed.
 #[derive(Debug, PartialEq, Properties)]
 pub struct DialogProperties {
     pub children: Children,
@@ -41,7 +43,7 @@ pub struct DialogProperties {
     #[prop_or_default]
     pub style: Option<AttrValue>,
     #[prop_or_default]
-    pub on_esc: Callback<()>,
+    pub on_close: Callback<()>,
 }
 
 /// A container component to display content in a Dialog.
@@ -55,14 +57,19 @@ pub struct DialogProperties {
 ///
 /// let dialog_ref: NodeRef = NodeRef::default();
 ///
+/// let close_dialog = {
+///     let dialog_ref = dialog_ref.clone();
+///     Callback::from(move |_| close_dialog(&dialog_ref, Callback::noop()))
+/// };
+///
+/// let hide_dialog = {
+///     let dialog_ref = dialog_ref.clone();
+///     Callback::from(move |_| hide_dialog(&dialog_ref))
+/// };
+///
 /// let open_dialog = {
 ///     let dialog_ref = dialog_ref.clone();
 ///     Callback::from(move |_| open_dialog(&dialog_ref))
-/// };
-///
-/// let close_dialog = {
-///     let dialog_ref = dialog_ref.clone();
-///     Callback::from(move |_| close_dialog(&dialog_ref))
 /// };
 ///
 /// <button onclick={open_dialog}>{"Open dialog"}</button>
@@ -102,11 +109,11 @@ impl Component for Dialog {
             default_open,
             class,
             style,
-            on_esc,
+            on_close,
         } = ctx.props();
 
         html! {
-            <Modal modal_ref={dialog_ref} {default_open} {on_esc}>
+            <Modal modal_ref={dialog_ref} {default_open} {on_close}>
                 <div
                     class={classes!("dialog",
                         class.clone()

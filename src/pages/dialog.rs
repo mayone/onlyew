@@ -13,9 +13,17 @@ macro_rules! make_open_dialog {
 }
 
 macro_rules! make_close_dialog {
+    ($dialog_ref:expr, $on_close:expr) => {{
+        let dialog_ref = $dialog_ref.clone();
+        let on_close = $on_close.clone();
+        Callback::from(move |_| close_dialog(&dialog_ref, on_close.clone()))
+    }};
+}
+
+macro_rules! make_hide_dialog {
     ($dialog_ref:expr) => {{
         let dialog_ref = $dialog_ref.clone();
-        Callback::from(move |_| close_dialog(&dialog_ref))
+        Callback::from(move |_| hide_dialog(&dialog_ref))
     }};
 }
 
@@ -25,10 +33,7 @@ pub fn dialog() -> Html {
     let form_dialog_ref: NodeRef = NodeRef::default();
 
     let open_long_dialog = make_open_dialog!(long_dialog_ref);
-    let close_long_dialog = make_close_dialog!(long_dialog_ref);
-
     let open_form_dialog = make_open_dialog!(form_dialog_ref);
-    let close_form_dialog = make_close_dialog!(form_dialog_ref);
 
     html! {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
@@ -36,8 +41,8 @@ pub fn dialog() -> Html {
             <button style="width: fit-content" onclick={open_long_dialog}>{ "Long Dialog" }</button>
             <button style="width: fit-content" onclick={open_form_dialog}>{ "Form Dialog" }</button>
             // <Link<Route> to={Route::Home}>{ "home" }</Link<Route>>
-            <LongDialog dialog_ref={long_dialog_ref} close_dialog={close_long_dialog} />
-            <FormDialog dialog_ref={form_dialog_ref} close_dialog={close_form_dialog} />
+            <LongDialog dialog_ref={long_dialog_ref} />
+            <FormDialog dialog_ref={form_dialog_ref} />
         </div>
     }
 }
@@ -45,16 +50,12 @@ pub fn dialog() -> Html {
 #[derive(Properties, PartialEq)]
 pub struct LongDialogProps {
     dialog_ref: NodeRef,
-    close_dialog: Callback<MouseEvent>,
 }
 
 #[function_component(LongDialog)]
-pub fn long_dialog(
-    LongDialogProps {
-        dialog_ref,
-        close_dialog,
-    }: &LongDialogProps,
-) -> Html {
+pub fn long_dialog(LongDialogProps { dialog_ref }: &LongDialogProps) -> Html {
+    let close_dialog = make_close_dialog!(dialog_ref, Callback::noop());
+
     html! {
         <Dialog {dialog_ref}>
             <DialogHeader>
@@ -83,16 +84,10 @@ Quisque condimentum quis sapien quis consectetur. Quisque ornare sit amet augue 
 #[derive(Properties, PartialEq)]
 pub struct FormDialogProps {
     dialog_ref: NodeRef,
-    close_dialog: Callback<MouseEvent>,
 }
 
 #[function_component(FormDialog)]
-pub fn form_dialog(
-    FormDialogProps {
-        dialog_ref,
-        close_dialog,
-    }: &FormDialogProps,
-) -> Html {
+pub fn form_dialog(FormDialogProps { dialog_ref }: &FormDialogProps) -> Html {
     let value = use_state(|| 0);
 
     let on_change = {
@@ -107,34 +102,33 @@ pub fn form_dialog(
         })
     };
 
+    let close_dialog = make_close_dialog!(dialog_ref, clear_value.clone());
+    let hide_dialog = make_hide_dialog!(dialog_ref);
+
     let handle_cancel = {
-        let clear_value = clear_value.clone();
         let close_dialog = close_dialog.clone();
         Callback::from(move |e: MouseEvent| {
-            clear_value.emit(());
             close_dialog.emit(e);
         })
     };
 
     let handle_submit = {
         let value = value.clone();
-        let clear_value = clear_value.clone();
         let close_dialog = close_dialog.clone();
         Callback::from(move |e: MouseEvent| {
             log::info!("Submit: {}", *value);
-            clear_value.emit(());
             close_dialog.emit(e);
         })
     };
 
     html! {
-        <Dialog {dialog_ref} on_esc={clear_value}>
+        <Dialog {dialog_ref} on_close={clear_value}>
             <DialogHeader>
                 <DialogTitle>{ "This is a dialog with form" }</DialogTitle>
             </DialogHeader>
             <DialogContent>
                 <Counter value={*value} {on_change} />
-                <button onclick={close_dialog.clone()}>{ "Hide" }</button>
+                <button onclick={hide_dialog.clone()}>{ "Hide" }</button>
             </DialogContent>
             <DialogFooter>
                 <button onclick={handle_cancel}>{ "Cancel" }</button>

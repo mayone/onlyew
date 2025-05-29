@@ -21,7 +21,7 @@ const MODAL_ROOT_ID: &str = "modal-root";
 ///
 /// Event handlers:
 ///
-/// - `on_esc`: Callback function, called when the Modal is closed by ESC key or by clicking the backdrop.
+/// - `on_close`: Callback function, called when the Modal is closed.
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
     pub children: Children,
@@ -29,7 +29,7 @@ pub struct ModalProperties {
     #[prop_or_default]
     pub default_open: bool,
     #[prop_or_default]
-    pub on_esc: Callback<()>,
+    pub on_close: Callback<()>,
 }
 
 #[derive(Debug)]
@@ -46,14 +46,20 @@ pub enum ModalMessage {
 ///
 /// let modal_ref: NodeRef = NodeRef::default();
 ///
-/// let open_modal = {
-///     let modal_ref = modal_ref.clone();
-///     Callback::from(move |_| open_modal(&modal_ref))
-/// };
 ///
 /// let close_modal = {
 ///     let modal_ref = modal_ref.clone();
-///     Callback::from(move |_| close_modal(&modal_ref))
+///     Callback::from(move |_| close_modal(&modal_ref, Callback::noop()))
+/// };
+///
+/// let hide_modal = {
+///     let modal_ref = modal_ref.clone();
+///     Callback::from(move |_| hide_modal(&modal_ref))
+/// };
+///
+/// let open_modal = {
+///     let modal_ref = modal_ref.clone();
+///     Callback::from(move |_| open_modal(&modal_ref))
 /// };
 ///
 /// <button onclick={open_modal}>{"Open modal"}</button>
@@ -61,6 +67,7 @@ pub enum ModalMessage {
 ///     modal_ref={modal_ref}
 ///     // Optional
 ///     default_open=false
+///     on_close={Callback::noop()}
 /// >
 ///     <h1>{ "This is a modal" }</h1>
 ///     <button onclick={close_modal}>{"Close modal"}</button>
@@ -81,7 +88,14 @@ pub struct Modal {
     cancel_listener: Option<Closure<dyn Fn(Event)>>,
 }
 
-pub fn close_modal(modal_ref: &NodeRef) {
+pub fn close_modal(modal_ref: &NodeRef, on_close: Callback<()>) {
+    if let Some(dialog) = modal_ref.cast::<HtmlDialogElement>() {
+        on_close.emit(());
+        dialog.close();
+    }
+}
+
+pub fn hide_modal(modal_ref: &NodeRef) {
     if let Some(dialog) = modal_ref.cast::<HtmlDialogElement>() {
         dialog.close();
     }
@@ -94,8 +108,8 @@ pub fn open_modal(modal_ref: &NodeRef) {
 }
 
 impl Modal {
-    fn close(&self) {
-        close_modal(&self.modal_ref);
+    fn close(&self, ctx: &Context<Self>) {
+        close_modal(&self.modal_ref, ctx.props().on_close.clone());
     }
     fn open(&self) {
         open_modal(&self.modal_ref);
@@ -124,8 +138,7 @@ impl Component for Modal {
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             ModalMessage::Close => {
-                ctx.props().on_esc.emit(());
-                self.close();
+                self.close(ctx);
                 true
             }
             ModalMessage::Open => {
@@ -162,16 +175,16 @@ impl Component for Modal {
     }
 
     fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
-        let Self::Properties { on_esc, .. } = ctx.props();
+        let Self::Properties { on_close, .. } = ctx.props();
 
         if first_render {
             log::info!("adding event listener");
             if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
                 let on_cancel = {
-                    let on_esc = on_esc.clone();
+                    let on_close = on_close.clone();
                     Callback::from(move |_: Event| {
                         log::info!("canceled");
-                        on_esc.emit(());
+                        on_close.emit(());
                     })
                 };
 
