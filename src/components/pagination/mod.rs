@@ -24,6 +24,10 @@ pub struct PaginationProperties {
     #[prop_or(1)]
     pub sibling_page_count: usize,
     #[prop_or_default]
+    pub class: Classes,
+    #[prop_or_default]
+    pub style: Option<AttrValue>,
+    #[prop_or_default]
     pub on_change: Callback<usize>,
 }
 
@@ -156,6 +160,8 @@ impl Component for Pagination {
         let Self::Properties {
             edge_page_count,
             sibling_page_count,
+            class,
+            style,
             ..
         } = ctx.props();
 
@@ -217,7 +223,7 @@ impl Component for Pagination {
         };
 
         html! {
-            <div class="pagination-container">
+            <div class={classes!("pagination-container", class.clone())} {style}>
                 <button
                     onclick={ctx.link().callback(|_| Self::Message::First)}
                     disabled={self.current_page <= 1}
