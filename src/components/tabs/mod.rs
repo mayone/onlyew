@@ -108,10 +108,11 @@ impl Component for Tabs {
             <div class="tabs-container">
                 <div class={classes!("tabs", class.clone())} {style}>
                     <div>
-                        { for children.iter().enumerate().map(|(index, child)| {
+                        { children.iter().enumerate().map(|(index, child)| {
                             let is_selected = index == self.selected_tab;
                             html! {
                                 <button
+                                    key={index}
                                     disabled={child.props.disabled}
                                     class={classes!("tab-button", is_selected.then_some("selected"))}
                                     aria-selected={is_selected.to_string()}
@@ -122,7 +123,7 @@ impl Component for Tabs {
                                     { child.props.children.clone() }
                                 </button>
                             }
-                        }) }
+                        }).collect::<Html>() }
                     </div>
                     <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
                 </div>
