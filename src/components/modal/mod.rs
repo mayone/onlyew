@@ -1,30 +1,19 @@
+//! Container based on [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) tag.
 use gloo::events::EventListener;
 use web_sys::{Element, HtmlDialogElement};
 use yew::prelude::*;
 
 const MODAL_ROOT_ID: &str = "modal-root";
 
-/// The Modal component has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside the Modal.
-/// - `modal_ref`: Node reference to the Modal, which will be used to control
-///   the state of the it.
-///
-/// Optional props:
-///
-/// - `default_open`: If enabled, the Modal will be open by default.
-///
-/// Event handlers:
-///
-/// - `on_close`: Callback function, called when the Modal is closed.
+/// Properties for the [`Modal`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct ModalProperties {
     pub children: Children,
+    /// The [`NodeRef`](yew::NodeRef) for the `<dialog>` tag.
     pub modal_ref: NodeRef,
     #[prop_or_default]
     pub default_open: bool,
+    /// Callback function, called when the Modal is closed.
     #[prop_or_default]
     pub on_close: Callback<()>,
 }
@@ -32,10 +21,9 @@ pub struct ModalProperties {
 #[derive(Debug)]
 pub enum ModalMessage {
     Close,
-    Open,
 }
 
-/// The modal component provides a solid foundation for creating dialogs, popovers, etc.
+/// A container based on [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) tag.
 ///
 /// Usage:
 /// ```ignore
@@ -72,12 +60,14 @@ pub enum ModalMessage {
 /// ```
 ///
 /// Note:
-/// 1. focus outline of `dialog` is manually removed by us.
+/// 1. focus outline of dialog is manually removed by us.
 /// 2. `modal-content` need to stay in `modal-backdrop` to be aligned by it
 ///    instead of `dialog`. Since when `default_open` is enabled, the position
-///    of the first time rendered component inside `dialog` will be off
+///    of the first time rendered component inside dialog will be off
 ///    vertically.
-/// 3. The default open `dialog` cannot be closed by ESC key.
+/// 3. The default open dialog cannot be closed by Esc key.
+/// 4. `cancel_listener` is used to monitor [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
+///    "cancel" event, required for `on_close` callback when Esc key pressed.
 #[derive(Debug)]
 pub struct Modal {
     modal_ref: NodeRef,
@@ -108,9 +98,6 @@ impl Modal {
     fn close(&self, ctx: &Context<Self>) {
         close_modal(&self.modal_ref, &ctx.props().on_close);
     }
-    fn open(&self) {
-        open_modal(&self.modal_ref);
-    }
 }
 
 impl Component for Modal {
@@ -134,10 +121,6 @@ impl Component for Modal {
         match msg {
             ModalMessage::Close => {
                 self.close(ctx);
-                true
-            }
-            ModalMessage::Open => {
-                self.open();
                 true
             }
         }
