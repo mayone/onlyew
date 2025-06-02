@@ -1,7 +1,7 @@
 .tabs-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .tabs {
@@ -14,18 +14,18 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  height: 2px;
+  height: 0.125rem;
   background-color: var(--tabs-indicator);
   transition: all 0.3s ease;
 }
 
 .tab-button {
   border: none;
-  padding: 16px 24px;
+  padding: 1rem 1.5rem;
   background-color: transparent;
   color: var(--color-60);
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
   transition: all 0.3s ease;
 
   &:hover {
@@ -48,5 +48,5 @@
 }
 
 .tabs-panel {
-  padding: 16px 24px;
+  padding: 1rem 1.5rem;
 }

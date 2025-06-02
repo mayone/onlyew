@@ -1,17 +1,17 @@
 .pagination-container {
   display: inline-flex;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .pagination-container > button {
   background-color: transparent;
   color: var(--color);
   border-color: var(--border-color);
-  border-radius: 5px;
-  border-width: 1px;
+  border-radius: 0.3125rem;
+  border-width: 0.0625rem;
   border-style: solid;
-  padding: 5px 10px;
-  font-size: 20px;
+  padding: 0.3125rem 0.625rem;
+  font-size: 1.25rem;
   transition: all 0.3s ease;
 
   &:hover {
