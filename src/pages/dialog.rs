@@ -1,8 +1,7 @@
 use yew::prelude::*;
-// use yew_router::prelude::Link;
+use yew_router::prelude::Link;
 
-// use crate::Route;
-
+use crate::Route;
 use crate::components::*;
 
 macro_rules! make_open_dialog {
@@ -38,9 +37,9 @@ pub fn dialog() -> Html {
     html! {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
             <h1>{ "Dialog Showcase" }</h1>
+            <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
             <button style="width: fit-content" onclick={open_long_dialog}>{ "Long Dialog" }</button>
             <button style="width: fit-content" onclick={open_form_dialog}>{ "Form Dialog" }</button>
-            // <Link<Route> to={Route::Home}>{ "home" }</Link<Route>>
             <LongDialog dialog_ref={long_dialog_ref} />
             <FormDialog dialog_ref={form_dialog_ref} />
         </div>

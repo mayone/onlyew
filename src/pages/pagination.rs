@@ -1,5 +1,7 @@
-use crate::components::Pagination;
 use yew::prelude::*;
+use yew_router::prelude::Link;
+
+use crate::{components::Pagination, route::Route};
 
 #[function_component(PaginationPage)]
 pub fn pagination() -> Html {
@@ -9,9 +11,11 @@ pub fn pagination() -> Html {
         let current_page = current_page.clone();
         Callback::from(move |page: usize| current_page.set(page))
     };
+
     html! {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
             <h1>{ "Pagination Showcase" }</h1>
+            <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
             <div style="display: flex; flex-direction: column; gap: 20px">
                 <Pagination total_pages=0 />
                 <Pagination total_pages=1 />
