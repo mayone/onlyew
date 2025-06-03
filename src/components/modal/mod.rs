@@ -1,5 +1,4 @@
 //! Container based on [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) tag.
-use gloo::events::EventListener;
 use web_sys::{Element, HtmlDialogElement};
 use yew::prelude::*;
 
@@ -66,13 +65,12 @@ pub enum ModalMessage {
 ///    of the first time rendered component inside dialog will be off
 ///    vertically.
 /// 3. The default open dialog cannot be closed by Esc key.
-/// 4. `cancel_listener` is used to monitor [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
+/// 4. `oncancel` is for [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
 ///    "cancel" event, required for `on_close` callback when Esc key pressed.
 #[derive(Debug)]
 pub struct Modal {
     modal_ref: NodeRef,
     modal_root: Element,
-    cancel_listener: Option<EventListener>,
 }
 
 pub fn close_modal(modal_ref: &NodeRef, on_close: &Callback<()>) {
@@ -113,7 +111,6 @@ impl Component for Modal {
         Self {
             modal_ref,
             modal_root,
-            cancel_listener: None,
         }
     }
 
@@ -130,11 +127,20 @@ impl Component for Modal {
         let Self::Properties {
             children,
             default_open,
+            on_close,
             ..
         } = ctx.props();
 
         let content = html! {
-            <dialog class="modal" ref={self.modal_ref.clone()} open={*default_open}>
+            <dialog
+                class="modal"
+                ref={self.modal_ref.clone()}
+                open={*default_open}
+                oncancel={{
+                    let on_close = on_close.clone();
+                    Callback::from(move |_: Event| on_close.emit(()))
+                }}
+            >
                 <div
                     class={classes!("modal-backdrop")}
                     onclick={ctx.link().callback(move |_| Self::Message::Close)}
@@ -150,28 +156,6 @@ impl Component for Modal {
         };
 
         create_portal(content, self.modal_root.clone())
-    }
-
-    fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
-        let Self::Properties { on_close, .. } = ctx.props();
-
-        if first_render {
-            if let Some(dialog) = self.modal_ref.cast::<HtmlDialogElement>() {
-                let on_cancel = {
-                    let on_close = on_close.clone();
-                    Callback::from(move |_: Event| on_close.emit(()))
-                };
-
-                let listener =
-                    EventListener::new(&dialog, "cancel", move |e| on_cancel.emit(e.clone()));
-
-                self.cancel_listener = Some(listener);
-            }
-        }
-    }
-
-    fn destroy(&mut self, _ctx: &yew::Context<Self>) {
-        self.cancel_listener = None;
     }
 }
 
