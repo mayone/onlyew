@@ -1,14 +1,21 @@
-use web_sys::HtmlElement;
+use std::rc::Rc;
+
 use yew::prelude::*;
 
 mod tab;
+mod tab_list;
+mod tab_panel;
+
 pub use tab::Tab;
+pub use tab_list::TabList;
+pub use tab_panel::TabPanel;
 
 /// Properties for the [`Tabs`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabsProperties {
     #[prop_or_default]
-    pub children: ChildrenWithProps<Tab>,
+    pub children: Children,
+    pub tab_list: ChildrenWithProps<TabList>,
     /// The index of the default tab to be selected.
     #[prop_or_default]
     pub default_tab: Option<usize>,
@@ -44,9 +51,7 @@ pub enum TabsMessage {
 /// ```
 #[derive(Debug)]
 pub struct Tabs {
-    indicator_ref: NodeRef,
     selected_tab: usize,
-    tab_refs: Vec<NodeRef>,
 }
 
 impl Component for Tabs {
@@ -55,18 +60,8 @@ impl Component for Tabs {
 
     fn create(ctx: &Context<Self>) -> Self {
         let selected_tab = ctx.props().default_tab.unwrap_or(0);
-        let tab_refs = ctx
-            .props()
-            .children
-            .iter()
-            .map(|_| NodeRef::default())
-            .collect::<Vec<_>>();
 
-        Self {
-            indicator_ref: NodeRef::default(),
-            selected_tab,
-            tab_refs,
-        }
+        Self { selected_tab }
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
@@ -85,55 +80,33 @@ impl Component for Tabs {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let Self::Properties {
+            tab_list,
             children,
             class,
             style,
             ..
         } = ctx.props();
-        let on_select = ctx.link().callback(TabsMessage::Select);
+
+        let tab_list = tab_list.iter().map(|mut tab_list| {
+            let on_select = ctx.link().callback(TabsMessage::Select);
+            let props = Rc::make_mut(&mut tab_list.props);
+            props.selected_tab = self.selected_tab;
+            props.on_select = on_select;
+
+            tab_list
+        });
+
+        let children = children
+            .iter()
+            .enumerate()
+            .filter(|(index, _)| *index == self.selected_tab)
+            .map(|(_, child)| child);
 
         html! {
-            <div class="tabs-container">
-                <div class={classes!("tabs", class.clone())} {style}>
-                    <div>
-                        { children.iter().enumerate().map(|(index, child)| {
-                            let is_selected = index == self.selected_tab;
-                            html! {
-                                <button
-                                    key={index}
-                                    disabled={child.props.disabled}
-                                    class={classes!("tab-button", is_selected.then_some("selected"))}
-                                    aria-selected={is_selected.to_string()}
-                                    ref={self.tab_refs[index].clone()}
-                                    onclick={let on_select = on_select.clone();
-                                        Callback::from(move |_| on_select.emit(index))}
-                                >
-                                    { child.props.children.clone() }
-                                </button>
-                            }
-                        }).collect::<Html>() }
-                    </div>
-                    <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
-                </div>
-                <div class="tabs-panel">
-                    { children.iter().enumerate().find(|(index, _)| *index == self.selected_tab)
-                    .map(|(_, child)| child.props.panel.clone())
-                        .unwrap_or_default() }
-                </div>
+            <div class={classes!("tabs", class.clone())} {style}>
+                { for tab_list }
+                { for children }
             </div>
-        }
-    }
-
-    fn rendered(&mut self, _ctx: &Context<Self>, _first_render: bool) {
-        let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
-
-        if let Some(tab) = self.tab_refs[self.selected_tab].cast::<HtmlElement>() {
-            let indicator_style = format!(
-                "width: {}px; transform: translateX({}px)",
-                tab.client_width(),
-                tab.offset_left(),
-            );
-            let _ = indicator.set_attribute("style", &indicator_style);
         }
     }
 }
@@ -145,10 +118,14 @@ mod tests {
     #[test]
     fn test_render_tabs() {
         let _ = html! {
-            <Tabs>
-                <Tab panel={html!{<div>{"Panel 1"}</div>}}>{ "Tab 1" }</Tab>
-                <Tab panel={html!{<div>{"Panel 2"}</div>}}>{ "Tab 2" }</Tab>
-            </Tabs>
+            <Tabs
+                tab_list={html_nested!{
+                    <TabList>
+                        <Tab>{ "Tab 1" }</Tab>
+                        <Tab>{ "Tab 2" }</Tab>
+                    </TabList>
+                }}
+            />
         };
     }
 }

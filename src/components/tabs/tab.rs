@@ -1,28 +1,24 @@
 use yew::prelude::*;
 
-/// The Tab component has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside the tab button.
-/// - `panel`: The content to be rendered in the panel when this tab is selected.
-///
-/// Optional props:
-///
-/// - `disabled`: Whether the tab is disabled.
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
-#[derive(Debug, PartialEq, Properties)]
+/// Properties for the [`Tab`].
+#[derive(Clone, Debug, PartialEq, Properties)]
 pub struct TabProperties {
     #[prop_or_default]
+    pub node_ref: NodeRef,
+    #[prop_or_default]
     pub children: Children,
-    pub panel: Html,
+    #[prop_or_default]
+    pub value: AttrValue,
     #[prop_or_default]
     pub disabled: bool,
+    #[prop_or_default]
+    pub is_selected: bool,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
+    #[prop_or_default]
+    pub on_click: Callback<AttrValue>,
 }
 
 /// A component to represent a single tab in a Tabs component.
@@ -53,17 +49,29 @@ impl Component for Tab {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let Self::Properties {
+            node_ref,
             children,
+            value,
             disabled,
+            is_selected,
             class,
             style,
+            on_click,
             ..
         } = ctx.props();
 
         html! {
-            <div class={classes!("tab", class.clone(), disabled.then_some("disabled"))} {style}>
+            <button
+                ref={node_ref}
+                disabled={*disabled}
+                class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
+                {style}
+                onclick={let on_click = on_click.clone();
+                    let value = value.clone();
+                    Callback::from(move |_| on_click.emit(value.clone()))}
+            >
                 { children.clone() }
-            </div>
+            </button>
         }
     }
 }
