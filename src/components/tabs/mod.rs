@@ -4,31 +4,19 @@ use yew::prelude::*;
 mod tab;
 pub use tab::Tab;
 
-/// The Tabs component has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children (tabs) to be rendered inside the Tabs.
-///
-/// Optional props:
-///
-/// - `default_tab`: The index of the default tab to be selected.
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
-///
-/// Event handlers:
-///
-/// - `on_change`: A callback function that is called when the selected tab changes.
+/// Properties for the [`Tabs`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabsProperties {
     #[prop_or_default]
     pub children: ChildrenWithProps<Tab>,
+    /// The index of the default tab to be selected.
     #[prop_or_default]
     pub default_tab: Option<usize>,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
+    /// A callback function that is called when the selected tab changes.
     #[prop_or_default]
     pub on_change: Callback<usize>,
 }
