@@ -10,7 +10,7 @@ pub struct TabPanelProperties {
     #[prop_or_default]
     pub style: Option<AttrValue>,
     #[prop_or_default]
-    pub value: Option<usize>,
+    pub value: Option<AttrValue>,
 }
 
 /// A component to display the selected tab's content.

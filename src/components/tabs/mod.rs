@@ -18,19 +18,19 @@ pub struct TabsProperties {
     pub tab_list: ChildrenWithProps<TabList>,
     /// The index of the default tab to be selected.
     #[prop_or_default]
-    pub default_tab: Option<usize>,
+    pub default_tab: Option<AttrValue>,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
     /// A callback function that is called when the selected tab changes.
     #[prop_or_default]
-    pub on_change: Callback<usize>,
+    pub on_change: Callback<AttrValue>,
 }
 
 #[derive(Debug)]
 pub enum TabsMessage {
-    Select(usize),
+    Select(AttrValue),
 }
 
 /// A component to display tabs.
@@ -51,7 +51,7 @@ pub enum TabsMessage {
 /// ```
 #[derive(Debug)]
 pub struct Tabs {
-    selected_tab: usize,
+    selected_tab: AttrValue,
 }
 
 impl Component for Tabs {
@@ -59,7 +59,7 @@ impl Component for Tabs {
     type Properties = TabsProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let selected_tab = ctx.props().default_tab.unwrap_or(0);
+        let selected_tab = ctx.props().default_tab.clone().unwrap_or("0".into());
 
         Self { selected_tab }
     }
@@ -68,7 +68,7 @@ impl Component for Tabs {
         match msg {
             TabsMessage::Select(value) => {
                 if self.selected_tab != value {
-                    self.selected_tab = value;
+                    self.selected_tab = value.clone();
                     ctx.props().on_change.emit(value);
                     true
                 } else {
@@ -90,7 +90,7 @@ impl Component for Tabs {
         let tab_list = tab_list.iter().map(|mut tab_list| {
             let on_select = ctx.link().callback(TabsMessage::Select);
             let props = Rc::make_mut(&mut tab_list.props);
-            props.selected_tab = self.selected_tab;
+            props.selected_tab = self.selected_tab.clone();
             props.on_select = on_select;
 
             tab_list
@@ -99,7 +99,14 @@ impl Component for Tabs {
         let children = children
             .iter()
             .enumerate()
-            .filter(|(index, child)| child.props.value.unwrap_or(*index) == self.selected_tab)
+            .filter(|(index, child)| {
+                child
+                    .props
+                    .value
+                    .clone()
+                    .unwrap_or(index.to_string().into())
+                    == self.selected_tab
+            })
             .map(|(_, child)| child);
 
         html! {

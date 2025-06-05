@@ -17,10 +17,10 @@ pub struct TabListProperties {
     #[prop_or_default]
     pub style: Option<AttrValue>,
     #[prop_or_default]
-    pub selected_tab: usize,
+    pub selected_tab: AttrValue,
     /// A callback function that is called when the selected tab changes.
     #[prop_or_default]
-    pub on_select: Callback<usize>,
+    pub on_select: Callback<AttrValue>,
 }
 
 /// A component to contain a list of tabs.
@@ -52,7 +52,12 @@ impl Component for TabList {
             .enumerate()
             .map(|(index, child)| {
                 let mut hasher = DefaultHasher::new();
-                child.props.value.unwrap_or(index).hash(&mut hasher);
+                child
+                    .props
+                    .value
+                    .clone()
+                    .unwrap_or(index.to_string().into())
+                    .hash(&mut hasher);
                 let id = hasher.finish();
 
                 (id, NodeRef::default())
@@ -77,11 +82,11 @@ impl Component for TabList {
         let children = children.iter().enumerate().map(|(index, mut child)| {
             let props = Rc::make_mut(&mut child.props);
             let mut hasher = DefaultHasher::new();
-            let value = props.value.unwrap_or(index);
+            let value = props.value.clone().unwrap_or(index.to_string().into());
             value.hash(&mut hasher);
             let id = hasher.finish();
             props.node_ref = self.tab_refs[&id].clone();
-            props.value = Some(value);
+            props.value = Some(value.clone());
             props.is_selected = value == *selected_tab;
             props.on_click = {
                 let on_select = on_select.clone();
@@ -101,8 +106,7 @@ impl Component for TabList {
 
     fn rendered(&mut self, ctx: &Context<Self>, _first_render: bool) {
         let mut hasher = DefaultHasher::new();
-        let selected_tab = ctx.props().selected_tab;
-        selected_tab.hash(&mut hasher);
+        ctx.props().selected_tab.hash(&mut hasher);
         let id = hasher.finish();
         let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
 
