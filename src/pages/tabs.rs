@@ -16,7 +16,7 @@ pub fn tabs() -> Html {
                 <Tabs
                     tab_list={html_nested!{<TabList>
                         <Tab>{ "Dandelion" }</Tab>
-                        <Tab>{ "Heather" }</Tab>
+                        <Tab value={723}>{ "Heather" }</Tab>
                         <Tab>{ "Lavender" }</Tab>
                         <Tab>{ "Lilac" }</Tab>
                         <Tab>{ "Marigold" }</Tab>
@@ -25,13 +25,13 @@ pub fn tabs() -> Html {
                         <Tab disabled=true>{ "Poppy" }</Tab>
                         <Tab>{ "Rose" }</Tab>
                     </TabList>}}
-                    default_tab=1
-                    on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}
+                    default_tab=723
+                    on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}
                 >
                     <TabPanel>
                         <div>{ "Dandelion" }</div>
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel value=723>
                         <div>{ "Heather" }</div>
                     </TabPanel>
                     <TabPanel>
@@ -49,12 +49,12 @@ pub fn tabs() -> Html {
                     <TabPanel>
                         <div>{ "Orchid" }</div>
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel value=723>
                         <div>{ "Poppy" }</div>
                     </TabPanel>
-                    <TabPanel>
-                        <div>{ "Rose" }</div>
-                    </TabPanel>
+                    // <TabPanel>
+                    //     <div>{ "Rose" }</div>
+                    // </TabPanel>
                 </Tabs>
             </div>
         </div>

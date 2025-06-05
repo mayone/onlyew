@@ -1,4 +1,8 @@
-use std::rc::Rc;
+use std::{
+    collections::HashMap,
+    hash::{DefaultHasher, Hash, Hasher},
+    rc::Rc,
+};
 
 use super::Tab;
 use web_sys::HtmlElement;
@@ -33,7 +37,7 @@ pub struct TabListProperties {
 #[derive(Debug)]
 pub struct TabList {
     indicator_ref: NodeRef,
-    tab_refs: Vec<NodeRef>,
+    tab_refs: HashMap<u64, NodeRef>,
 }
 
 impl Component for TabList {
@@ -45,8 +49,15 @@ impl Component for TabList {
             .props()
             .children
             .iter()
-            .map(|_| NodeRef::default())
-            .collect::<Vec<_>>();
+            .enumerate()
+            .map(|(index, child)| {
+                let mut hasher = DefaultHasher::new();
+                child.props.value.unwrap_or(index).hash(&mut hasher);
+                let id = hasher.finish();
+
+                (id, NodeRef::default())
+            })
+            .collect::<HashMap<_, _>>();
 
         Self {
             indicator_ref: NodeRef::default(),
@@ -65,12 +76,16 @@ impl Component for TabList {
 
         let children = children.iter().enumerate().map(|(index, mut child)| {
             let props = Rc::make_mut(&mut child.props);
-            props.node_ref = self.tab_refs[index].clone();
-            props.value = format!("{}", index).into();
-            props.is_selected = index == *selected_tab;
+            let mut hasher = DefaultHasher::new();
+            let value = props.value.unwrap_or(index);
+            value.hash(&mut hasher);
+            let id = hasher.finish();
+            props.node_ref = self.tab_refs[&id].clone();
+            props.value = Some(value);
+            props.is_selected = value == *selected_tab;
             props.on_click = {
                 let on_select = on_select.clone();
-                Callback::from(move |_| on_select.emit(index))
+                Callback::from(move |value| on_select.emit(value))
             };
 
             child
@@ -85,10 +100,17 @@ impl Component for TabList {
     }
 
     fn rendered(&mut self, ctx: &Context<Self>, _first_render: bool) {
+        let mut hasher = DefaultHasher::new();
         let selected_tab = ctx.props().selected_tab;
+        selected_tab.hash(&mut hasher);
+        let id = hasher.finish();
         let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
 
-        if let Some(tab) = self.tab_refs[selected_tab].cast::<HtmlElement>() {
+        if let Some(tab) = self
+            .tab_refs
+            .get(&id)
+            .and_then(|tab| tab.cast::<HtmlElement>())
+        {
             let indicator_style = format!(
                 "width: {}px; transform: translateX({}px)",
                 tab.client_width(),

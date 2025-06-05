@@ -8,7 +8,7 @@ pub struct TabProperties {
     #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
-    pub value: AttrValue,
+    pub value: Option<usize>,
     #[prop_or_default]
     pub disabled: bool,
     #[prop_or_default]
@@ -18,7 +18,7 @@ pub struct TabProperties {
     #[prop_or_default]
     pub style: Option<AttrValue>,
     #[prop_or_default]
-    pub on_click: Callback<AttrValue>,
+    pub on_click: Callback<usize>,
 }
 
 /// A component to represent a single tab in a Tabs component.
@@ -68,7 +68,7 @@ impl Component for Tab {
                 {style}
                 onclick={let on_click = on_click.clone();
                     let value = value.clone();
-                    Callback::from(move |_| on_click.emit(value.clone()))}
+                    Callback::from(move |_| on_click.emit(value.unwrap().clone()))}
             >
                 { children.clone() }
             </button>

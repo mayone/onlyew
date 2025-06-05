@@ -14,7 +14,7 @@ pub use tab_panel::TabPanel;
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabsProperties {
     #[prop_or_default]
-    pub children: Children,
+    pub children: ChildrenWithProps<TabPanel>,
     pub tab_list: ChildrenWithProps<TabList>,
     /// The index of the default tab to be selected.
     #[prop_or_default]
@@ -66,10 +66,10 @@ impl Component for Tabs {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            TabsMessage::Select(index) => {
-                if self.selected_tab != index {
-                    self.selected_tab = index;
-                    ctx.props().on_change.emit(index);
+            TabsMessage::Select(value) => {
+                if self.selected_tab != value {
+                    self.selected_tab = value;
+                    ctx.props().on_change.emit(value);
                     true
                 } else {
                     false
@@ -99,13 +99,13 @@ impl Component for Tabs {
         let children = children
             .iter()
             .enumerate()
-            .filter(|(index, _)| *index == self.selected_tab)
+            .filter(|(index, child)| child.props.value.unwrap_or(*index) == self.selected_tab)
             .map(|(_, child)| child);
 
         html! {
             <div class={classes!("tabs", class.clone())} {style}>
-                { for tab_list }
-                { for children }
+                { tab_list.collect::<Html>() }
+                { children.collect::<Html>() }
             </div>
         }
     }
