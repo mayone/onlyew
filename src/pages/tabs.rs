@@ -14,7 +14,10 @@ pub fn tabs() -> Html {
             <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
             <div style="display: flex; flex-direction: column; gap: 20px">
                 <Tabs
-                    tab_list={html_nested!{<TabList>
+                    default_tab="723"
+                    on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}
+                >
+                    <TabList>
                         <Tab>{ "Dandelion" }</Tab>
                         <Tab value="723">{ "Heather" }</Tab>
                         <Tab>{ "Lavender" }</Tab>
@@ -24,10 +27,7 @@ pub fn tabs() -> Html {
                         <Tab>{ "Orchid" }</Tab>
                         <Tab disabled=true>{ "Poppy" }</Tab>
                         <Tab>{ "Rose" }</Tab>
-                    </TabList>}}
-                    default_tab="723"
-                    on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}
-                >
+                    </TabList>
                     <TabPanel>
                         <div>{ "Dandelion" }</div>
                     </TabPanel>

@@ -1,4 +1,7 @@
-use std::rc::Rc;
+use std::{
+    any::{Any, TypeId},
+    rc::Rc,
+};
 
 use yew::prelude::*;
 
@@ -10,12 +13,13 @@ pub use tab::Tab;
 pub use tab_list::TabList;
 pub use tab_panel::TabPanel;
 
+// use crate::contexts::TabsContext;
+
 /// Properties for the [`Tabs`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabsProperties {
     #[prop_or_default]
-    pub children: ChildrenWithProps<TabPanel>,
-    pub tab_list: ChildrenWithProps<TabList>,
+    pub children: Children,
     /// The index of the default tab to be selected.
     #[prop_or_default]
     pub default_tab: Option<AttrValue>,
@@ -80,24 +84,32 @@ impl Component for Tabs {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let Self::Properties {
-            tab_list,
             children,
             class,
             style,
             ..
         } = ctx.props();
 
-        let tab_list = tab_list.iter().map(|mut tab_list| {
-            let on_select = ctx.link().callback(TabsMessage::Select);
-            let props = Rc::make_mut(&mut tab_list.props);
-            props.selected_tab = self.selected_tab.clone();
-            props.on_select = on_select;
+        // let (tabs_ctx, _) = ctx
+        //     .link()
+        //     .context::<TabsContext>(Callback::noop())
+        //     .expect("No tabs context provided");
 
-            tab_list
-        });
+        let tab_list = children
+            .iter()
+            .filter(|child| child.type_id() == TypeId::of::<TabList>())
+            .map(|mut tab_list| {
+                let on_select = ctx.link().callback(TabsMessage::Select);
+                let props = Rc::make_mut(&mut tab_list.props);
+                props.selected_tab = self.selected_tab.clone();
+                props.on_select = on_select;
+
+                tab_list
+            });
 
         let children = children
             .iter()
+            .filter(|child| child.type_id() == TypeId::of::<Tab>())
             .enumerate()
             .filter(|(index, child)| {
                 child
@@ -125,14 +137,18 @@ mod tests {
     #[test]
     fn test_render_tabs() {
         let _ = html! {
-            <Tabs
-                tab_list={html_nested!{
-                    <TabList>
-                        <Tab>{ "Tab 1" }</Tab>
-                        <Tab>{ "Tab 2" }</Tab>
-                    </TabList>
-                }}
-            />
+            <Tabs>
+                <TabList>
+                    <Tab>{ "Tab 1" }</Tab>
+                    <Tab>{ "Tab 2" }</Tab>
+                </TabList>
+                <TabPanel>
+                    <div>{ "TabPanel 1" }</div>
+                </TabPanel>
+                <TabPanel>
+                    <div>{ "TabPanel 2" }</div>
+                </TabPanel>
+            </Tabs>
         };
     }
 }

@@ -24,6 +24,8 @@ impl Reducible for Tabs {
     }
 }
 
+pub type TabsContext = UseReducerHandle<Tabs>;
+
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabsProviderProperties {
     #[prop_or_default]
@@ -37,7 +39,7 @@ pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
     });
 
     html! {
-        <ContextProvider<TabsContext> context={()}>
+        <ContextProvider<TabsContext> context={tabs}>
             { props.children.clone() }
         </ContextProvider<TabsContext>>
     }
