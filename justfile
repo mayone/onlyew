@@ -7,7 +7,7 @@ _default:
 
 # Run the server
 run:
-    trunk serve
+    trunk serve --open
 
 # Run the tests
 test:
