@@ -8,9 +8,7 @@ pub use tab::Tab;
 pub use tab_list::TabList;
 pub use tab_panel::TabPanel;
 
-use crate::contexts::{TabsAction, TabsContext, TabsProvider};
-
-// use crate::contexts::TabsContext;
+use crate::contexts::TabsProvider;
 
 /// Properties for the [`Tabs`].
 #[derive(Debug, PartialEq, Properties)]
@@ -27,11 +25,6 @@ pub struct TabsProperties {
     /// A callback function that is called when the selected tab changes.
     #[prop_or_default]
     pub on_change: Callback<AttrValue>,
-}
-
-#[derive(Debug)]
-pub enum TabsMessage {
-    Select(AttrValue),
 }
 
 /// A component to display tabs.
@@ -51,49 +44,27 @@ pub enum TabsMessage {
 /// }
 /// ```
 #[derive(Debug)]
-pub struct Tabs {
-    // selected_tab: AttrValue,
-}
+pub struct Tabs;
 
 impl Component for Tabs {
-    type Message = TabsMessage;
+    type Message = ();
     type Properties = TabsProperties;
 
-    fn create(ctx: &Context<Self>) -> Self {
-        // let selected_tab = ctx.props().default_tab.clone().unwrap_or("0".into());
-        // let (tabs_context, _) = ctx
-        //     .link()
-        //     .context::<TabsContext>(Callback::noop())
-        //     .expect("No tabs context provided");
-        // tabs_context.dispatch(TabsAction::Select(selected_tab));
-
-        Self {}
+    fn create(_ctx: &Context<Self>) -> Self {
+        Self
     }
-
-    // fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
-    //     match msg {
-    //         TabsMessage::Select(value) => {
-    //             if self.selected_tab != value {
-    //                 self.selected_tab = value.clone();
-    //                 ctx.props().on_change.emit(value);
-    //                 true
-    //             } else {
-    //                 false
-    //             }
-    //         }
-    //     }
-    // }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let Self::Properties {
             children,
+            default_tab,
             class,
             style,
             ..
         } = ctx.props();
 
         html! {
-            <TabsProvider>
+            <TabsProvider default_tab={default_tab.clone()}>
                 <div class={classes!("tabs", class.clone())} {style}>{ children.clone() }</div>
             </TabsProvider>
         }

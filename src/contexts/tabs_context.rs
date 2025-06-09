@@ -33,12 +33,15 @@ pub type TabsContext = UseReducerHandle<Tabs>;
 pub struct TabsProviderProperties {
     #[prop_or_default]
     pub children: Children,
+    #[prop_or_default]
+    pub default_tab: Option<AttrValue>,
 }
 
 #[function_component]
 pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
+    let default_tab = props.default_tab.clone().unwrap_or("0".into());
     let tabs = use_reducer(|| Tabs {
-        selected_tab: "0".into(),
+        selected_tab: default_tab,
     });
 
     html! {
