@@ -17,12 +17,9 @@ impl Reducible for Tabs {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
-            Self::Action::Select(value) => {
-                log::info!("value {}", value);
-                Rc::new(Self {
-                    selected_tab: value,
-                })
-            }
+            Self::Action::Select(value) => Rc::new(Self {
+                selected_tab: value,
+            }),
         }
     }
 }

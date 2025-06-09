@@ -18,8 +18,6 @@ pub struct TabListProperties {
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
-    #[prop_or_default]
-    pub selected_tab: AttrValue,
     /// A callback function that is called when the selected tab changes.
     #[prop_or_default]
     pub on_select: Callback<AttrValue>,
@@ -114,7 +112,7 @@ impl Component for TabList {
             let id = hasher.finish();
             props.node_ref = self.tab_refs[&id].clone();
             props.value = Some(value.clone());
-            // props.is_selected = value == *tabs_context.selected_tab;
+            props.is_selected = value == *tabs_context.selected_tab;
             props.on_click = {
                 ctx.link()
                     .callback(move |value: AttrValue| Self::Message::Select(value.clone()))

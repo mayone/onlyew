@@ -13,8 +13,8 @@ pub struct TabProperties {
     pub value: Option<AttrValue>,
     #[prop_or_default]
     pub disabled: bool,
-    // #[prop_or_default]
-    // pub is_selected: bool,
+    #[prop_or_default]
+    pub is_selected: bool,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
@@ -76,16 +76,16 @@ impl Component for Tab {
             children,
             value,
             disabled,
-            // is_selected,
+            is_selected,
             class,
             style,
             on_click,
             ..
         } = ctx.props();
 
-        let is_selected = tabs_context.selected_tab == value.clone().unwrap_or("".into());
+        // let is_selected = tabs_context.selected_tab == value.clone().unwrap_or("".into());
 
-        log::info!("selected {}", tabs_context.selected_tab);
+        log::info!("tab selected {}", tabs_context.selected_tab);
 
         html! {
             <button
