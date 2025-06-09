@@ -4,6 +4,8 @@ use std::{
     rc::Rc,
 };
 
+use crate::contexts::{TabsAction, TabsContext, tabs_context};
+
 use super::Tab;
 use web_sys::HtmlElement;
 use yew::prelude::*;
@@ -21,6 +23,11 @@ pub struct TabListProperties {
     /// A callback function that is called when the selected tab changes.
     #[prop_or_default]
     pub on_select: Callback<AttrValue>,
+}
+
+#[derive(Debug)]
+pub enum TabListMessage {
+    Select(AttrValue),
 }
 
 /// A component to contain a list of tabs.
@@ -41,7 +48,7 @@ pub struct TabList {
 }
 
 impl Component for TabList {
-    type Message = ();
+    type Message = TabListMessage;
     type Properties = TabListProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
@@ -70,13 +77,33 @@ impl Component for TabList {
         }
     }
 
+    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+        match msg {
+            TabListMessage::Select(value) => {
+                let (tabs_context, _) = ctx
+                    .link()
+                    .context::<TabsContext>(Callback::noop())
+                    .expect("No tabs context provided");
+
+                tabs_context.dispatch(TabsAction::Select(value));
+            }
+        }
+
+        true
+    }
+
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let (tabs_context, _) = ctx
+            .link()
+            .context::<TabsContext>(Callback::noop())
+            .expect("No tabs context provided");
+
         let TabListProperties {
             children,
             class,
             style,
-            selected_tab,
             on_select,
+            ..
         } = ctx.props();
 
         let children = children.iter().enumerate().map(|(index, mut child)| {
@@ -87,10 +114,10 @@ impl Component for TabList {
             let id = hasher.finish();
             props.node_ref = self.tab_refs[&id].clone();
             props.value = Some(value.clone());
-            props.is_selected = value == *selected_tab;
+            // props.is_selected = value == *tabs_context.selected_tab;
             props.on_click = {
-                let on_select = on_select.clone();
-                Callback::from(move |value| on_select.emit(value))
+                ctx.link()
+                    .callback(move |value: AttrValue| Self::Message::Select(value.clone()))
             };
 
             child
@@ -98,15 +125,22 @@ impl Component for TabList {
 
         html! {
             <div class={classes!("tab-list", class.clone())} {style}>
-                { for children }
+                { children.collect::<Html>() }
                 <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
             </div>
         }
     }
 
     fn rendered(&mut self, ctx: &Context<Self>, _first_render: bool) {
+        let (tabs_context, _) = ctx
+            .link()
+            .context::<TabsContext>(Callback::noop())
+            .expect("No tabs context provided");
+
+        let selected = tabs_context.selected_tab.clone();
+
         let mut hasher = DefaultHasher::new();
-        ctx.props().selected_tab.hash(&mut hasher);
+        selected.hash(&mut hasher);
         let id = hasher.finish();
         let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
 
