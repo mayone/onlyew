@@ -7,12 +7,16 @@ use crate::contexts::TabsContext;
 pub struct TabPanelProperties {
     #[prop_or_default]
     pub children: Children,
+    pub value: AttrValue,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
-    #[prop_or_default]
-    pub value: Option<AttrValue>,
+}
+
+#[derive(Debug)]
+pub enum TabPanelMessage {
+    ContextUpdated(TabsContext),
 }
 
 /// A component to display the selected tab's content.
@@ -27,22 +31,37 @@ pub struct TabPanelProperties {
 /// }
 /// ```
 #[derive(Debug)]
-pub struct TabPanel;
+pub struct TabPanel {
+    tabs_context: TabsContext,
+    _ctx_handle: ContextHandle<TabsContext>,
+}
 
 impl Component for TabPanel {
-    type Message = ();
+    type Message = TabPanelMessage;
     type Properties = TabPanelProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
-        Self
+        let (tabs_context, ctx_handle) = ctx
+            .link()
+            .context::<TabsContext>(ctx.link().callback(Self::Message::ContextUpdated))
+            .expect("No tabs context provided");
+
+        Self {
+            tabs_context,
+            _ctx_handle: ctx_handle,
+        }
+    }
+
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+        match msg {
+            Self::Message::ContextUpdated(new_ctx) => {
+                self.tabs_context = new_ctx;
+                true
+            }
+        }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let (tabs_context, _) = ctx
-            .link()
-            .context::<TabsContext>(Callback::noop())
-            .expect("No tabs context provided");
-
         let TabPanelProperties {
             children,
             class,
@@ -51,10 +70,15 @@ impl Component for TabPanel {
             ..
         } = ctx.props();
 
-        let is_selected = value.clone().unwrap_or("0".into()) == *tabs_context.selected_tab;
+        let is_selected = value.clone() == self.tabs_context.selected_tab;
 
         html! {
-            <div class={classes!("tab-panel", (!is_selected).then_some("hidden"), class.clone())} {style}>{ children.clone() }</div>
+            <div
+                class={classes!("tab-panel", (!is_selected).then_some("hidden"), class.clone())}
+                {style}
+            >
+                { children.clone() }
+            </div>
         }
     }
 }

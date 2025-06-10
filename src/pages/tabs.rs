@@ -18,43 +18,43 @@ pub fn tabs() -> Html {
                     on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}
                 >
                     <TabList>
-                        <Tab>{ "Dandelion" }</Tab>
+                        <Tab value="1">{ "Dandelion" }</Tab>
                         <Tab value="723">{ "Heather" }</Tab>
-                        <Tab>{ "Lavender" }</Tab>
-                        <Tab>{ "Lilac" }</Tab>
-                        <Tab>{ "Marigold" }</Tab>
-                        <Tab>{ "Narcissus" }</Tab>
-                        <Tab>{ "Orchid" }</Tab>
-                        <Tab disabled=true>{ "Poppy" }</Tab>
-                        <Tab>{ "Rose" }</Tab>
+                        <Tab value="3">{ "Lavender" }</Tab>
+                        <Tab value="4">{ "Lilac" }</Tab>
+                        <Tab value="5">{ "Marigold" }</Tab>
+                        <Tab value="6">{ "Narcissus" }</Tab>
+                        <Tab value="7">{ "Orchid" }</Tab>
+                        <Tab value="8" disabled=true>{ "Poppy" }</Tab>
+                        <Tab value="9">{ "Rose" }</Tab>
                     </TabList>
-                    <TabPanel>
+                    <TabPanel value="1">
                         <div>{ "Dandelion" }</div>
                     </TabPanel>
                     <TabPanel value="723">
                         <div>{ "Heather" }</div>
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel value="3">
                         <div>{ "Lavender" }</div>
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel value="4">
                         <div>{ "Lilac" }</div>
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel value="5">
                         <div>{ "Marigold" }</div>
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel value="6">
                         <div>{ "Narcissus" }</div>
                     </TabPanel>
-                    <TabPanel>
-                        <div>{ "Orchid" }</div>
-                    </TabPanel>
+                    // <TabPanel value="7">
+                    //     <div>{ "Orchid" }</div>
+                    // </TabPanel>
                     <TabPanel value="723">
                         <div>{ "Poppy" }</div>
                     </TabPanel>
-                    // <TabPanel>
-                    //     <div>{ "Rose" }</div>
-                    // </TabPanel>
+                    <TabPanel value="9">
+                        <div>{ "Rose" }</div>
+                    </TabPanel>
                 </Tabs>
             </div>
         </div>

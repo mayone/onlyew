@@ -10,11 +10,10 @@ pub struct TabProperties {
     #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
-    pub value: Option<AttrValue>,
-    #[prop_or_default]
     pub disabled: bool,
     #[prop_or_default]
     pub is_selected: bool,
+    pub value: AttrValue,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
@@ -95,7 +94,7 @@ impl Component for Tab {
                 {style}
                 onclick={let on_click = on_click.clone();
                     let value = value.clone();
-                    Callback::from(move |_| on_click.emit(value.clone().unwrap()))}
+                    Callback::from(move |_| on_click.emit(value.clone()))}
             // onclick={let value = value.clone(); Callback::from(move |_| tabs_context.dispatch(TabsAction::Select(value.clone().unwrap())))}
             // onclick={let value = value.clone();
             //     ctx.link().callback(move |_| Self::Message::Select(value.clone().unwrap_or("".into())))}

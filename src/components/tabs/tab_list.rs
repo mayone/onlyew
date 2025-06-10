@@ -54,15 +54,9 @@ impl Component for TabList {
             .props()
             .children
             .iter()
-            .enumerate()
-            .map(|(index, child)| {
+            .map(|child| {
                 let mut hasher = DefaultHasher::new();
-                child
-                    .props
-                    .value
-                    .clone()
-                    .unwrap_or(index.to_string().into())
-                    .hash(&mut hasher);
+                child.props.value.clone().hash(&mut hasher);
                 let id = hasher.finish();
 
                 (id, NodeRef::default())
@@ -104,14 +98,14 @@ impl Component for TabList {
             ..
         } = ctx.props();
 
-        let children = children.iter().enumerate().map(|(index, mut child)| {
+        let children = children.iter().map(|mut child| {
             let props = Rc::make_mut(&mut child.props);
             let mut hasher = DefaultHasher::new();
-            let value = props.value.clone().unwrap_or(index.to_string().into());
+            let value = props.value.clone();
             value.hash(&mut hasher);
             let id = hasher.finish();
             props.node_ref = self.tab_refs[&id].clone();
-            props.value = Some(value.clone());
+            props.value = value.clone();
             props.is_selected = value == *tabs_context.selected_tab;
             props.on_click = {
                 ctx.link()
