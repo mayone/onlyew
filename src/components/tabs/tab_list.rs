@@ -10,7 +10,7 @@ use super::Tab;
 use web_sys::HtmlElement;
 use yew::prelude::*;
 
-#[derive(Clone, Debug, PartialEq, Properties)]
+#[derive(Debug, PartialEq, Properties)]
 pub struct TabListProperties {
     #[prop_or_default]
     pub children: ChildrenWithProps<Tab>,
@@ -112,13 +112,8 @@ impl Component for TabList {
         }
     }
 
-    fn rendered(&mut self, ctx: &Context<Self>, _first_render: bool) {
-        let (tabs_context, _) = ctx
-            .link()
-            .context::<TabsContext>(Callback::noop())
-            .expect("No tabs context provided");
-
-        let selected = tabs_context.selected_tab.clone();
+    fn rendered(&mut self, _ctx: &Context<Self>, _first_render: bool) {
+        let selected = self.tabs_context.selected_tab.clone();
 
         let mut hasher = DefaultHasher::new();
         selected.hash(&mut hasher);

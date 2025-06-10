@@ -69,11 +69,6 @@ impl Component for Tab {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let (tabs_context, _) = ctx
-            .link()
-            .context::<TabsContext>(Callback::noop())
-            .expect("No tabs context provided");
-
         let Self::Properties {
             node_ref,
             children,
@@ -95,7 +90,8 @@ impl Component for Tab {
                 class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
                 onclick={let value = value.clone();
-                    let selected = (*tabs_context.selected_tab).to_string().clone();
+                    let selected = (*self.tabs_context.selected_tab).to_string().clone();
+                    let tabs_context = self.tabs_context.clone();
                     Callback::from(move |_| {
                         if value != selected {
                             tabs_context.dispatch(TabsAction::Select(value.clone()));
