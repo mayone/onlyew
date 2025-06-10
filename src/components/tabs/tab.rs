@@ -11,8 +11,6 @@ pub struct TabProperties {
     pub children: Children,
     #[prop_or_default]
     pub disabled: bool,
-    #[prop_or_default]
-    pub is_selected: bool,
     pub value: AttrValue,
     #[prop_or_default]
     pub class: Classes,
@@ -24,7 +22,7 @@ pub struct TabProperties {
 
 #[derive(Debug)]
 pub enum TabMessage {
-    Select(AttrValue),
+    ContextUpdated(TabsContext),
 }
 
 /// A component to represent a single tab in a Tabs component.
@@ -39,29 +37,35 @@ pub enum TabMessage {
 /// }
 /// ```
 #[derive(Debug)]
-pub struct Tab;
+pub struct Tab {
+    tabs_context: TabsContext,
+    _ctx_handle: ContextHandle<TabsContext>,
+}
 
 impl Component for Tab {
     type Message = TabMessage;
     type Properties = TabProperties;
 
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self
+    fn create(ctx: &Context<Self>) -> Self {
+        let (tabs_context, ctx_handle) = ctx
+            .link()
+            .context::<TabsContext>(ctx.link().callback(Self::Message::ContextUpdated))
+            .expect("No tabs context provided");
+
+        Self {
+            tabs_context,
+            _ctx_handle: ctx_handle,
+        }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            TabMessage::Select(value) => {
-                let (tabs_context, _) = ctx
-                    .link()
-                    .context::<TabsContext>(Callback::noop())
-                    .expect("No tabs context provided");
+            Self::Message::ContextUpdated(new_ctx) => {
+                self.tabs_context = new_ctx;
 
-                tabs_context.dispatch(TabsAction::Select(value));
+                true
             }
         }
-
-        true
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
@@ -75,16 +79,15 @@ impl Component for Tab {
             children,
             value,
             disabled,
-            is_selected,
             class,
             style,
             on_click,
             ..
         } = ctx.props();
 
-        // let is_selected = tabs_context.selected_tab == value.clone().unwrap_or("".into());
+        let is_selected = self.tabs_context.selected_tab == value.clone();
 
-        log::info!("tab selected {}", tabs_context.selected_tab);
+        // log::info!("tab selected {}", tabs_context.selected_tab);
 
         html! {
             <button
@@ -92,12 +95,11 @@ impl Component for Tab {
                 disabled={*disabled}
                 class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
-                onclick={let on_click = on_click.clone();
-                    let value = value.clone();
-                    Callback::from(move |_| on_click.emit(value.clone()))}
-            // onclick={let value = value.clone(); Callback::from(move |_| tabs_context.dispatch(TabsAction::Select(value.clone().unwrap())))}
-            // onclick={let value = value.clone();
-            //     ctx.link().callback(move |_| Self::Message::Select(value.clone().unwrap_or("".into())))}
+                onclick={let value = value.clone();
+                    let on_click = on_click.clone();
+                    Callback::from(move |_| {
+                    tabs_context.dispatch(TabsAction::Select(value.clone()));
+                    on_click.emit(value.clone())})}
             >
                 { children.clone() }
             </button>

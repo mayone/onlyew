@@ -4,7 +4,7 @@ use std::{
     rc::Rc,
 };
 
-use crate::contexts::{TabsAction, TabsContext, tabs_context};
+use crate::contexts::TabsContext;
 
 use super::Tab;
 use web_sys::HtmlElement;
@@ -25,7 +25,7 @@ pub struct TabListProperties {
 
 #[derive(Debug)]
 pub enum TabListMessage {
-    Select(AttrValue),
+    ContextUpdated(TabsContext),
 }
 
 /// A component to contain a list of tabs.
@@ -43,6 +43,8 @@ pub enum TabListMessage {
 pub struct TabList {
     indicator_ref: NodeRef,
     tab_refs: HashMap<u64, NodeRef>,
+    tabs_context: TabsContext,
+    _ctx_handle: ContextHandle<TabsContext>,
 }
 
 impl Component for TabList {
@@ -50,6 +52,11 @@ impl Component for TabList {
     type Properties = TabListProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
+        let (tabs_context, ctx_handle) = ctx
+            .link()
+            .context::<TabsContext>(ctx.link().callback(Self::Message::ContextUpdated))
+            .expect("No tabs context provided");
+
         let tab_refs = ctx
             .props()
             .children
@@ -66,30 +73,22 @@ impl Component for TabList {
         Self {
             indicator_ref: NodeRef::default(),
             tab_refs,
+            tabs_context,
+            _ctx_handle: ctx_handle,
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            TabListMessage::Select(value) => {
-                let (tabs_context, _) = ctx
-                    .link()
-                    .context::<TabsContext>(Callback::noop())
-                    .expect("No tabs context provided");
+            Self::Message::ContextUpdated(new_ctx) => {
+                self.tabs_context = new_ctx;
 
-                tabs_context.dispatch(TabsAction::Select(value));
+                true
             }
         }
-
-        true
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let (tabs_context, _) = ctx
-            .link()
-            .context::<TabsContext>(Callback::noop())
-            .expect("No tabs context provided");
-
         let TabListProperties {
             children,
             class,
@@ -105,12 +104,7 @@ impl Component for TabList {
             value.hash(&mut hasher);
             let id = hasher.finish();
             props.node_ref = self.tab_refs[&id].clone();
-            props.value = value.clone();
-            props.is_selected = value == *tabs_context.selected_tab;
-            props.on_click = {
-                ctx.link()
-                    .callback(move |value: AttrValue| Self::Message::Select(value.clone()))
-            };
+            props.on_click = on_select.clone();
 
             child
         });

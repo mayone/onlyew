@@ -56,6 +56,7 @@ impl Component for TabPanel {
         match msg {
             Self::Message::ContextUpdated(new_ctx) => {
                 self.tabs_context = new_ctx;
+
                 true
             }
         }
@@ -71,6 +72,8 @@ impl Component for TabPanel {
         } = ctx.props();
 
         let is_selected = value.clone() == self.tabs_context.selected_tab;
+
+        // log::info!("tab panel is selected {}", is_selected);
 
         html! {
             <div

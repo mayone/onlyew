@@ -80,13 +80,13 @@ mod tests {
         let _ = html! {
             <Tabs>
                 <TabList>
-                    <Tab>{ "Tab 1" }</Tab>
-                    <Tab>{ "Tab 2" }</Tab>
+                    <Tab value="1">{ "Tab 1" }</Tab>
+                    <Tab value="2">{ "Tab 2" }</Tab>
                 </TabList>
-                <TabPanel>
+                <TabPanel value="1">
                     <div>{ "TabPanel 1" }</div>
                 </TabPanel>
-                <TabPanel>
+                <TabPanel value="2">
                     <div>{ "TabPanel 2" }</div>
                 </TabPanel>
             </Tabs>
