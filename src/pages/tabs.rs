@@ -14,7 +14,7 @@ pub fn tabs() -> Html {
             <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
             <div style="display: flex; flex-direction: column; gap: 20px">
                 <Tabs
-                    default_tab="723"
+                    default_value="723"
                     on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}
                 >
                     <TabList>

@@ -17,7 +17,7 @@ pub struct TabsProperties {
     pub children: Children,
     /// The index of the default tab to be selected.
     #[prop_or_default]
-    pub default_tab: Option<AttrValue>,
+    pub default_value: Option<AttrValue>,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
@@ -38,8 +38,16 @@ pub struct TabsProperties {
 ///
 /// html! {
 ///     <Tabs on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}>
-///         <Tab panel={html!{<div>{"Panel 1"}</div>}}>{"Tab 1"}</Tab>
-///         <Tab panel={html!{<div>{"Panel 2"}</div>}}>{"Tab 2"}</Tab>
+///         <TabList>
+///             <Tab value="1">{"Tab 1"}</Tab>
+///             <Tab value="2">{"Tab 2"}</Tab>
+///         </TabList>
+///         <TabPanel value="1">
+///             <div>{ "TabPanel 1" }</div>
+///         </TabPanel>
+///         <TabPanel value="2">
+///             <div>{ "TabPanel 2" }</div>
+///         </TabPanel>
 ///     </Tabs>
 /// }
 /// ```
@@ -57,14 +65,15 @@ impl Component for Tabs {
     fn view(&self, ctx: &Context<Self>) -> Html {
         let Self::Properties {
             children,
-            default_tab,
+            default_value,
             class,
             style,
+            on_change,
             ..
         } = ctx.props();
 
         html! {
-            <TabsProvider default_tab={default_tab.clone()}>
+            <TabsProvider {default_value} {on_change}>
                 <div class={classes!("tabs", class.clone())} {style}>{ children.clone() }</div>
             </TabsProvider>
         }

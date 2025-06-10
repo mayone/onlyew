@@ -18,9 +18,6 @@ pub struct TabListProperties {
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
-    /// A callback function that is called when the selected tab changes.
-    #[prop_or_default]
-    pub on_select: Callback<AttrValue>,
 }
 
 #[derive(Debug)]
@@ -33,9 +30,9 @@ pub enum TabListMessage {
 /// Usage:
 /// ```ignore
 /// html! {
-///     <TabList selected_tab={0} on_select={Callback::from(|_| {})}>
-///         <Tab>{"Tab 1"}</Tab>
-///         <Tab>{"Tab 2"}</Tab>
+///     <TabList>
+///         <Tab value="1">{"Tab 1"}</Tab>
+///         <Tab value="2">{"Tab 2"}</Tab>
 ///     </TabList>
 /// }
 /// ```
@@ -93,7 +90,6 @@ impl Component for TabList {
             children,
             class,
             style,
-            on_select,
             ..
         } = ctx.props();
 
@@ -104,7 +100,6 @@ impl Component for TabList {
             value.hash(&mut hasher);
             let id = hasher.finish();
             props.node_ref = self.tab_refs[&id].clone();
-            props.on_click = on_select.clone();
 
             child
         });
@@ -142,5 +137,20 @@ impl Component for TabList {
             );
             let _ = indicator.set_attribute("style", &indicator_style);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_render_tab_list() {
+        let _ = html! {
+            <TabList>
+                <Tab value="1">{ "Tab 1" }</Tab>
+                <Tab value="2">{ "Tab 2" }</Tab>
+            </TabList>
+        };
     }
 }

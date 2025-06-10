@@ -24,9 +24,8 @@ pub enum TabPanelMessage {
 /// Usage:
 /// ```ignore
 /// html! {
-///     <TabPanel selected_tab={0}>
-///         <Tab panel={html!{<div>{"Panel 1"}</div>}}>{"Tab 1"}</Tab>
-///         <Tab panel={html!{<div>{"Panel 2"}</div>}}>{"Tab 2"}</Tab>
+///     <TabPanel value="1">
+///         <div>{"Tab 1"}</div>
 ///     </TabPanel>
 /// }
 /// ```
@@ -83,5 +82,19 @@ impl Component for TabPanel {
                 { children.clone() }
             </div>
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_render_tab_panel() {
+        let _ = html! {
+            <TabPanel value="1">
+                <div>{ "Tab 1" }</div>
+            </TabPanel>
+        };
     }
 }

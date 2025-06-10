@@ -16,8 +16,6 @@ pub struct TabProperties {
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
-    #[prop_or_default]
-    pub on_click: Callback<AttrValue>,
 }
 
 #[derive(Debug)]
@@ -81,7 +79,6 @@ impl Component for Tab {
             disabled,
             class,
             style,
-            on_click,
             ..
         } = ctx.props();
 
@@ -96,10 +93,9 @@ impl Component for Tab {
                 class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
                 onclick={let value = value.clone();
-                    let on_click = on_click.clone();
                     Callback::from(move |_| {
                     tabs_context.dispatch(TabsAction::Select(value.clone()));
-                    on_click.emit(value.clone())})}
+                    tabs_context.on_change.emit(value.clone())})}
             >
                 { children.clone() }
             </button>

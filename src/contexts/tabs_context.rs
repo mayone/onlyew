@@ -5,6 +5,7 @@ use yew::prelude::*;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Tabs {
     pub selected_tab: AttrValue,
+    pub on_change: Callback<AttrValue>,
 }
 
 #[derive(Debug)]
@@ -19,6 +20,7 @@ impl Reducible for Tabs {
         match action {
             Self::Action::Select(value) => Rc::new(Self {
                 selected_tab: value,
+                on_change: self.on_change.clone(),
             }),
         }
     }
@@ -31,14 +33,17 @@ pub struct TabsProviderProperties {
     #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
-    pub default_tab: Option<AttrValue>,
+    pub default_value: Option<AttrValue>,
+    #[prop_or_default]
+    pub on_change: Callback<AttrValue>,
 }
 
 #[function_component]
 pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
-    let default_tab = props.default_tab.clone().unwrap_or("0".into());
+    let default_value = props.default_value.clone().unwrap_or_default();
     let tabs = use_reducer(|| Tabs {
-        selected_tab: default_tab,
+        selected_tab: default_value,
+        on_change: props.on_change.clone(),
     });
 
     html! {
