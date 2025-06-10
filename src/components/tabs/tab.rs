@@ -23,14 +23,16 @@ pub enum TabMessage {
     ContextUpdated(TabsContext),
 }
 
-/// A component to represent a single tab in a Tabs component.
+/// A component to represent a single tab in a TabList component.
 ///
 /// Usage:
 /// ```ignore
 /// html! {
 ///     <Tabs>
-///         <Tab panel={html!{<div>{"Panel 1"}</div>}}>{"Tab 1"}</Tab>
-///         <Tab panel={html!{<div>{"Panel 2"}</div>}}>{"Tab 2"}</Tab>
+///         <TabList>
+///              <Tab value="1">{ "Tab 1" }</Tab>
+///              <Tab value="2">{ "Tab 2" }</Tab>
+///         </TabList>
 ///     </Tabs>
 /// }
 /// ```
@@ -93,12 +95,35 @@ impl Component for Tab {
                 class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
                 onclick={let value = value.clone();
+                    let selected = (*tabs_context.selected_tab).to_string().clone();
                     Callback::from(move |_| {
-                    tabs_context.dispatch(TabsAction::Select(value.clone()));
-                    tabs_context.on_change.emit(value.clone())})}
+                        if value != selected {
+                            tabs_context.dispatch(TabsAction::Select(value.clone()));
+                            tabs_context.on_change.emit(value.clone());
+                        }
+                    })}
             >
                 { children.clone() }
             </button>
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::components::{TabList, Tabs};
+
+    use super::*;
+
+    #[test]
+    fn test_render_tab() {
+        let _ = html! {
+            <Tabs>
+                <TabList>
+                    <Tab value="1">{ "Tab 1" }</Tab>
+                    <Tab value="2">{ "Tab 2" }</Tab>
+                </TabList>
+            </Tabs>
+        };
     }
 }
