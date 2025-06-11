@@ -21,11 +21,6 @@ pub struct TabListProperties {
     pub style: Option<AttrValue>,
 }
 
-#[derive(Debug)]
-pub enum TabListMessage {
-    ContextUpdated(TabsContext),
-}
-
 /// A component to contain a list of tabs.
 #[derive(Debug)]
 pub struct TabList {
@@ -35,13 +30,13 @@ pub struct TabList {
 }
 
 impl Component for TabList {
-    type Message = TabListMessage;
+    type Message = ();
     type Properties = TabListProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
         let (tabs_context, ctx_handle) = ctx
             .link()
-            .context::<TabsContext>(ctx.link().callback(Self::Message::ContextUpdated))
+            .context::<TabsContext>(ctx.link().callback(|_| ()))
             .expect("No tabs context provided");
 
         let tab_refs = ctx
@@ -67,12 +62,6 @@ impl Component for TabList {
             indicator_ref: NodeRef::default(),
             tab_refs,
             _ctx_handle: ctx_handle,
-        }
-    }
-
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
-        match msg {
-            Self::Message::ContextUpdated(_new_ctx) => true,
         }
     }
 
