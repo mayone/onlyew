@@ -4,7 +4,7 @@ use std::{
     rc::Rc,
 };
 
-use crate::contexts::TabsContext;
+use crate::contexts::{TabsAction, TabsContext};
 
 use super::Tab;
 
@@ -49,8 +49,12 @@ impl Component for TabList {
             .props()
             .children
             .iter()
-            .map(|child| {
+            .enumerate()
+            .map(|(index, child)| {
                 let value = child.props.value.clone();
+                if index == 0 && tabs_context.selected_tab.is_empty() {
+                    tabs_context.dispatch(TabsAction::Select(value.clone()));
+                }
 
                 let mut hasher = DefaultHasher::new();
                 value.hash(&mut hasher);
