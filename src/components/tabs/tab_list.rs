@@ -31,7 +31,6 @@ pub enum TabListMessage {
 pub struct TabList {
     indicator_ref: NodeRef,
     tab_refs: HashMap<u64, NodeRef>,
-    tabs_context: TabsContext,
     _ctx_handle: ContextHandle<TabsContext>,
 }
 
@@ -67,22 +66,22 @@ impl Component for TabList {
         Self {
             indicator_ref: NodeRef::default(),
             tab_refs,
-            tabs_context,
             _ctx_handle: ctx_handle,
         }
     }
 
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Self::Message::ContextUpdated(new_ctx) => {
-                self.tabs_context = new_ctx;
-
-                true
-            }
+            Self::Message::ContextUpdated(_new_ctx) => true,
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let (tabs_context, _) = ctx
+            .link()
+            .context::<TabsContext>(Callback::noop())
+            .expect("No tabs context provided");
+
         let TabListProperties {
             children,
             class,
@@ -100,7 +99,7 @@ impl Component for TabList {
                 value.hash(&mut hasher);
                 let id = hasher.finish();
 
-                props.is_selected = value == self.tabs_context.selected_tab;
+                props.is_selected = value == tabs_context.selected_tab;
                 props.node_ref = self.tab_refs[&id].clone();
 
                 child
@@ -115,9 +114,15 @@ impl Component for TabList {
         }
     }
 
-    fn rendered(&mut self, _ctx: &Context<Self>, first_render: bool) {
-        let selected = self.tabs_context.selected_tab.clone();
+    fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
+        let (tabs_context, _) = ctx
+            .link()
+            .context::<TabsContext>(Callback::noop())
+            .expect("No tabs context provided");
 
+        let selected = tabs_context.selected_tab.clone();
+
+        // TODO: Improve perf by saving hashed id.
         let mut hasher = DefaultHasher::new();
         selected.hash(&mut hasher);
         let id = hasher.finish();
