@@ -18,10 +18,14 @@ impl Reducible for Tabs {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
-            Self::Action::Select(value) => Rc::new(Self {
-                selected_tab: value,
-                on_change: self.on_change.clone(),
-            }),
+            Self::Action::Select(value) => {
+                // TODO: Try to remove on_change from state and call it here.
+
+                Rc::new(Self {
+                    selected_tab: value,
+                    ..(*self).clone()
+                })
+            }
         }
     }
 }
