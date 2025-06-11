@@ -114,7 +114,7 @@ impl Component for TabList {
         }
     }
 
-    fn rendered(&mut self, _ctx: &Context<Self>, _first_render: bool) {
+    fn rendered(&mut self, _ctx: &Context<Self>, first_render: bool) {
         let selected = self.tabs_context.selected_tab.clone();
 
         let mut hasher = DefaultHasher::new();
@@ -129,9 +129,14 @@ impl Component for TabList {
             .and_then(|tab| tab.cast::<HtmlElement>())
         {
             let indicator_style = format!(
-                "width: {}px; transform: translateX({}px)",
+                "width: {}px; transform: translateX({}px);{}",
                 tab.client_width(),
                 tab.offset_left(),
+                if first_render {
+                    " transition: none;"
+                } else {
+                    ""
+                }
             );
             let _ = indicator.set_attribute("style", &indicator_style);
         }
