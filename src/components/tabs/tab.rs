@@ -11,6 +11,8 @@ pub struct TabProperties {
     #[prop_or_default]
     pub disabled: bool,
     #[prop_or_default]
+    pub is_selected: bool,
+    #[prop_or_default]
     pub node_ref: NodeRef,
     #[prop_or_default]
     pub class: Classes,
@@ -18,56 +20,34 @@ pub struct TabProperties {
     pub style: Option<AttrValue>,
 }
 
-#[derive(Debug)]
-pub enum TabMessage {
-    ContextUpdated(TabsContext),
-}
-
 /// A component to represent a single tab in a TabList component.
 #[derive(Debug)]
-pub struct Tab {
-    tabs_context: TabsContext,
-    _ctx_handle: ContextHandle<TabsContext>,
-}
+pub struct Tab;
 
 impl Component for Tab {
-    type Message = TabMessage;
+    type Message = ();
     type Properties = TabProperties;
 
-    fn create(ctx: &Context<Self>) -> Self {
-        let (tabs_context, ctx_handle) = ctx
-            .link()
-            .context::<TabsContext>(ctx.link().callback(Self::Message::ContextUpdated))
-            .expect("No tabs context provided");
-
-        Self {
-            tabs_context,
-            _ctx_handle: ctx_handle,
-        }
-    }
-
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
-        match msg {
-            Self::Message::ContextUpdated(new_ctx) => {
-                self.tabs_context = new_ctx;
-
-                true
-            }
-        }
+    fn create(_ctx: &Context<Self>) -> Self {
+        Self
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let (tabs_context, _) = ctx
+            .link()
+            .context::<TabsContext>(Callback::noop())
+            .expect("No tabs context provided");
+
         let Self::Properties {
             value,
             children,
             disabled,
+            is_selected,
             node_ref,
             class,
             style,
             ..
         } = ctx.props();
-
-        let is_selected = self.tabs_context.selected_tab == value.clone();
 
         html! {
             <button
@@ -76,7 +56,8 @@ impl Component for Tab {
                 class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
                 onclick={let value = value.clone();
-                    let tabs_context = self.tabs_context.clone();
+                    let is_selected = is_selected.clone();
+                    let tabs_context = tabs_context.clone();
                     Callback::from(move |_| {
                         if !is_selected {
                             tabs_context.dispatch(TabsAction::Select(value.clone()));

@@ -100,6 +100,7 @@ impl Component for TabList {
                 value.hash(&mut hasher);
                 let id = hasher.finish();
 
+                props.is_selected = value == self.tabs_context.selected_tab;
                 props.node_ref = self.tab_refs[&id].clone();
 
                 child
