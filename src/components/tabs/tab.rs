@@ -5,13 +5,13 @@ use crate::contexts::{TabsAction, TabsContext};
 /// Properties for the [`Tab`].
 #[derive(Clone, Debug, PartialEq, Properties)]
 pub struct TabProperties {
-    #[prop_or_default]
-    pub node_ref: NodeRef,
+    pub value: AttrValue,
     #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
     pub disabled: bool,
-    pub value: AttrValue,
+    #[prop_or_default]
+    pub node_ref: NodeRef,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
@@ -24,18 +24,6 @@ pub enum TabMessage {
 }
 
 /// A component to represent a single tab in a TabList component.
-///
-/// Usage:
-/// ```ignore
-/// html! {
-///     <Tabs>
-///         <TabList>
-///              <Tab value="1">{ "Tab 1" }</Tab>
-///              <Tab value="2">{ "Tab 2" }</Tab>
-///         </TabList>
-///     </Tabs>
-/// }
-/// ```
 #[derive(Debug)]
 pub struct Tab {
     tabs_context: TabsContext,
@@ -70,18 +58,16 @@ impl Component for Tab {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let Self::Properties {
-            node_ref,
-            children,
             value,
+            children,
             disabled,
+            node_ref,
             class,
             style,
             ..
         } = ctx.props();
 
         let is_selected = self.tabs_context.selected_tab == value.clone();
-
-        // log::info!("tab selected {}", tabs_context.selected_tab);
 
         html! {
             <button
@@ -90,10 +76,9 @@ impl Component for Tab {
                 class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
                 onclick={let value = value.clone();
-                    let selected = (*self.tabs_context.selected_tab).to_string().clone();
                     let tabs_context = self.tabs_context.clone();
                     Callback::from(move |_| {
-                        if value != selected {
+                        if !is_selected {
                             tabs_context.dispatch(TabsAction::Select(value.clone()));
                             tabs_context.on_change.emit(value.clone());
                         }
@@ -107,19 +92,10 @@ impl Component for Tab {
 
 #[cfg(test)]
 mod tests {
-    use crate::components::{TabList, Tabs};
-
     use super::*;
 
     #[test]
     fn test_render_tab() {
-        let _ = html! {
-            <Tabs>
-                <TabList>
-                    <Tab value="1">{ "Tab 1" }</Tab>
-                    <Tab value="2">{ "Tab 2" }</Tab>
-                </TabList>
-            </Tabs>
-        };
+        let _ = html! { <Tab value="1">{ "Tab 1" }</Tab> };
     }
 }

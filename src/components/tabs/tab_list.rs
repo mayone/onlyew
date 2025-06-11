@@ -7,6 +7,7 @@ use std::{
 use crate::contexts::TabsContext;
 
 use super::Tab;
+
 use web_sys::HtmlElement;
 use yew::prelude::*;
 
@@ -26,16 +27,6 @@ pub enum TabListMessage {
 }
 
 /// A component to contain a list of tabs.
-///
-/// Usage:
-/// ```ignore
-/// html! {
-///     <TabList>
-///         <Tab value="1">{"Tab 1"}</Tab>
-///         <Tab value="2">{"Tab 2"}</Tab>
-///     </TabList>
-/// }
-/// ```
 #[derive(Debug)]
 pub struct TabList {
     indicator_ref: NodeRef,
@@ -59,8 +50,10 @@ impl Component for TabList {
             .children
             .iter()
             .map(|child| {
+                let value = child.props.value.clone();
+
                 let mut hasher = DefaultHasher::new();
-                child.props.value.clone().hash(&mut hasher);
+                value.hash(&mut hasher);
                 let id = hasher.finish();
 
                 (id, NodeRef::default())
@@ -93,20 +86,25 @@ impl Component for TabList {
             ..
         } = ctx.props();
 
-        let children = children.iter().map(|mut child| {
-            let props = Rc::make_mut(&mut child.props);
-            let mut hasher = DefaultHasher::new();
-            let value = props.value.clone();
-            value.hash(&mut hasher);
-            let id = hasher.finish();
-            props.node_ref = self.tab_refs[&id].clone();
+        let children = children
+            .iter()
+            .map(|mut child| {
+                let props = Rc::make_mut(&mut child.props);
+                let value = props.value.clone();
 
-            child
-        });
+                let mut hasher = DefaultHasher::new();
+                value.hash(&mut hasher);
+                let id = hasher.finish();
+
+                props.node_ref = self.tab_refs[&id].clone();
+
+                child
+            })
+            .collect::<Html>();
 
         html! {
             <div class={classes!("tab-list", class.clone())} {style}>
-                { children.collect::<Html>() }
+                { children }
                 <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
             </div>
         }
@@ -118,6 +116,7 @@ impl Component for TabList {
         let mut hasher = DefaultHasher::new();
         selected.hash(&mut hasher);
         let id = hasher.finish();
+
         let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
 
         if let Some(tab) = self
