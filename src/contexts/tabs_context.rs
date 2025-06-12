@@ -47,7 +47,7 @@ pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
     });
 
     let context = TabsContext {
-        state: state.clone(),
+        state,
         on_change: props.on_change.clone(),
     };
 

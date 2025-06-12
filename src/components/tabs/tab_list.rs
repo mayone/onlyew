@@ -101,13 +101,18 @@ impl Component for TabList {
 
         let selected = tabs_context.state.selected_tab.clone();
 
-        let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
+        update_indicator_position(&self.tab_refs, &self.indicator_ref, &selected, first_render);
+    }
+}
 
-        if let Some(tab) = self
-            .tab_refs
-            .get(&selected.to_string())
-            .and_then(|tab| tab.cast::<HtmlElement>())
-        {
+fn update_indicator_position(
+    tab_refs: &HashMap<String, NodeRef>,
+    indicator_ref: &NodeRef,
+    selected: &str,
+    first_render: bool,
+) {
+    if let Some(tab_ref) = tab_refs.get(&selected.to_string()) {
+        if let Some(tab) = tab_ref.cast::<HtmlElement>() {
             let indicator_style = format!(
                 "width: {}px; transform: translateX({}px);{}",
                 tab.client_width(),
@@ -118,7 +123,10 @@ impl Component for TabList {
                     ""
                 }
             );
-            let _ = indicator.set_attribute("style", &indicator_style);
+
+            if let Some(indicator) = indicator_ref.cast::<HtmlElement>() {
+                let _ = indicator.set_attribute("style", &indicator_style);
+            }
         }
     }
 }

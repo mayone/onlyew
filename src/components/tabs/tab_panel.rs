@@ -72,8 +72,6 @@ impl Component for TabPanel {
 
         let is_selected = value.clone() == self.tabs_context.state.selected_tab;
 
-        // log::info!("tab panel is selected {}", is_selected);
-
         html! {
             <div
                 class={classes!("tab-panel", (!is_selected).then_some("hidden"), class.clone())}

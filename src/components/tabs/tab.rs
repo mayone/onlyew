@@ -20,7 +20,7 @@ pub struct TabProperties {
     pub style: Option<AttrValue>,
 }
 
-/// A component to represent a single tab in a TabList component.
+/// A component to represent a single tab in a [`TabList`] component.
 #[derive(Debug)]
 pub struct Tab;
 
@@ -56,7 +56,7 @@ impl Component for Tab {
                 class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
                 onclick={let value = value.clone();
-                    let is_selected = is_selected.clone();
+                    let is_selected = *is_selected;
                     let tabs_context = tabs_context.clone();
                     Callback::from(move |_| {
                         if !is_selected {
