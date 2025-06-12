@@ -70,7 +70,7 @@ impl Component for TabPanel {
             ..
         } = ctx.props();
 
-        let is_selected = value.clone() == self.tabs_context.selected_tab;
+        let is_selected = value.clone() == self.tabs_context.state.selected_tab;
 
         // log::info!("tab panel is selected {}", is_selected);
 

@@ -42,8 +42,10 @@ impl Component for TabList {
             .enumerate()
             .map(|(index, child)| {
                 let value = child.props.value.clone();
-                if index == 0 && tabs_context.selected_tab.is_empty() {
-                    tabs_context.dispatch(TabsAction::Select(value.clone()));
+                if index == 0 && tabs_context.state.selected_tab.is_empty() {
+                    tabs_context
+                        .state
+                        .dispatch(TabsAction::Select(value.clone()));
                 }
 
                 (value.to_string(), NodeRef::default())
@@ -76,7 +78,7 @@ impl Component for TabList {
                 let props = Rc::make_mut(&mut child.props);
                 let value = props.value.clone();
 
-                props.is_selected = value == tabs_context.selected_tab;
+                props.is_selected = value == tabs_context.state.selected_tab;
                 props.node_ref = self.tab_refs[&value.to_string()].clone();
 
                 child
@@ -97,7 +99,7 @@ impl Component for TabList {
             .context::<TabsContext>(Callback::noop())
             .expect("No tabs context provided");
 
-        let selected = tabs_context.selected_tab.clone();
+        let selected = tabs_context.state.selected_tab.clone();
 
         let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
 

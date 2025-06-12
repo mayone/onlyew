@@ -3,9 +3,8 @@ use std::rc::Rc;
 use yew::prelude::*;
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct Tabs {
+pub struct TabsState {
     pub selected_tab: AttrValue,
-    pub on_change: Callback<AttrValue>,
 }
 
 #[derive(Debug)]
@@ -13,24 +12,23 @@ pub enum TabsAction {
     Select(AttrValue),
 }
 
-impl Reducible for Tabs {
+impl Reducible for TabsState {
     type Action = TabsAction;
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
-            Self::Action::Select(value) => {
-                // TODO: Try to remove on_change from state and call it here.
-
-                Rc::new(Self {
-                    selected_tab: value,
-                    ..(*self).clone()
-                })
-            }
+            Self::Action::Select(value) => Rc::new(Self {
+                selected_tab: value,
+            }),
         }
     }
 }
 
-pub type TabsContext = UseReducerHandle<Tabs>;
+#[derive(Clone, Debug, PartialEq)]
+pub struct TabsContext {
+    pub state: UseReducerHandle<TabsState>,
+    pub on_change: Callback<AttrValue>,
+}
 
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabsProviderProperties {
@@ -44,14 +42,17 @@ pub struct TabsProviderProperties {
 
 #[function_component]
 pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
-    let default_value = props.default_value.clone().unwrap_or_default();
-    let tabs = use_reducer(|| Tabs {
-        selected_tab: default_value,
-        on_change: props.on_change.clone(),
+    let state = use_reducer(|| TabsState {
+        selected_tab: props.default_value.clone().unwrap_or_default(),
     });
 
+    let context = TabsContext {
+        state: state.clone(),
+        on_change: props.on_change.clone(),
+    };
+
     html! {
-        <ContextProvider<TabsContext> context={tabs}>
+        <ContextProvider<TabsContext> {context}>
             { props.children.clone() }
         </ContextProvider<TabsContext>>
     }
