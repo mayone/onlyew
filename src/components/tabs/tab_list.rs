@@ -1,8 +1,4 @@
-use std::{
-    collections::HashMap,
-    hash::{DefaultHasher, Hash, Hasher},
-    rc::Rc,
-};
+use std::{collections::HashMap, rc::Rc};
 
 use crate::contexts::{TabsAction, TabsContext};
 
@@ -25,7 +21,7 @@ pub struct TabListProperties {
 #[derive(Debug)]
 pub struct TabList {
     indicator_ref: NodeRef,
-    tab_refs: HashMap<u64, NodeRef>,
+    tab_refs: HashMap<String, NodeRef>,
     _ctx_handle: ContextHandle<TabsContext>,
 }
 
@@ -50,11 +46,7 @@ impl Component for TabList {
                     tabs_context.dispatch(TabsAction::Select(value.clone()));
                 }
 
-                let mut hasher = DefaultHasher::new();
-                value.hash(&mut hasher);
-                let id = hasher.finish();
-
-                (id, NodeRef::default())
+                (value.to_string(), NodeRef::default())
             })
             .collect::<HashMap<_, _>>();
 
@@ -84,12 +76,8 @@ impl Component for TabList {
                 let props = Rc::make_mut(&mut child.props);
                 let value = props.value.clone();
 
-                let mut hasher = DefaultHasher::new();
-                value.hash(&mut hasher);
-                let id = hasher.finish();
-
                 props.is_selected = value == tabs_context.selected_tab;
-                props.node_ref = self.tab_refs[&id].clone();
+                props.node_ref = self.tab_refs[&value.to_string()].clone();
 
                 child
             })
@@ -111,16 +99,11 @@ impl Component for TabList {
 
         let selected = tabs_context.selected_tab.clone();
 
-        // TODO: Improve perf by saving hashed id.
-        let mut hasher = DefaultHasher::new();
-        selected.hash(&mut hasher);
-        let id = hasher.finish();
-
         let indicator = self.indicator_ref.cast::<HtmlElement>().unwrap();
 
         if let Some(tab) = self
             .tab_refs
-            .get(&id)
+            .get(&selected.to_string())
             .and_then(|tab| tab.cast::<HtmlElement>())
         {
             let indicator_style = format!(
