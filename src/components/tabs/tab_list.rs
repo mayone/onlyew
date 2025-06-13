@@ -72,13 +72,15 @@ impl Component for TabList {
             ..
         } = ctx.props();
 
+        let selected_tab = &tabs_context.state.selected_tab;
+
         let children = children
             .iter()
             .map(|mut child| {
                 let props = Rc::make_mut(&mut child.props);
                 let value = props.value.clone();
 
-                props.is_selected = value == tabs_context.state.selected_tab;
+                props.is_selected = &value == selected_tab;
                 props.node_ref = self.tab_refs[&value.to_string()].clone();
 
                 child
