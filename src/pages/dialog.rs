@@ -28,11 +28,13 @@ macro_rules! make_hide_dialog {
 
 #[function_component(DialogPage)]
 pub fn dialog() -> Html {
-    let long_dialog_ref: NodeRef = NodeRef::default();
-    let form_dialog_ref: NodeRef = NodeRef::default();
+    let long_dialog_ref = NodeRef::default();
+    let form_dialog_ref = NodeRef::default();
+    let tabs_dialog_ref = NodeRef::default();
 
     let open_long_dialog = make_open_dialog!(long_dialog_ref);
     let open_form_dialog = make_open_dialog!(form_dialog_ref);
+    let open_tabs_dialog = make_open_dialog!(tabs_dialog_ref);
 
     html! {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
@@ -40,8 +42,10 @@ pub fn dialog() -> Html {
             <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
             <button style="width: fit-content" onclick={open_long_dialog}>{ "Long Dialog" }</button>
             <button style="width: fit-content" onclick={open_form_dialog}>{ "Form Dialog" }</button>
+            <button style="width: fit-content" onclick={open_tabs_dialog}>{ "Tabs Dialog" }</button>
             <LongDialog dialog_ref={long_dialog_ref} />
             <FormDialog dialog_ref={form_dialog_ref} />
+            <TabsDialog dialog_ref={tabs_dialog_ref} />
         </div>
     }
 }
@@ -163,5 +167,45 @@ pub fn counter(CounterProps { value, on_change }: &CounterProps) -> Html {
             { *value }
             <button onclick={increment}>{ "+" }</button>
         </div>
+    }
+}
+
+#[derive(Properties, PartialEq)]
+pub struct TabsDialogProps {
+    dialog_ref: NodeRef,
+}
+
+#[function_component(TabsDialog)]
+pub fn long_dialog(TabsDialogProps { dialog_ref }: &TabsDialogProps) -> Html {
+    let close_dialog = make_close_dialog!(dialog_ref, Callback::noop());
+
+    html! {
+        <Dialog {dialog_ref}>
+            <DialogHeader>
+                <DialogTitle>{ "This is a dialog with tabs" }</DialogTitle>
+            </DialogHeader>
+            <DialogContent>
+                // TODO: Fix the indicator in dialog failed to get the width in first render, this issue might related to create_portal.
+                <Tabs default_value="1">
+                    <TabList>
+                        <Tab value="1">{ "Dandelion" }</Tab>
+                        <Tab value="3" disabled=true>{ "Wayne" }</Tab>
+                        <Tab value="2">{ "Heather" }</Tab>
+                    </TabList>
+                    <TabPanel value="1">
+                        <div>{ "Dandelion" }</div>
+                    </TabPanel>
+                    <TabPanel value="3">
+                        <div>{ "Wayne" }</div>
+                    </TabPanel>
+                    <TabPanel value="2">
+                        <div>{ "Heather" }</div>
+                    </TabPanel>
+                </Tabs>
+            </DialogContent>
+            <DialogFooter>
+                <button onclick={close_dialog}>{ "Close Dialog" }</button>
+            </DialogFooter>
+        </Dialog>
     }
 }
