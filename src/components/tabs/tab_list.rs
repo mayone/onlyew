@@ -103,7 +103,17 @@ impl Component for TabList {
 
         let selected = tabs_context.state.selected_tab.clone();
 
-        update_indicator_position(&self.tab_refs, &self.indicator_ref, &selected, first_render);
+        if first_render {
+            let tab_refs = self.tab_refs.clone();
+            let indicator_ref = self.indicator_ref.clone();
+            let selected = selected.clone();
+            gloo::timers::callback::Timeout::new(0, move || {
+                update_indicator_position(&tab_refs, &indicator_ref, &selected, false);
+            })
+            .forget();
+        } else {
+            update_indicator_position(&self.tab_refs, &self.indicator_ref, &selected, first_render);
+        }
     }
 }
 
