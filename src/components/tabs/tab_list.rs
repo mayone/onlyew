@@ -4,6 +4,7 @@ use crate::contexts::{TabsAction, TabsContext};
 
 use super::Tab;
 
+use gloo::timers::callback::Timeout;
 use web_sys::HtmlElement;
 use yew::prelude::*;
 
@@ -106,9 +107,8 @@ impl Component for TabList {
         if first_render {
             let tab_refs = self.tab_refs.clone();
             let indicator_ref = self.indicator_ref.clone();
-            let selected = selected.clone();
-            gloo::timers::callback::Timeout::new(0, move || {
-                update_indicator_position(&tab_refs, &indicator_ref, &selected, false);
+            let _ = Timeout::new(0, move || {
+                update_indicator_position(&tab_refs, &indicator_ref, &selected, first_render);
             })
             .forget();
         } else {
@@ -125,6 +125,9 @@ fn update_indicator_position(
 ) {
     if let Some(tab_ref) = tab_refs.get(&selected.to_string()) {
         if let Some(tab) = tab_ref.cast::<HtmlElement>() {
+            // log::info!("client_width: {}", tab.client_width());
+            // log::info!("offset_left: {}", tab.offset_left());
+
             let indicator_style = format!(
                 "width: {}px; transform: translateX({}px);{}",
                 tab.client_width(),

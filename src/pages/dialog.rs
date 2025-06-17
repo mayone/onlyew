@@ -50,7 +50,7 @@ pub fn dialog() -> Html {
     }
 }
 
-#[derive(Properties, PartialEq)]
+#[derive(Debug, Properties, PartialEq)]
 pub struct LongDialogProps {
     dialog_ref: NodeRef,
 }
@@ -84,7 +84,7 @@ Quisque condimentum quis sapien quis consectetur. Quisque ornare sit amet augue 
     }
 }
 
-#[derive(Properties, PartialEq)]
+#[derive(Debug, Properties, PartialEq)]
 pub struct FormDialogProps {
     dialog_ref: NodeRef,
 }
@@ -170,7 +170,7 @@ pub fn counter(CounterProps { value, on_change }: &CounterProps) -> Html {
     }
 }
 
-#[derive(Properties, PartialEq)]
+#[derive(Debug, Properties, PartialEq)]
 pub struct TabsDialogProps {
     dialog_ref: NodeRef,
 }
