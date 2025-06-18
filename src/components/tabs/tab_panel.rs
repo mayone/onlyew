@@ -5,9 +5,9 @@ use crate::contexts::TabsContext;
 /// Properties for the [`TabPanel`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabPanelProperties {
+    pub value: AttrValue,
     #[prop_or_default]
     pub children: Children,
-    pub value: AttrValue,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
@@ -63,10 +63,10 @@ impl Component for TabPanel {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let TabPanelProperties {
+            value,
             children,
             class,
             style,
-            value,
             ..
         } = ctx.props();
 

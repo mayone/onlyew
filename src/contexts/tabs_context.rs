@@ -57,3 +57,36 @@ pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
         </ContextProvider<TabsContext>>
     }
 }
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_render_tabs_provider() {
+        let _ = html! { <TabsProvider /> };
+    }
+
+    #[test]
+    fn test_tabs_provider_with_props() {
+        let default_value = AttrValue::from("tab1");
+
+        let _ = html! {
+            <TabsProvider default_value={Some(default_value)} on_change={Callback::noop()}>
+                <div>{ "Tabs" }</div>
+            </TabsProvider>
+        };
+    }
+
+    #[test]
+    fn test_tabs_state_reducer() {
+        let initial_state = TabsState {
+            selected_tab: AttrValue::from("initial"),
+        };
+
+        let new_tab = AttrValue::from("new_tab");
+        let reduced =
+            TabsState::reduce(Rc::new(initial_state), TabsAction::Select(new_tab.clone()));
+
+        assert_eq!(reduced.selected_tab, new_tab);
+    }
+}
