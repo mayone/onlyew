@@ -60,14 +60,15 @@ pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
 #[cfg(test)]
 mod tests {
     use super::*;
+    // use wasm_bindgen_test::*;
 
     #[test]
-    fn test_render_tabs_provider() {
+    fn render_tabs_provider() {
         let _ = html! { <TabsProvider /> };
     }
 
     #[test]
-    fn test_tabs_provider_with_props() {
+    fn tabs_provider_with_props() {
         let default_value = AttrValue::from("tab1");
 
         let _ = html! {
@@ -78,7 +79,7 @@ mod tests {
     }
 
     #[test]
-    fn test_tabs_state_reducer() {
+    fn tabs_state_reducer() {
         let initial_state = TabsState {
             selected_tab: AttrValue::from("initial"),
         };
@@ -89,4 +90,45 @@ mod tests {
 
         assert_eq!(reduced.selected_tab, new_tab);
     }
+
+    // TODO: Add test for context.
+    // #[function_component(TestConsumer)]
+    // fn test_consumer() -> Html {
+    //     let context = use_context::<TabsContext>().expect("context not found");
+
+    //     html! { <div id="test-output">{ context.state.selected_tab.clone() }</div> }
+    // }
+
+    // #[function_component(TestRoot)]
+    // fn test_root() -> Html {
+    //     let default_value = AttrValue::from("tab-1");
+
+    //     html! {
+    //         <TabsProvider default_value={Some(default_value.clone())}>
+    //             <TestConsumer />
+    //         </TabsProvider>
+    //     }
+    // }
+
+    // wasm_bindgen_test_configure!(run_in_browser);
+
+    // #[wasm_bindgen_test]
+    // fn test_tabs_provider_initializes_with_default_value() {
+    //     let document = gloo::utils::document();
+    //     let body = document.body().expect("document should have a body");
+
+    //     let root = document.create_element("div").unwrap();
+    //     root.set_id("test-root");
+    //     body.append_child(&root).unwrap();
+
+    //     yew::Renderer::<TestRoot>::with_root(root).render();
+
+    //     let output = document
+    //         .get_element_by_id("test-output")
+    //         .unwrap()
+    //         .text_content()
+    //         .unwrap();
+
+    //     assert_eq!(output, "tab-1");
+    // }
 }

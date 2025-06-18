@@ -10,3 +10,6 @@ yew-router = { git = "https://github.com/yewstack/yew.git" }
 log = "0.4.27"
 wasm-logger = "0.2.0"
 gloo = "0.11.0"
+
+# [dev-dependencies]
+# wasm-bindgen-test = "0.3.0"
