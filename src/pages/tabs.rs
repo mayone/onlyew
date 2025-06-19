@@ -2,7 +2,7 @@ use yew::prelude::*;
 use yew_router::prelude::Link;
 
 use crate::{
-    components::{Tab, Tabs},
+    components::{Tab, TabList, TabPanel, Tabs},
     route::Route,
 };
 
@@ -14,18 +14,47 @@ pub fn tabs() -> Html {
             <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
             <div style="display: flex; flex-direction: column; gap: 20px">
                 <Tabs
-                    default_tab=1
-                    on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}
+                    default_value="723"
+                    on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}
                 >
-                    <Tab panel={html!{<div>{"Dandelion"}</div>}}>{ "Dandelion" }</Tab>
-                    <Tab panel={html!{<div>{"Heather"}</div>}}>{ "Heather" }</Tab>
-                    <Tab panel={html!{<div>{"Lavender"}</div>}}>{ "Lavender" }</Tab>
-                    <Tab panel={html!{<div>{"Lilac"}</div>}}>{ "Lilac" }</Tab>
-                    <Tab panel={html!{<div>{"Marigold"}</div>}}>{ "Marigold" }</Tab>
-                    <Tab panel={html!{<div>{"Narcissus"}</div>}}>{ "Narcissus" }</Tab>
-                    <Tab panel={html!{<div>{"Orchid"}</div>}}>{ "Orchid" }</Tab>
-                    <Tab disabled=true panel={html!{<div>{"Poppy"}</div>}}>{ "Poppy" }</Tab>
-                    <Tab panel={html!{<div>{"Rose"}</div>}}>{ "Rose" }</Tab>
+                    <TabList>
+                        <Tab value="1">{ "Dandelion" }</Tab>
+                        <Tab value="723">{ "Heather" }</Tab>
+                        <Tab value="3">{ "Lavender" }</Tab>
+                        <Tab value="4">{ "Lilac" }</Tab>
+                        <Tab value="5">{ "Marigold" }</Tab>
+                        <Tab value="6">{ "Narcissus" }</Tab>
+                        <Tab value="7">{ "Orchid" }</Tab>
+                        <Tab value="8" disabled=true>{ "Poppy" }</Tab>
+                        <Tab value="9">{ "Rose" }</Tab>
+                    </TabList>
+                    <TabPanel value="1">
+                        <div>{ "Dandelion" }</div>
+                    </TabPanel>
+                    <TabPanel value="723">
+                        <div>{ "Heather" }</div>
+                    </TabPanel>
+                    <TabPanel value="3">
+                        <div>{ "Lavender" }</div>
+                    </TabPanel>
+                    <TabPanel value="4">
+                        <div>{ "Lilac" }</div>
+                    </TabPanel>
+                    <TabPanel value="5">
+                        <div>{ "Marigold" }</div>
+                    </TabPanel>
+                    <TabPanel value="6">
+                        <div>{ "Narcissus" }</div>
+                    </TabPanel>
+                    // <TabPanel value="7">
+                    //     <div>{ "Orchid" }</div>
+                    // </TabPanel>
+                    <TabPanel value="723">
+                        <div>{ "Poppy" }</div>
+                    </TabPanel>
+                    <TabPanel value="9">
+                        <div>{ "Rose" }</div>
+                    </TabPanel>
                 </Tabs>
             </div>
         </div>

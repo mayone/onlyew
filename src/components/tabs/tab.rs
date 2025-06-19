@@ -1,41 +1,26 @@
 use yew::prelude::*;
 
-/// The Tab component has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside the tab button.
-/// - `panel`: The content to be rendered in the panel when this tab is selected.
-///
-/// Optional props:
-///
-/// - `disabled`: Whether the tab is disabled.
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
-#[derive(Debug, PartialEq, Properties)]
+use crate::contexts::{TabsAction, TabsContext};
+
+/// Properties for the [`Tab`].
+#[derive(Clone, Debug, PartialEq, Properties)]
 pub struct TabProperties {
+    pub value: AttrValue,
     #[prop_or_default]
     pub children: Children,
-    pub panel: Html,
     #[prop_or_default]
     pub disabled: bool,
+    #[prop_or_default]
+    pub is_selected: bool,
+    #[prop_or_default]
+    pub node_ref: NodeRef,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
 
-/// A component to represent a single tab in a Tabs component.
-///
-/// Usage:
-/// ```ignore
-/// html! {
-///     <Tabs>
-///         <Tab panel={html!{<div>{"Panel 1"}</div>}}>{"Tab 1"}</Tab>
-///         <Tab panel={html!{<div>{"Panel 2"}</div>}}>{"Tab 2"}</Tab>
-///     </Tabs>
-/// }
-/// ```
+/// A component to represent a single tab in a [`TabList`] component.
 #[derive(Debug)]
 pub struct Tab;
 
@@ -47,23 +32,51 @@ impl Component for Tab {
         Self
     }
 
-    fn update(&mut self, _ctx: &Context<Self>, _msg: Self::Message) -> bool {
-        false
-    }
-
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let (tabs_context, _) = ctx
+            .link()
+            .context::<TabsContext>(Callback::noop())
+            .expect("No tabs context provided");
+
         let Self::Properties {
+            value,
             children,
             disabled,
+            is_selected,
+            node_ref,
             class,
             style,
             ..
         } = ctx.props();
 
         html! {
-            <div class={classes!("tab", class.clone(), disabled.then_some("disabled"))} {style}>
+            <button
+                ref={node_ref}
+                disabled={*disabled}
+                class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
+                {style}
+                onclick={let value = value.clone();
+                    let is_selected = *is_selected;
+                    let tabs_context = tabs_context.clone();
+                    Callback::from(move |_| {
+                        if !is_selected {
+                            tabs_context.state.dispatch(TabsAction::Select(value.clone()));
+                            tabs_context.on_change.emit(value.clone());
+                        }
+                    })}
+            >
                 { children.clone() }
-            </div>
+            </button>
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn render_tab() {
+        let _ = html! { <Tab value="1">{ "Tab 1" }</Tab> };
     }
 }
