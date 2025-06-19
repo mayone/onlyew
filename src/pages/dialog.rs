@@ -176,7 +176,7 @@ pub struct TabsDialogProps {
 }
 
 #[function_component(TabsDialog)]
-pub fn long_dialog(TabsDialogProps { dialog_ref }: &TabsDialogProps) -> Html {
+pub fn tabs_dialog(TabsDialogProps { dialog_ref }: &TabsDialogProps) -> Html {
     let close_dialog = make_close_dialog!(dialog_ref, Callback::noop());
 
     html! {
