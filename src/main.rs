@@ -12,10 +12,11 @@ use route::switch;
 #[function_component(App)]
 fn app() -> Html {
     html! {
-        <BrowserRouter>
-            <div id="modal-root" />
-            <Switch<Route> render={switch} />
-        </BrowserRouter>
+        <div id="modal-root">
+            <BrowserRouter>
+                <Switch<Route> render={switch} />
+            </BrowserRouter>
+        </div>
     }
 }
 

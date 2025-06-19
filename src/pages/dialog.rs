@@ -4,63 +4,77 @@ use yew_router::prelude::Link;
 use crate::Route;
 use crate::components::*;
 
-macro_rules! make_open_dialog {
-    ($dialog_ref:expr) => {{
-        let dialog_ref = $dialog_ref.clone();
-        Callback::from(move |_| open_dialog(&dialog_ref))
-    }};
-}
+macro_rules! make_toggle_callbacks {
+    ($state:expr) => {{
+        let state = $state.clone();
 
-macro_rules! make_close_dialog {
-    ($dialog_ref:expr, $on_close:expr) => {{
-        let dialog_ref = $dialog_ref.clone();
-        let on_close = $on_close.clone();
-        Callback::from(move |_| close_dialog(&dialog_ref, &on_close))
-    }};
-}
+        let toggle_for_click = {
+            let state = state.clone();
+            Callback::from(move |_| {
+                state.set(!*state);
+            })
+        };
 
-macro_rules! make_hide_dialog {
-    ($dialog_ref:expr) => {{
-        let dialog_ref = $dialog_ref.clone();
-        Callback::from(move |_| hide_dialog(&dialog_ref))
+        let toggle_for_close = {
+            let state = state.clone();
+            Callback::from(move |_: ()| {
+                state.set(!*state);
+            })
+        };
+
+        (toggle_for_click, toggle_for_close)
     }};
 }
 
 #[function_component(DialogPage)]
 pub fn dialog() -> Html {
-    let long_dialog_ref = NodeRef::default();
-    let form_dialog_ref = NodeRef::default();
-    let tabs_dialog_ref = NodeRef::default();
+    let is_long_dialog_open = use_state(|| false);
+    let is_form_dialog_open = use_state(|| false);
+    let is_tabs_dialog_open = use_state(|| false);
 
-    let open_long_dialog = make_open_dialog!(long_dialog_ref);
-    let open_form_dialog = make_open_dialog!(form_dialog_ref);
-    let open_tabs_dialog = make_open_dialog!(tabs_dialog_ref);
+    let (toggle_long_dialog, toggle_long_dialog_for_close) =
+        make_toggle_callbacks!(is_long_dialog_open);
+    let (toggle_form_dialog, toggle_form_dialog_for_close) =
+        make_toggle_callbacks!(is_form_dialog_open);
+    let (toggle_tabs_dialog, toggle_tabs_dialog_for_close) =
+        make_toggle_callbacks!(is_tabs_dialog_open);
 
     html! {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
             <h1>{ "Dialog Showcase" }</h1>
             <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
-            <button style="width: fit-content" onclick={open_long_dialog}>{ "Long Dialog" }</button>
-            <button style="width: fit-content" onclick={open_form_dialog}>{ "Form Dialog" }</button>
-            <button style="width: fit-content" onclick={open_tabs_dialog}>{ "Tabs Dialog" }</button>
-            <LongDialog dialog_ref={long_dialog_ref} />
-            <FormDialog dialog_ref={form_dialog_ref} />
-            <TabsDialog dialog_ref={tabs_dialog_ref} />
+            <button style="width: fit-content" onclick={toggle_long_dialog}>{ "Long Dialog" }</button>
+            <button style="width: fit-content" onclick={toggle_form_dialog}>{ "Form Dialog" }</button>
+            <button style="width: fit-content" onclick={toggle_tabs_dialog}>{ "Tabs Dialog" }</button>
+            <LongDialog is_open={*is_long_dialog_open} handle_close={toggle_long_dialog_for_close} />
+            <FormDialog is_open={*is_form_dialog_open} handle_close={toggle_form_dialog_for_close} />
+            <TabsDialog is_open={*is_tabs_dialog_open} handle_close={toggle_tabs_dialog_for_close} />
         </div>
     }
 }
 
 #[derive(Debug, Properties, PartialEq)]
 pub struct LongDialogProps {
-    dialog_ref: NodeRef,
+    is_open: bool,
+    handle_close: Callback<()>,
 }
 
 #[function_component(LongDialog)]
-pub fn long_dialog(LongDialogProps { dialog_ref }: &LongDialogProps) -> Html {
-    let close_dialog = make_close_dialog!(dialog_ref, Callback::noop());
+pub fn long_dialog(
+    LongDialogProps {
+        is_open,
+        handle_close,
+    }: &LongDialogProps,
+) -> Html {
+    let handle_close_for_click = {
+        let handle_close = handle_close.clone();
+        Callback::from(move |_| {
+            handle_close.emit(());
+        })
+    };
 
     html! {
-        <Dialog {dialog_ref}>
+        <Dialog open={*is_open} on_close={handle_close}>
             <DialogHeader>
                 <DialogTitle>{ "This is a long dialog" }</DialogTitle>
             </DialogHeader>
@@ -78,7 +92,7 @@ Quisque condimentum quis sapien quis consectetur. Quisque ornare sit amet augue 
                 </div>
             </DialogContent>
             <DialogFooter>
-                <button onclick={close_dialog}>{ "Close Dialog" }</button>
+                <button onclick={handle_close_for_click}>{ "Close Dialog" }</button>
             </DialogFooter>
         </Dialog>
     }
@@ -86,11 +100,17 @@ Quisque condimentum quis sapien quis consectetur. Quisque ornare sit amet augue 
 
 #[derive(Debug, Properties, PartialEq)]
 pub struct FormDialogProps {
-    dialog_ref: NodeRef,
+    is_open: bool,
+    handle_close: Callback<()>,
 }
 
 #[function_component(FormDialog)]
-pub fn form_dialog(FormDialogProps { dialog_ref }: &FormDialogProps) -> Html {
+pub fn form_dialog(
+    FormDialogProps {
+        is_open,
+        handle_close,
+    }: &FormDialogProps,
+) -> Html {
     let value = use_state(|| 0);
 
     let on_change = {
@@ -105,36 +125,38 @@ pub fn form_dialog(FormDialogProps { dialog_ref }: &FormDialogProps) -> Html {
         })
     };
 
-    let close_dialog = make_close_dialog!(dialog_ref, clear_value.clone());
-    let hide_dialog = make_hide_dialog!(dialog_ref);
-
-    let handle_cancel = {
-        let close_dialog = close_dialog.clone();
-        Callback::from(move |e: MouseEvent| {
-            close_dialog.emit(e);
+    let handle_close_for_click = {
+        let handle_close = handle_close.clone();
+        Callback::from(move |_| {
+            handle_close.emit(());
         })
     };
 
     let handle_submit = {
         let value = value.clone();
-        let close_dialog = close_dialog.clone();
-        Callback::from(move |e: MouseEvent| {
+        let clear_value = clear_value.clone();
+        let handle_close = handle_close.clone();
+        Callback::from(move |_| {
             log::info!("Submit: {}", *value);
-            close_dialog.emit(e);
+            handle_close.emit(());
+            clear_value.emit(());
         })
     };
 
     html! {
-        <Dialog {dialog_ref} on_close={clear_value}>
+        <Dialog open={*is_open} on_close={handle_close}>
             <DialogHeader>
                 <DialogTitle>{ "This is a dialog with form" }</DialogTitle>
             </DialogHeader>
             <DialogContent>
                 <Counter value={*value} {on_change} />
-                <button onclick={hide_dialog.clone()}>{ "Hide" }</button>
+                <button onclick={handle_close_for_click.clone()}>{ "Hide" }</button>
             </DialogContent>
             <DialogFooter>
-                <button onclick={handle_cancel}>{ "Cancel" }</button>
+                <button onclick={Callback::from(move |e: MouseEvent| {
+                    clear_value.emit(());
+                    handle_close_for_click.emit(e);
+                })}>{ "Clear" }</button>
                 <button onclick={handle_submit}>{ "Submit" }</button>
             </DialogFooter>
         </Dialog>
@@ -172,15 +194,26 @@ pub fn counter(CounterProps { value, on_change }: &CounterProps) -> Html {
 
 #[derive(Debug, Properties, PartialEq)]
 pub struct TabsDialogProps {
-    dialog_ref: NodeRef,
+    is_open: bool,
+    handle_close: Callback<()>,
 }
 
 #[function_component(TabsDialog)]
-pub fn tabs_dialog(TabsDialogProps { dialog_ref }: &TabsDialogProps) -> Html {
-    let close_dialog = make_close_dialog!(dialog_ref, Callback::noop());
+pub fn tabs_dialog(
+    TabsDialogProps {
+        is_open,
+        handle_close,
+    }: &TabsDialogProps,
+) -> Html {
+    let handle_close_for_click = {
+        let handle_close = handle_close.clone();
+        Callback::from(move |_| {
+            handle_close.emit(());
+        })
+    };
 
     html! {
-        <Dialog {dialog_ref}>
+        <Dialog open={*is_open} on_close={handle_close}>
             <DialogHeader>
                 <DialogTitle>{ "This is a dialog with tabs" }</DialogTitle>
             </DialogHeader>
@@ -204,7 +237,7 @@ pub fn tabs_dialog(TabsDialogProps { dialog_ref }: &TabsDialogProps) -> Html {
                 </Tabs>
             </DialogContent>
             <DialogFooter>
-                <button onclick={close_dialog}>{ "Close Dialog" }</button>
+                <button onclick={handle_close_for_click}>{ "Close Dialog" }</button>
             </DialogFooter>
         </Dialog>
     }
