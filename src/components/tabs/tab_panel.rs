@@ -88,7 +88,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_render_tab_panel() {
+    fn render_tab_panel() {
         let _ = html! {
             <TabPanel value="1">
                 <div>{ "Tab 1" }</div>

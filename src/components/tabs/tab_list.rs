@@ -1,13 +1,13 @@
+use gloo::timers::callback::Timeout;
 use std::{collections::HashMap, rc::Rc};
+use web_sys::HtmlElement;
+use yew::prelude::*;
 
 use crate::contexts::{TabsAction, TabsContext};
 
 use super::Tab;
 
-use gloo::timers::callback::Timeout;
-use web_sys::HtmlElement;
-use yew::prelude::*;
-
+/// Properties for the [`TabList`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct TabListProperties {
     #[prop_or_default]
@@ -18,7 +18,7 @@ pub struct TabListProperties {
     pub style: Option<AttrValue>,
 }
 
-/// A component to contain a list of tabs.
+/// A component to contain a list of [`Tab`].
 #[derive(Debug)]
 pub struct TabList {
     indicator_ref: NodeRef,
@@ -125,9 +125,6 @@ fn update_indicator_position(
 ) {
     if let Some(tab_ref) = tab_refs.get(&selected.to_string()) {
         if let Some(tab) = tab_ref.cast::<HtmlElement>() {
-            // log::info!("client_width: {}", tab.client_width());
-            // log::info!("offset_left: {}", tab.offset_left());
-
             let indicator_style = format!(
                 "width: {}px; transform: translateX({}px);{}",
                 tab.client_width(),
@@ -151,7 +148,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_render_tab_list() {
+    fn render_tab_list() {
         let _ = html! {
             <TabList>
                 <Tab value="1">{ "Tab 1" }</Tab>

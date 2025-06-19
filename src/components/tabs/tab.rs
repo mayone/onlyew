@@ -76,7 +76,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_render_tab() {
+    fn render_tab() {
         let _ = html! { <Tab value="1">{ "Tab 1" }</Tab> };
     }
 }

@@ -85,7 +85,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_render_tabs() {
+    fn render_tabs() {
         let _ = html! {
             <Tabs>
                 <TabList>
