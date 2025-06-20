@@ -46,10 +46,10 @@ impl Component for Modal {
     type Properties = ModalProperties;
 
     fn create(_ctx: &Context<Self>) -> Self {
-        let node_ref = NodeRef::default();
         let modal_root = gloo::utils::document()
             .get_element_by_id(MODAL_ROOT_ID)
-            .unwrap_or_else(|| panic!("Expected to find a #{} element", MODAL_ROOT_ID));
+            .unwrap_or_else(|| panic!("Expected to find a #{MODAL_ROOT_ID} element"));
+        let node_ref = NodeRef::default();
 
         Self {
             modal_root,
@@ -68,8 +68,8 @@ impl Component for Modal {
         let content = html! {
             <dialog
                 class="modal"
-                ref={self.node_ref.clone()}
                 open={*open}
+                ref={self.node_ref.clone()}
                 onkeydown={let on_close = on_close.clone();
                     Callback::from(move |e: KeyboardEvent| {
                         if e.key() == "Escape" {
@@ -98,7 +98,7 @@ impl Component for Modal {
 
         let app_root = gloo::utils::document()
             .get_element_by_id(APP_ID)
-            .unwrap_or_else(|| panic!("Expected to find the element {}", APP_ID));
+            .unwrap_or_else(|| panic!("Expected to find a #{APP_ID} element"));
         let _ = app_root.set_attribute("inert", "");
 
         create_portal(content, self.modal_root.clone())
@@ -108,7 +108,7 @@ impl Component for Modal {
         if !self.modal_root.has_child_nodes() {
             let app_root = gloo::utils::document()
                 .get_element_by_id(APP_ID)
-                .unwrap_or_else(|| panic!("Expected to find the element {}", APP_ID));
+                .unwrap_or_else(|| panic!("Expected to find a #{APP_ID} element"));
             let _ = app_root.remove_attribute("inert");
         } else if let Some(dialog) = self.node_ref.cast::<HtmlElement>() {
             let _ = dialog.focus();
