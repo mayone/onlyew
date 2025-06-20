@@ -12,23 +12,7 @@ use yew::prelude::*;
 
 use crate::components::Modal;
 
-/// The Dialog component has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside the Dialog.
-/// - `dialog_ref`: Node reference to the Dialog, which will be used to control
-///   the state of the it.
-///
-/// Optional props:
-///
-/// - `open`: If enabled, the Dialog will be open by default.
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
-///
-/// Event handlers:
-///
-/// - `on_close`: Callback function, called when the Dialog is closed.
+/// Properties for the [`Dialog`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct DialogProperties {
     pub children: Children,

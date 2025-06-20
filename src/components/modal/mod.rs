@@ -1,9 +1,9 @@
 //! Container based on [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog) tag.
 
-use web_sys::Element;
-// use web_sys::KeyboardEvent;
+use web_sys::{Element, HtmlElement};
 use yew::prelude::*;
 
+const APP_ID: &str = "app-root";
 const MODAL_ROOT_ID: &str = "modal-root";
 
 /// Properties for the [`Modal`].
@@ -35,12 +35,10 @@ pub struct ModalProperties {
 ///    instead of `dialog`. Since when `open` is enabled, the position
 ///    of the first time rendered component inside dialog will be off
 ///    vertically.
-/// 3. The default open dialog cannot be closed by Esc key.
-/// 4. `oncancel` is for [`<dialog>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog)
-///    "cancel" event, required for `on_close` callback when Esc key pressed.
 #[derive(Debug)]
 pub struct Modal {
     modal_root: Element,
+    node_ref: NodeRef,
 }
 
 impl Component for Modal {
@@ -48,11 +46,15 @@ impl Component for Modal {
     type Properties = ModalProperties;
 
     fn create(_ctx: &Context<Self>) -> Self {
+        let node_ref = NodeRef::default();
         let modal_root = gloo::utils::document()
             .get_element_by_id(MODAL_ROOT_ID)
             .unwrap_or_else(|| panic!("Expected to find a #{} element", MODAL_ROOT_ID));
 
-        Self { modal_root }
+        Self {
+            modal_root,
+            node_ref,
+        }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
@@ -66,22 +68,19 @@ impl Component for Modal {
         let content = html! {
             <dialog
                 class="modal"
+                ref={self.node_ref.clone()}
                 open={*open}
-                // onkeydown={
-                //     let on_close = on_close.clone();
-                //     Callback::from(move |e: KeyboardEvent| {
-                //         if e.key() == "Escape" {
-                //             on_close.emit(());
-                //         }
-                //     })
-                // }
+                onkeydown={let on_close = on_close.clone();
+                    Callback::from(move |e: KeyboardEvent| {
+                        if e.key() == "Escape" {
+                            on_close.emit(());
+                        }
+                    })}
             >
                 <div
                     class={classes!("modal-backdrop")}
-                    onclick={
-                        let on_close = on_close.clone();
-                        Callback::from(move |_| on_close.emit(()))
-                    }
+                    onclick={let on_close = on_close.clone();
+                        Callback::from(move |_| on_close.emit(()))}
                 >
                     <div
                         class={classes!("modal-content")}
@@ -97,7 +96,23 @@ impl Component for Modal {
             return html! {};
         }
 
+        let app_root = gloo::utils::document()
+            .get_element_by_id(APP_ID)
+            .unwrap_or_else(|| panic!("Expected to find the element {}", APP_ID));
+        let _ = app_root.set_attribute("inert", "");
+
         create_portal(content, self.modal_root.clone())
+    }
+
+    fn rendered(&mut self, _ctx: &Context<Self>, _first_render: bool) {
+        if !self.modal_root.has_child_nodes() {
+            let app_root = gloo::utils::document()
+                .get_element_by_id(APP_ID)
+                .unwrap_or_else(|| panic!("Expected to find the element {}", APP_ID));
+            let _ = app_root.remove_attribute("inert");
+        } else if let Some(dialog) = self.node_ref.cast::<HtmlElement>() {
+            let _ = dialog.focus();
+        }
     }
 }
 

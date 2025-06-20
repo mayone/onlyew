@@ -43,9 +43,15 @@ pub fn dialog() -> Html {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
             <h1>{ "Dialog Showcase" }</h1>
             <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
-            <button style="width: fit-content" onclick={toggle_long_dialog}>{ "Long Dialog" }</button>
-            <button style="width: fit-content" onclick={toggle_form_dialog}>{ "Form Dialog" }</button>
-            <button style="width: fit-content" onclick={toggle_tabs_dialog}>{ "Tabs Dialog" }</button>
+            <button style="width: fit-content" onclick={toggle_long_dialog}>
+                { "Long Dialog" }
+            </button>
+            <button style="width: fit-content" onclick={toggle_form_dialog}>
+                { "Form Dialog" }
+            </button>
+            <button style="width: fit-content" onclick={toggle_tabs_dialog}>
+                { "Tabs Dialog" }
+            </button>
             <LongDialog is_open={*is_long_dialog_open} handle_close={toggle_long_dialog_for_close} />
             <FormDialog is_open={*is_form_dialog_open} handle_close={toggle_form_dialog_for_close} />
             <TabsDialog is_open={*is_tabs_dialog_open} handle_close={toggle_tabs_dialog_for_close} />
@@ -153,10 +159,14 @@ pub fn form_dialog(
                 <button onclick={handle_close_for_click.clone()}>{ "Hide" }</button>
             </DialogContent>
             <DialogFooter>
-                <button onclick={Callback::from(move |e: MouseEvent| {
+                <button
+                    onclick={Callback::from(move |e: MouseEvent| {
                     clear_value.emit(());
                     handle_close_for_click.emit(e);
-                })}>{ "Clear" }</button>
+                })}
+                >
+                    { "Clear" }
+                </button>
                 <button onclick={handle_submit}>{ "Submit" }</button>
             </DialogFooter>
         </Dialog>
