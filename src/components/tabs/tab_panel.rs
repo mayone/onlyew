@@ -14,11 +14,6 @@ pub struct TabPanelProperties {
     pub style: Option<AttrValue>,
 }
 
-#[derive(Debug)]
-pub enum TabPanelMessage {
-    ContextUpdated(TabsContext),
-}
-
 /// A component to display the selected tab's content.
 ///
 /// Usage:
@@ -31,37 +26,30 @@ pub enum TabPanelMessage {
 /// ```
 #[derive(Debug)]
 pub struct TabPanel {
-    tabs_context: TabsContext,
     _ctx_handle: ContextHandle<TabsContext>,
 }
 
 impl Component for TabPanel {
-    type Message = TabPanelMessage;
+    type Message = ();
     type Properties = TabPanelProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let (tabs_context, ctx_handle) = ctx
+        let (_tabs_context, ctx_handle) = ctx
             .link()
-            .context::<TabsContext>(ctx.link().callback(Self::Message::ContextUpdated))
+            .context::<TabsContext>(ctx.link().callback(|_| ()))
             .expect("No tabs context provided");
 
         Self {
-            tabs_context,
             _ctx_handle: ctx_handle,
         }
     }
 
-    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
-        match msg {
-            Self::Message::ContextUpdated(new_ctx) => {
-                self.tabs_context = new_ctx;
-
-                true
-            }
-        }
-    }
-
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let (tabs_context, _) = ctx
+            .link()
+            .context::<TabsContext>(Callback::noop())
+            .expect("No tabs context provided");
+
         let TabPanelProperties {
             value,
             children,
@@ -70,7 +58,7 @@ impl Component for TabPanel {
             ..
         } = ctx.props();
 
-        let is_selected = value.clone() == self.tabs_context.state.selected_tab;
+        let is_selected = value.clone() == tabs_context.state.selected_tab;
 
         html! {
             <div

@@ -8,42 +8,19 @@ pub use dialog_footer::DialogFooter;
 pub use dialog_header::DialogHeader;
 pub use dialog_title::DialogTitle;
 
-pub use crate::components::{
-    close_modal as close_dialog, hide_modal as hide_dialog, open_modal as open_dialog,
-};
-
 use yew::prelude::*;
 
 use crate::components::Modal;
 
-/// The Dialog component has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside the Dialog.
-/// - `dialog_ref`: Node reference to the Dialog, which will be used to control
-///   the state of the it.
-///
-/// Optional props:
-///
-/// - `default_open`: If enabled, the Dialog will be open by default.
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
-///
-/// Event handlers:
-///
-/// - `on_close`: Callback function, called when the Dialog is closed.
+/// Properties for the [`Dialog`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct DialogProperties {
     pub children: Children,
-    pub dialog_ref: NodeRef,
-    #[prop_or_default]
-    pub default_open: bool,
+    pub open: bool,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
     pub style: Option<AttrValue>,
-    #[prop_or_default]
     pub on_close: Callback<()>,
 }
 
@@ -55,26 +32,7 @@ pub struct DialogProperties {
 ///
 /// Usage:
 /// ```ignore
-///
-/// let dialog_ref: NodeRef = NodeRef::default();
-///
-/// let close_dialog = {
-///     let dialog_ref = dialog_ref.clone();
-///     Callback::from(move |_| close_dialog(&dialog_ref, &Callback::noop()))
-/// };
-///
-/// let hide_dialog = {
-///     let dialog_ref = dialog_ref.clone();
-///     Callback::from(move |_| hide_dialog(&dialog_ref))
-/// };
-///
-/// let open_dialog = {
-///     let dialog_ref = dialog_ref.clone();
-///     Callback::from(move |_| open_dialog(&dialog_ref))
-/// };
-///
-/// <button onclick={open_dialog}>{"Open dialog"}</button>
-/// <Dialog {dialog_ref} on_close={Callback::noop()}>
+/// <Dialog open=true on_close={Callback::noop()}>
 ///     <DialogHeader>
 ///         <DialogTitle>{ "..." }</DialogTitle>
 ///     </DialogHeader>
@@ -87,12 +45,6 @@ pub struct DialogProperties {
 ///     </DialogFooter>
 /// </Dialog>
 /// ```
-///
-/// Note:
-/// - `dialog_ref` is passed to Modal to control it
-/// - `close_dialog` is the re-export of `close_modal`
-/// - `hide_dialog` is the re-export of `hide_modal`
-/// - `open_dialog` is the re-export of `open_modal`
 #[derive(Debug)]
 pub struct Dialog;
 
@@ -107,15 +59,14 @@ impl Component for Dialog {
     fn view(&self, ctx: &Context<Self>) -> Html {
         let Self::Properties {
             children,
-            dialog_ref,
-            default_open,
+            open,
             class,
             style,
             on_close,
         } = ctx.props();
 
         html! {
-            <Modal modal_ref={dialog_ref} {default_open} {on_close}>
+            <Modal {open} {on_close}>
                 <div
                     class={classes!("dialog",
                         class.clone()
@@ -135,9 +86,8 @@ mod test {
 
     #[test]
     fn test_render_dialog() {
-        let dialog_ref = NodeRef::default();
         let _ = yew::html! {
-            <Dialog {dialog_ref}>
+            <Dialog open=true on_close={Callback::noop()}>
                 <DialogHeader>
                     <DialogTitle>{ "Title" }</DialogTitle>
                 </DialogHeader>
