@@ -15,7 +15,7 @@ use crate::contexts::TabsProvider;
 pub struct TabsProperties {
     #[prop_or_default]
     pub children: Children,
-    /// The index of the default tab to be selected.
+    /// The value of the default tab to be selected.
     #[prop_or_default]
     pub default_value: Option<AttrValue>,
     #[prop_or_default]
@@ -37,7 +37,7 @@ pub struct TabsProperties {
 /// ```ignore
 ///
 /// html! {
-///     <Tabs on_change={Callback::from(|index| log::info!("Tab changed to: {}", index))}>
+///     <Tabs on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}>
 ///         <TabList>
 ///             <Tab value="1">{"Tab 1"}</Tab>
 ///             <Tab value="2">{"Tab 2"}</Tab>

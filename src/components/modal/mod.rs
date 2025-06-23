@@ -31,10 +31,7 @@ pub struct ModalProperties {
 ///
 /// Note:
 /// 1. focus outline of dialog is manually removed by us.
-/// 2. `modal-content` need to stay in `modal-backdrop` to be aligned by it
-///    instead of `dialog`. Since when `open` is enabled, the position
-///    of the first time rendered component inside dialog will be off
-///    vertically.
+/// 2. `<dialog>` caused incorrect vertical alignment on initial render, so we used `modal-backdrop` to do the alignment.
 #[derive(Debug)]
 pub struct Modal {
     modal_root: Element,
