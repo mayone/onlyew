@@ -228,7 +228,6 @@ pub fn tabs_dialog(
                 <DialogTitle>{ "This is a dialog with tabs" }</DialogTitle>
             </DialogHeader>
             <DialogContent>
-                // TODO: Fix the indicator in dialog failed to get the width in first render, this issue might related to create_portal.
                 <Tabs default_value="1">
                     <TabList>
                         <Tab value="1">{ "Dandelion" }</Tab>
