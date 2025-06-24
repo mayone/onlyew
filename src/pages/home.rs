@@ -11,6 +11,7 @@ pub fn home() -> Html {
             <Link<Route> to={Route::Pagination}>{ "Pagination" }</Link<Route>>
             <Link<Route> to={Route::Dialog}>{ "Dialog" }</Link<Route>>
             <Link<Route> to={Route::Tabs}>{ "Tabs" }</Link<Route>>
+            <Link<Route> to={Route::SegmentedControl}>{ "Segmented Control" }</Link<Route>>
         </div>
     }
 }

@@ -13,8 +13,13 @@
   --tab-bg-background-active: #edeef020;
   --tab-bg-background-hover: #edeef010;
   --tabs-border-bottom: #edeef060;
-  --tab-border-bottom-active: #9eb1ff;
-  --tabs-indicator: #9eb1ff;
+
+  --color-neutral-contrast: #3a3a41;
+  --color-neutral-strong: #b3b3be;
+  --color-neutral-strong-40: #b3b3be40;
+
+  --color-primary-emphasis: #9eb1ff;
+  --color-primary-contrast: #4c5dab;
 }
 
 body {

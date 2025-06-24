@@ -1,0 +1,11 @@
+.sc-container {
+  background-color: var(--color-neutral-contrast);
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  width: fit-content;
+}
+
+.sc-item {
+  border-radius: var(--rounded-md);
+  padding-block: var(--spacing-24);
+}
