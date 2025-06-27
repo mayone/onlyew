@@ -18,7 +18,7 @@ pub fn segmented_control() -> Html {
                     on_change={Callback::from(|value| log::info!("Segmented Control changed to: {value}"))}
                 >
                     <ControlItem value="Dandelion">{ "Dandelion" }</ControlItem>
-                    <ControlItem value="Wayne">{ "Wayne" }</ControlItem>
+                    <ControlItem value="Wayne" disabled=true>{ "Wayne" }</ControlItem>
                     <ControlItem value="Heather">{ "Heather" }</ControlItem>
                 </SegmentedControl>
             </div>

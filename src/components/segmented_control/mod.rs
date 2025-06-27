@@ -92,6 +92,10 @@ impl Component for SegmentedControl {
             })
             .collect::<Html>();
 
-        html! { <div class={classes!("sc-container", class.clone())} {style}>{ children }</div> }
+        html! {
+            <div class={classes!("segmented-control-container", class.clone())} {style}>
+                { children }
+            </div>
+        }
     }
 }

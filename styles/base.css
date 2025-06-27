@@ -17,9 +17,21 @@
   --color-neutral-contrast: #3a3a41;
   --color-neutral-strong: #b3b3be;
   --color-neutral-strong-40: #b3b3be40;
+  --color-neutral-invert: #eeeef0;
 
   --color-primary-emphasis: #9eb1ff;
   --color-primary-contrast: #4c5dab;
+}
+
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
 }
 
 body {

@@ -49,7 +49,7 @@ impl Component for ControlItem {
             <button
                 ref={node_ref}
                 disabled={*disabled}
-                class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
+                class={classes!("segmented-control-item", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
                 onclick={let value = value.clone();
                     let is_selected = *is_selected;
