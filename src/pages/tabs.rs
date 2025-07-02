@@ -15,7 +15,7 @@ pub fn tabs() -> Html {
             <div style="display: flex; flex-direction: column; gap: 20px">
                 <Tabs
                     default_value="723"
-                    on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}
+                    on_change={Callback::from(|value| log::info!("Tab changed to: {value}"))}
                 >
                     <TabList>
                         <Tab value="1">{ "Dandelion" }</Tab>
