@@ -1,9 +1,10 @@
-use std::rc::Rc;
-use yew::prelude::*;
-
 mod control_item;
 
 pub use control_item::ControlItem;
+
+use std::rc::Rc;
+
+use yew::prelude::*;
 
 /// Properties for the [`SegmentedControl`].
 #[derive(Debug, PartialEq, Properties)]
@@ -25,6 +26,25 @@ pub enum SegmentedControlMessage {
     Changed(AttrValue),
 }
 
+/// A component to contain a list of [`ControlItem`].
+///
+/// Usage:
+/// ```ignore
+/// <SegmentedControl
+///     default_value="ControlItem 3"
+///     on_change={Callback::from(|value| log::info!("Segmented Control changed to: {value}"))}
+/// >
+///     <ControlItem value="ControlItem 1">
+///         { "ControlItem 1" }
+///     </ControlItem>
+///     <ControlItem value="ControlItem 2" disabled=true>
+///         { "ControlItem 2" }
+///     </ControlItem>
+///     <ControlItem value="ControlItem 3">
+///         { "ControlItem 3" }
+///     </ControlItem>
+/// </SegmentedControl>
+/// ```
 /// A component to contain a list of [`ControlItem`].
 #[derive(Debug)]
 pub struct SegmentedControl {
@@ -97,5 +117,26 @@ impl Component for SegmentedControl {
                 { children }
             </div>
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn html_with_all_props() {
+        let _ = html! {
+            <SegmentedControl
+                default_value="ControlItem 3"
+                class={classes!("test-class")}
+                style="background-color: red"
+                on_change={Callback::from(|value| log::info!("Segmented Control changed to: {value}"))}
+            >
+                <ControlItem value="ControlItem 1">{ "ControlItem 1" }</ControlItem>
+                <ControlItem value="ControlItem 2" disabled=true>{ "ControlItem 2" }</ControlItem>
+                <ControlItem value="ControlItem 3">{ "ControlItem 3" }</ControlItem>
+            </SegmentedControl>
+        };
     }
 }

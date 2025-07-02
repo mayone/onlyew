@@ -45,20 +45,19 @@ impl Component for ControlItem {
             ..
         } = ctx.props();
 
+        let on_click = {
+            let value = value.clone();
+            let on_change = on_change.clone();
+            Callback::from(move |_| on_change.emit(value.clone()))
+        };
+
         html! {
             <button
                 ref={node_ref}
                 disabled={*disabled}
                 class={classes!("segmented-control-item", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
-                onclick={let value = value.clone();
-                    let is_selected = *is_selected;
-                    let on_change = on_change.clone();
-                    Callback::from(move |_| {
-                        if !is_selected {
-                            on_change.emit(value.clone());
-                        }
-                    })}
+                onclick={on_click}
             >
                 { children.clone() }
             </button>
@@ -71,7 +70,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn render_control_item() {
-        let _ = html! { <ControlItem value="1">{ "ControlItem 1" }</ControlItem> };
+    fn html_with_all_props() {
+        let _ = html! {
+            <ControlItem
+                value="1"
+                disabled=false
+                is_selected=true
+                class={classes!("test-class")}
+                style="color: red"
+                on_change={Callback::noop()}
+            >
+                { "ControlItem 1" }
+            </ControlItem>
+        };
     }
 }
