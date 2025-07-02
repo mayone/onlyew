@@ -15,14 +15,14 @@ macro_rules! make_toggle_callbacks {
             })
         };
 
-        let toggle_for_close = {
+        let toggle_for_call = {
             let state = state.clone();
             Callback::from(move |_: ()| {
                 state.set(!*state);
             })
         };
 
-        (toggle_for_click, toggle_for_close)
+        (toggle_for_click, toggle_for_call)
     }};
 }
 
@@ -32,12 +32,9 @@ pub fn dialog() -> Html {
     let is_form_dialog_open = use_state(|| false);
     let is_tabs_dialog_open = use_state(|| false);
 
-    let (toggle_long_dialog, toggle_long_dialog_for_close) =
-        make_toggle_callbacks!(is_long_dialog_open);
-    let (toggle_form_dialog, toggle_form_dialog_for_close) =
-        make_toggle_callbacks!(is_form_dialog_open);
-    let (toggle_tabs_dialog, toggle_tabs_dialog_for_close) =
-        make_toggle_callbacks!(is_tabs_dialog_open);
+    let (toggle_long_dialog, toggle_long_dialog_call) = make_toggle_callbacks!(is_long_dialog_open);
+    let (toggle_form_dialog, toggle_form_dialog_call) = make_toggle_callbacks!(is_form_dialog_open);
+    let (toggle_tabs_dialog, toggle_tabs_dialog_call) = make_toggle_callbacks!(is_tabs_dialog_open);
 
     html! {
         <div style="display: flex; flex-direction: column; gap: 20px; padding: 20px">
@@ -52,9 +49,9 @@ pub fn dialog() -> Html {
             <button style="width: fit-content" onclick={toggle_tabs_dialog}>
                 { "Tabs Dialog" }
             </button>
-            <LongDialog is_open={*is_long_dialog_open} handle_close={toggle_long_dialog_for_close} />
-            <FormDialog is_open={*is_form_dialog_open} handle_close={toggle_form_dialog_for_close} />
-            <TabsDialog is_open={*is_tabs_dialog_open} handle_close={toggle_tabs_dialog_for_close} />
+            <LongDialog is_open={*is_long_dialog_open} handle_close={toggle_long_dialog_call} />
+            <FormDialog is_open={*is_form_dialog_open} handle_close={toggle_form_dialog_call} />
+            <TabsDialog is_open={*is_tabs_dialog_open} handle_close={toggle_tabs_dialog_call} />
         </div>
     }
 }
