@@ -1,10 +1,14 @@
+use yew::prelude::*;
+use yew_router::prelude::*;
+
 mod components;
 mod contexts;
 mod pages;
 mod route;
 
-use yew::prelude::*;
-use yew_router::prelude::*;
+use components::{Sidebar, SidebarContent, SidebarFooter};
+use components::{SidebarHeader, SidebarToggle};
+use contexts::SidebarProvider;
 
 use route::Route;
 use route::switch;
@@ -14,7 +18,23 @@ fn app() -> Html {
     html! {
         <BrowserRouter>
             <div id="app-root">
-                <Switch<Route> render={switch} />
+                <SidebarProvider>
+                    <div class="sidebar-wrapper">
+                        <Sidebar>
+                            <SidebarHeader style="padding: 0.5rem;">
+                                <SidebarToggle>{ "Menu" }</SidebarToggle>
+                            </SidebarHeader>
+                            <SidebarContent>
+                                <div>{ "Content 1" }</div>
+                                <div>{ "Content 2" }</div>
+                            </SidebarContent>
+                            <SidebarFooter>{ "Footer" }</SidebarFooter>
+                        </Sidebar>
+                        <div class="sidebar-inset">
+                            <Switch<Route> render={switch} />
+                        </div>
+                    </div>
+                </SidebarProvider>
             </div>
             <div id="modal-root" />
         </BrowserRouter>

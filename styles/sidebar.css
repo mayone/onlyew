@@ -1,0 +1,35 @@
+.sidebar-wrapper {
+  display: flex;
+  /* position: relative; */
+}
+
+.sidebar-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-primary-soft);
+  color: var(--color);
+  width: var(--sidebar-rail-width);
+  height: 100svh;
+  transition: width 300ms ease;
+  flex-shrink: 0;
+  overflow: hidden;
+  justify-content: space-between;
+
+  &.open {
+    width: var(--sidebar-width);
+  }
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.sidebar-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-block: 1rem;
+  padding-inline: 1.5rem;
+}

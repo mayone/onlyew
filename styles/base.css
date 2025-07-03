@@ -21,6 +21,10 @@
 
   --color-primary-emphasis: #9eb1ff;
   --color-primary-contrast: #4c5dab;
+  --color-primary-soft: #252639;
+
+  --sidebar-rail-width: 3rem;
+  --sidebar-width: 16rem;
 }
 
 *,
