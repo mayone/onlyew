@@ -49,21 +49,27 @@ impl Component for Tab {
             ..
         } = ctx.props();
 
+        let on_click = {
+            let value = value.clone();
+            let is_selected = *is_selected;
+            let tabs_context = tabs_context.clone();
+            Callback::from(move |_| {
+                if !is_selected {
+                    tabs_context
+                        .state
+                        .dispatch(TabsAction::Select(value.clone()));
+                    tabs_context.on_change.emit(value.clone());
+                }
+            })
+        };
+
         html! {
             <button
                 ref={node_ref}
                 disabled={*disabled}
                 class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
                 {style}
-                onclick={let value = value.clone();
-                    let is_selected = *is_selected;
-                    let tabs_context = tabs_context.clone();
-                    Callback::from(move |_| {
-                        if !is_selected {
-                            tabs_context.state.dispatch(TabsAction::Select(value.clone()));
-                            tabs_context.on_change.emit(value.clone());
-                        }
-                    })}
+                onclick={on_click}
             >
                 { children.clone() }
             </button>
