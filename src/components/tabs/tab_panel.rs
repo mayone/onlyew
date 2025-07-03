@@ -34,14 +34,12 @@ impl Component for TabPanel {
     type Properties = TabPanelProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let (_tabs_context, ctx_handle) = ctx
+        let (_tabs_context, _ctx_handle) = ctx
             .link()
             .context::<TabsContext>(ctx.link().callback(|_| ()))
             .expect("No tabs context provided");
 
-        Self {
-            _ctx_handle: ctx_handle,
-        }
+        Self { _ctx_handle }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {

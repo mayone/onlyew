@@ -31,7 +31,7 @@ impl Component for TabList {
     type Properties = TabListProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
-        let (tabs_context, ctx_handle) = ctx
+        let (tabs_context, _ctx_handle) = ctx
             .link()
             .context::<TabsContext>(ctx.link().callback(|_| ()))
             .expect("No tabs context provided");
@@ -56,7 +56,7 @@ impl Component for TabList {
         Self {
             indicator_ref: NodeRef::default(),
             tab_refs,
-            _ctx_handle: ctx_handle,
+            _ctx_handle,
         }
     }
 
