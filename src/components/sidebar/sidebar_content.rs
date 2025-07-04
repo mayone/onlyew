@@ -1,15 +1,6 @@
 use yew::prelude::*;
 
-/// The Sidebar content has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside.
-///
-/// Optional props:
-///
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
+/// Properties for the [`SidebarContent`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct SidebarContentProperties {
     pub children: Children,

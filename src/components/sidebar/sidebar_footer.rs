@@ -1,15 +1,6 @@
 use yew::prelude::*;
 
-/// The Sidebar footer has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside.
-///
-/// Optional props:
-///
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
+/// Properties for the [`SidebarFooter`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct SidebarFooterProperties {
     pub children: Children,
