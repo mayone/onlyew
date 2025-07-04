@@ -19,21 +19,22 @@ fn app() -> Html {
         <BrowserRouter>
             <div id="app-root">
                 <SidebarProvider>
-                    <div class="sidebar-wrapper">
-                        <Sidebar>
-                            <SidebarHeader style="padding: 0.5rem;">
-                                <SidebarToggle>{ "Menu" }</SidebarToggle>
-                            </SidebarHeader>
-                            <SidebarContent>
-                                <div>{ "Content 1" }</div>
-                                <div>{ "Content 2" }</div>
-                            </SidebarContent>
-                            <SidebarFooter>{ "Footer" }</SidebarFooter>
-                        </Sidebar>
-                        <div class="sidebar-inset">
-                            <Switch<Route> render={switch} />
-                        </div>
-                    </div>
+                    <Sidebar>
+                        <SidebarHeader style="padding: 0.5rem;">
+                            <SidebarToggle>{ "Menu" }</SidebarToggle>
+                        </SidebarHeader>
+                        <SidebarContent>
+                            <div>{ "Content 1" }</div>
+                            <div style="display: flex; gap: 0.5rem">
+                                <div>{ "I" }</div>
+                                <div>{ "am" }</div>
+                                <div>{ "Content" }</div>
+                                <div>{ "2" }</div>
+                            </div>
+                        </SidebarContent>
+                        <SidebarFooter>{ "Footer" }</SidebarFooter>
+                    </Sidebar>
+                    <Switch<Route> render={switch} />
                 </SidebarProvider>
             </div>
             <div id="modal-root" />

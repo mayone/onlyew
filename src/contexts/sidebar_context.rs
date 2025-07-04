@@ -35,23 +35,38 @@ pub struct SidebarProviderProperties {
     #[prop_or_default]
     pub default_open: bool,
     #[prop_or_default]
+    pub class: Classes,
+    #[prop_or_default]
+    pub style: Option<AttrValue>,
+    #[prop_or_default]
     pub on_change: Callback<AttrValue>,
 }
 
 #[function_component]
 pub fn SidebarProvider(props: &SidebarProviderProperties) -> Html {
+    let SidebarProviderProperties {
+        children,
+        default_open,
+        class,
+        style,
+        on_change,
+        ..
+    } = props;
+
     let state = use_reducer(|| SidebarState {
-        open: props.default_open.clone(),
+        open: default_open.clone(),
     });
 
     let context = SidebarContext {
         state,
-        on_change: props.on_change.clone(),
+        on_change: on_change.clone(),
     };
 
     html! {
         <ContextProvider<SidebarContext> {context}>
-            { props.children.clone() }
+            <div class={classes!("sidebar-wrapper", class.clone())} {style}>
+                { children.clone() }
+            </div>
         </ContextProvider<SidebarContext>>
     }
 }
