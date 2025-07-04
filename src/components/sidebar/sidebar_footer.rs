@@ -39,7 +39,7 @@ impl Component for SidebarFooter {
 
         html! {
             <div
-                class={classes!("dialog-footer",
+                class={classes!("sidebar-footer",
                     class.clone()
                 )}
                 {style}

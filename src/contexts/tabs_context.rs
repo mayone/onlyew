@@ -57,6 +57,7 @@ pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
         </ContextProvider<TabsContext>>
     }
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;

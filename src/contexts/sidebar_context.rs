@@ -35,10 +35,6 @@ pub struct SidebarProviderProperties {
     #[prop_or_default]
     pub default_open: bool,
     #[prop_or_default]
-    pub class: Classes,
-    #[prop_or_default]
-    pub style: Option<AttrValue>,
-    #[prop_or_default]
     pub on_change: Callback<AttrValue>,
 }
 
@@ -47,14 +43,12 @@ pub fn SidebarProvider(props: &SidebarProviderProperties) -> Html {
     let SidebarProviderProperties {
         children,
         default_open,
-        class,
-        style,
         on_change,
         ..
     } = props;
 
     let state = use_reducer(|| SidebarState {
-        open: default_open.clone(),
+        open: *default_open,
     });
 
     let context = SidebarContext {
@@ -64,23 +58,17 @@ pub fn SidebarProvider(props: &SidebarProviderProperties) -> Html {
 
     html! {
         <ContextProvider<SidebarContext> {context}>
-            <div class={classes!("sidebar-wrapper", class.clone())} {style}>
-                { children.clone() }
-            </div>
+            { children.clone() }
         </ContextProvider<SidebarContext>>
     }
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn render_tabs_provider() {
-        let _ = html! { <SidebarProvider /> };
-    }
-
-    #[test]
-    fn sidebar_provider_with_props() {
+    fn html_with_all_props() {
         let _ = html! {
             <SidebarProvider default_open=true on_change={Callback::noop()}>
                 <div>{ "Sidebar" }</div>
@@ -94,6 +82,6 @@ mod tests {
 
         let reduced = SidebarState::reduce(Rc::new(initial_state), SidebarAction::Toggle());
 
-        assert_eq!(reduced.open, false);
+        assert!(!reduced.open);
     }
 }

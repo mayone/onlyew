@@ -16,7 +16,6 @@ use crate::contexts::SidebarContext;
 #[derive(Debug, PartialEq, Properties)]
 pub struct SidebarProperties {
     pub children: Children,
-    // pub open: bool,
     #[prop_or_default]
     pub class: Classes,
     #[prop_or_default]
