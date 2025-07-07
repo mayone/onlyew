@@ -78,12 +78,12 @@ impl Component for Sidebar {
 
         html! {
             <div
-                class={classes!("sidebar-container",
+                class={classes!("sidebar",
                     open.then_some("open"),
                     class.clone())}
                 {style}
             >
-                { children.clone() }
+                <div class="sidebar-container">{ children.clone() }</div>
             </div>
         }
     }

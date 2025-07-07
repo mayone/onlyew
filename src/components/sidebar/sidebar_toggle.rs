@@ -38,15 +38,11 @@ impl Component for SidebarToggle {
             ..
         } = ctx.props();
 
-        let on_click = {
-            let sidebar_context = sidebar_context.clone();
-            Callback::from(move |_| sidebar_context.state.dispatch(SidebarAction::Toggle()))
-        };
+        let on_click =
+            { Callback::from(move |_| sidebar_context.state.dispatch(SidebarAction::Toggle())) };
 
         html! {
-            <button class={classes!("sidebar-toggle", class.clone())} {style} onclick={on_click}>
-                { children.clone() }
-            </button>
+            <button class={class.clone()} {style} onclick={on_click}>{ children.clone() }</button>
         }
     }
 }
