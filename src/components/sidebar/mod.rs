@@ -77,14 +77,14 @@ impl Component for Sidebar {
         } = ctx.props();
 
         html! {
-            <div
+            <aside
                 class={classes!("sidebar",
                     open.then_some("open"),
                     class.clone())}
                 {style}
             >
                 <div class="sidebar-container">{ children.clone() }</div>
-            </div>
+            </aside>
         }
     }
 }
