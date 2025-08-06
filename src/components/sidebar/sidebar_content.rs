@@ -42,7 +42,7 @@ impl Component for SidebarContent {
             .context::<SidebarContext>(Callback::noop())
             .expect("No sidebar context provided");
 
-        let open = &sidebar_context.state.open;
+        let is_open = &sidebar_context.is_open;
 
         let Self::Properties {
             children,
@@ -55,7 +55,7 @@ impl Component for SidebarContent {
         let content_class = classes!(
             "sidebar-content",
             (*collapsible == CollapsedMode::Hidden).then_some("collapsed-hidden"),
-            if *open { "expanded" } else { "collapsed" },
+            if *is_open { "expanded" } else { "collapsed" },
             class.clone()
         );
 

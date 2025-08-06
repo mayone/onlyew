@@ -5,30 +5,28 @@ use yew::prelude::*;
 const SIDEBAR_KEYBOARD_SHORTCUT: &str = "b";
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct SidebarState {
-    pub open: bool,
+pub struct Sidebar {
+    pub is_open: bool,
 }
 
 #[derive(Debug)]
 pub enum SidebarAction {
-    Toggle(),
+    Toggle,
 }
 
-impl Reducible for SidebarState {
+impl Reducible for Sidebar {
     type Action = SidebarAction;
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
-            Self::Action::Toggle() => Rc::new(Self { open: !self.open }),
+            Self::Action::Toggle => Rc::new(Self {
+                is_open: !self.is_open,
+            }),
         }
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
-pub struct SidebarContext {
-    pub state: UseReducerHandle<SidebarState>,
-    pub on_change: Callback<AttrValue>,
-}
+pub type SidebarContext = UseReducerHandle<Sidebar>;
 
 #[derive(Debug, PartialEq, Properties)]
 pub struct SidebarProviderProperties {
@@ -36,8 +34,6 @@ pub struct SidebarProviderProperties {
     pub children: Children,
     #[prop_or_default]
     pub default_open: bool,
-    #[prop_or_default]
-    pub on_change: Callback<AttrValue>,
 }
 
 #[function_component]
@@ -45,29 +41,23 @@ pub fn SidebarProvider(props: &SidebarProviderProperties) -> Html {
     let SidebarProviderProperties {
         children,
         default_open,
-        on_change,
         ..
     } = props;
 
-    let state = use_reducer(|| SidebarState {
-        open: *default_open,
+    let context = use_reducer(|| Sidebar {
+        is_open: *default_open,
     });
 
-    let context = SidebarContext {
-        state: state.clone(),
-        on_change: on_change.clone(),
-    };
-
     html! {
-        <ContextProvider<SidebarContext> {context}>
+        <ContextProvider<SidebarContext> context={context.clone()}>
             <div
                 style="outline: none"
                 tabindex="-1"
                 onkeydown={Callback::from(move |e: KeyboardEvent| {
-                        if e.key() == SIDEBAR_KEYBOARD_SHORTCUT && (e.meta_key() || e.ctrl_key()) {
-                            state.dispatch(SidebarAction::Toggle());
-                        }
-                    })}
+                    if e.key() == SIDEBAR_KEYBOARD_SHORTCUT && (e.meta_key() || e.ctrl_key()) {
+                        context.dispatch(SidebarAction::Toggle);
+                    }
+                })}
             >
                 { children.clone() }
             </div>
@@ -82,7 +72,7 @@ mod tests {
     #[test]
     fn html_with_all_props() {
         let _ = html! {
-            <SidebarProvider default_open=true on_change={Callback::noop()}>
+            <SidebarProvider default_open=true>
                 <div>{ "Sidebar" }</div>
             </SidebarProvider>
         };
@@ -90,10 +80,10 @@ mod tests {
 
     #[test]
     fn tabs_state_reducer() {
-        let initial_state = SidebarState { open: true };
+        let initial_state = Sidebar { is_open: true };
 
-        let reduced = SidebarState::reduce(Rc::new(initial_state), SidebarAction::Toggle());
+        let reduced = Sidebar::reduce(Rc::new(initial_state), SidebarAction::Toggle);
 
-        assert!(!reduced.open);
+        assert!(!reduced.is_open);
     }
 }

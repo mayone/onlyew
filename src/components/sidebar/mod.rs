@@ -74,7 +74,7 @@ impl Component for Sidebar {
             .context::<SidebarContext>(Callback::noop())
             .expect("No sidebar context provided");
 
-        let open = &sidebar_context.state.open;
+        let is_open = &sidebar_context.is_open;
 
         let Self::Properties {
             children,
@@ -86,7 +86,7 @@ impl Component for Sidebar {
         html! {
             <aside
                 class={classes!("sidebar",
-                    open.then_some("expanded"),
+                    is_open.then_some("expanded"),
                     class.clone())}
                 {style}
             >
