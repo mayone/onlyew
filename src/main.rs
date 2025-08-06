@@ -6,7 +6,7 @@ mod contexts;
 mod pages;
 mod route;
 
-use components::{Sidebar, SidebarContent, SidebarFooter};
+use components::{CollapsedMode, Sidebar, SidebarContent, SidebarFooter};
 use components::{SidebarHeader, SidebarToggle};
 use contexts::SidebarProvider;
 
@@ -24,7 +24,7 @@ fn app() -> Html {
                             <SidebarHeader style="padding: 0.5rem;">
                                 <SidebarToggle>{ "Menu" }</SidebarToggle>
                             </SidebarHeader>
-                            <SidebarContent>
+                            <SidebarContent collapsible={CollapsedMode::Hidden}>
                                 <div>{ "Content 1" }</div>
                                 <div style="display: flex; gap: 0.5rem">
                                     <div>{ "I" }</div>
@@ -33,7 +33,9 @@ fn app() -> Html {
                                     <div>{ "2" }</div>
                                 </div>
                             </SidebarContent>
-                            <SidebarFooter>{ "Footer" }</SidebarFooter>
+                            <SidebarFooter collapsible={CollapsedMode::Hidden}>
+                                { "Footer" }
+                            </SidebarFooter>
                         </Sidebar>
                         <Switch<Route> render={switch} />
                     </div>

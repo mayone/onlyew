@@ -10,7 +10,7 @@
   white-space: nowrap;
   width: var(--sidebar-collapsed-width);
 
-  &.open {
+  &.expanded {
     background-color: var(--color-primary-soft);
     width: var(--sidebar-width);
   }
@@ -33,7 +33,7 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding-inline: var(--sidebar-collapsed-width);
+  /* padding-inline: var(--sidebar-collapsed-width); */
 }
 
 .sidebar-footer {
@@ -41,5 +41,22 @@
   display: flex;
   justify-content: center;
   padding-block: 1rem;
-  padding-inline: var(--sidebar-collapsed-width);
+  /* padding-inline: var(--sidebar-collapsed-width); */
+}
+
+.collapsed-hidden {
+  transition: opacity 300ms ease;
+
+  &.collapsed {
+    opacity: 0;
+    user-select: none;
+    visibility: hidden;
+    transition-delay: 0ms, 300ms;
+    transition-property: opacity, visibility;
+  }
+
+  &.expanded {
+    opacity: 1;
+    user-select: auto;
+  }
 }

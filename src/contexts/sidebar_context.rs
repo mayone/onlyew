@@ -2,6 +2,8 @@ use std::rc::Rc;
 
 use yew::prelude::*;
 
+const SIDEBAR_KEYBOARD_SHORTCUT: &str = "b";
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct SidebarState {
     pub open: bool,
@@ -52,13 +54,23 @@ pub fn SidebarProvider(props: &SidebarProviderProperties) -> Html {
     });
 
     let context = SidebarContext {
-        state,
+        state: state.clone(),
         on_change: on_change.clone(),
     };
 
     html! {
         <ContextProvider<SidebarContext> {context}>
-            { children.clone() }
+            <div
+                style="outline: none"
+                tabindex="-1"
+                onkeydown={Callback::from(move |e: KeyboardEvent| {
+                        if e.key() == SIDEBAR_KEYBOARD_SHORTCUT && (e.meta_key() || e.ctrl_key()) {
+                            state.dispatch(SidebarAction::Toggle());
+                        }
+                    })}
+            >
+                { children.clone() }
+            </div>
         </ContextProvider<SidebarContext>>
     }
 }

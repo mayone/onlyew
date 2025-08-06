@@ -31,3 +31,17 @@ impl Component for SidebarHeader {
         html! { <div class={classes!(class.clone())} {style}>{ children.clone() }</div> }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn html_with_all_props() {
+        let _ = html! {
+            <SidebarHeader class={classes!("test-class")} style="background-color: red">
+                { "Header" }
+            </SidebarHeader>
+        };
+    }
+}

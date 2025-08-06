@@ -4,9 +4,9 @@ use crate::contexts::SidebarContext;
 
 use super::CollapsedMode;
 
-/// Properties for the [`SidebarContent`].
+/// Properties for the [`SidebarItem`].
 #[derive(Debug, PartialEq, Properties)]
-pub struct SidebarContentProperties {
+pub struct SidebarItemProperties {
     pub children: Children,
     #[prop_or_default]
     pub collapsible: CollapsedMode,
@@ -17,13 +17,13 @@ pub struct SidebarContentProperties {
 }
 
 #[derive(Debug)]
-pub struct SidebarContent {
+pub struct SidebarItem {
     _ctx_handle: ContextHandle<SidebarContext>,
 }
 
-impl Component for SidebarContent {
+impl Component for SidebarItem {
     type Message = ();
-    type Properties = SidebarContentProperties;
+    type Properties = SidebarItemProperties;
 
     fn create(ctx: &Context<Self>) -> Self {
         let (_, ctx_handle) = ctx
@@ -52,14 +52,13 @@ impl Component for SidebarContent {
             ..
         } = ctx.props();
 
-        let content_class = classes!(
-            "sidebar-content",
+        let footer_class = classes!(
             (*collapsible == CollapsedMode::Hidden).then_some("collapsed-hidden"),
             if *open { "expanded" } else { "collapsed" },
             class.clone()
         );
 
-        html! { <div class={content_class} {style}>{ children.clone() }</div> }
+        html! { <div class={footer_class} {style}>{ children.clone() }</div> }
     }
 }
 
@@ -70,13 +69,13 @@ mod test {
     #[test]
     fn html_with_all_props() {
         let _ = html! {
-            <SidebarContent
+            <SidebarItem
                 class={classes!("test-class")}
                 style="background-color: red"
                 collapsible={CollapsedMode::Hidden}
             >
-                { "Content" }
-            </SidebarContent>
+                { "Item" }
+            </SidebarItem>
         };
     }
 }

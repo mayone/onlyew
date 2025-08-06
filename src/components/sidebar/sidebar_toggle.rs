@@ -52,7 +52,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn render_sidebar_toggle() {
-        let _ = html! { <SidebarToggle>{ "Toggle" }</SidebarToggle> };
+    fn html_with_all_props() {
+        let _ = html! {
+            <SidebarToggle class={classes!("test-class")} style="background-color: red">
+                { "Toggle" }
+            </SidebarToggle>
+        };
     }
 }

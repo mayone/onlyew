@@ -12,6 +12,13 @@ use yew::prelude::*;
 
 use crate::contexts::SidebarContext;
 
+#[derive(Debug, Default, PartialEq)]
+pub enum CollapsedMode {
+    #[default]
+    Visible,
+    Hidden,
+}
+
 /// Properties for the [`Sidebar`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct SidebarProperties {
@@ -79,7 +86,7 @@ impl Component for Sidebar {
         html! {
             <aside
                 class={classes!("sidebar",
-                    open.then_some("open"),
+                    open.then_some("expanded"),
                     class.clone())}
                 {style}
             >
@@ -94,12 +101,12 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_render_sidebar() {
-        let _ = yew::html! {
-            <Sidebar>
+    fn html_with_all_props() {
+        let _ = html! {
+            <Sidebar class={classes!("test-class")} style="background-color: red">
                 <SidebarHeader>{ "Header" }</SidebarHeader>
-                <SidebarContent>{ "Content" }</SidebarContent>
-                <SidebarFooter>{ "Footer" }</SidebarFooter>
+                <SidebarContent collapsible={CollapsedMode::Hidden}>{ "Content" }</SidebarContent>
+                <SidebarFooter collapsible={CollapsedMode::Visible}>{ "Footer" }</SidebarFooter>
             </Sidebar>
         };
     }
