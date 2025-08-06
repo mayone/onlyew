@@ -1,10 +1,14 @@
+use yew::prelude::*;
+use yew_router::prelude::*;
+
 mod components;
 mod contexts;
 mod pages;
 mod route;
 
-use yew::prelude::*;
-use yew_router::prelude::*;
+use components::{CollapsedMode, Sidebar, SidebarContent, SidebarFooter};
+use components::{SidebarHeader, SidebarToggle};
+use contexts::SidebarProvider;
 
 use route::Route;
 use route::switch;
@@ -14,7 +18,28 @@ fn app() -> Html {
     html! {
         <BrowserRouter>
             <div id="app-root">
-                <Switch<Route> render={switch} />
+                <SidebarProvider>
+                    <div style="display: flex">
+                        <Sidebar>
+                            <SidebarHeader style="padding: 0.5rem;">
+                                <SidebarToggle>{ "Menu" }</SidebarToggle>
+                            </SidebarHeader>
+                            <SidebarContent collapsible={CollapsedMode::Hidden}>
+                                <div>{ "Content 1" }</div>
+                                <div style="display: flex; gap: 0.5rem">
+                                    <div>{ "I" }</div>
+                                    <div>{ "am" }</div>
+                                    <div>{ "Content" }</div>
+                                    <div>{ "2" }</div>
+                                </div>
+                            </SidebarContent>
+                            <SidebarFooter collapsible={CollapsedMode::Hidden}>
+                                { "Footer" }
+                            </SidebarFooter>
+                        </Sidebar>
+                        <Switch<Route> render={switch} />
+                    </div>
+                </SidebarProvider>
             </div>
             <div id="modal-root" />
         </BrowserRouter>

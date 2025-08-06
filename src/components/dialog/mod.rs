@@ -86,7 +86,7 @@ mod test {
 
     #[test]
     fn test_render_dialog() {
-        let _ = yew::html! {
+        let _ = html! {
             <Dialog open=true on_close={Callback::noop()}>
                 <DialogHeader>
                     <DialogTitle>{ "Title" }</DialogTitle>

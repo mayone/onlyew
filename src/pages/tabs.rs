@@ -27,6 +27,10 @@ pub fn tabs() -> Html {
                         <Tab value="7">{ "Orchid" }</Tab>
                         <Tab value="8" disabled=true>{ "Poppy" }</Tab>
                         <Tab value="9">{ "Rose" }</Tab>
+                        <Tab value="9">{ "Rose" }</Tab>
+                        <Tab value="9">{ "Rose" }</Tab>
+                        <Tab value="9">{ "Rose" }</Tab>
+                        <Tab value="9">{ "Rose" }</Tab>
                     </TabList>
                     <TabPanel value="1">
                         <div>{ "Dandelion" }</div>
