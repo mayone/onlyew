@@ -1,0 +1,22 @@
+{
+  "css.validate": false,
+  "editor.inlineSuggest.enabled": true,
+  "editor.quickSuggestions": {
+    "other": "on",
+    "comments": "on",
+    "strings": true
+  },
+  "files.associations": {
+    "*.rs": "rust"
+  },
+  "rust-analyzer.check.overrideCommand": [
+    "cargo-clippy",
+    "--workspace",
+    "--message-format=json",
+    "--all-targets"
+  ],
+  "tailwindCSS.includeLanguages": {
+    "rust": "html",
+    "*.rs": "html"
+  }
+}

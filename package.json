@@ -1,0 +1,10 @@
+{
+  "name": "onlyew",
+  "private": true,
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "tw-animate-css": "^1.3.6"
+  }
+}

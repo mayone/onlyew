@@ -7,4 +7,8 @@ dist/
 # editor config files and directories
 *.iml
 /.idea/
-/.vscode/
+/.vscode/*
+!/.vscode/settings.json
+
+# Dependency directories
+node_modules/
