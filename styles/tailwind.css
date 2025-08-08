@@ -2,5 +2,7 @@
 @import "tw-animate-css";
 
 @theme {
+  --color-primary: var(--color-violet-700);
+
   --background-image-lg: linear-gradient(45deg, magenta, rebeccapurple, dodgerblue, green);
 }
