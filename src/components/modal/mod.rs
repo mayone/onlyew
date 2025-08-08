@@ -30,7 +30,7 @@ pub struct ModalProperties {
 /// ```
 ///
 /// Note:
-/// 1. focus outline of dialog is manually removed by us.
+/// 1. focus outline of dialog is removed by tailwindcss.
 /// 2. `<dialog>` caused incorrect vertical alignment on initial render, so we used `modal-backdrop` to do the alignment.
 #[derive(Debug)]
 pub struct Modal {
@@ -64,7 +64,6 @@ impl Component for Modal {
 
         let content = html! {
             <dialog
-                class="modal"
                 open={*open}
                 ref={self.node_ref.clone()}
                 onkeydown={let on_close = on_close.clone();
@@ -75,12 +74,12 @@ impl Component for Modal {
                     })}
             >
                 <div
-                    class={classes!("modal-backdrop")}
+                    class="flex fixed inset-0 justify-center items-center duration-200 bg-black/50 fade-in animate-in"
                     onclick={let on_close = on_close.clone();
                         Callback::from(move |_| on_close.emit(()))}
                 >
                     <div
-                        class={classes!("modal-content")}
+                        class="duration-200 animate-in fade-in zoom-in-90"
                         onclick={Callback::from(|e: MouseEvent| e.stop_propagation())}
                     >
                         { children.clone() }
@@ -118,7 +117,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn render_modal() {
+    fn html_with_all_props() {
         let _ = html! { <Modal open=true on_close={Callback::noop()}>{ "Content" }</Modal> };
     }
 }
