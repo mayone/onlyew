@@ -9,7 +9,6 @@
   --color-active: #111113;
   --border-color-disabled: #7f7f81;
   --color-disabled: #7f7f81;
-  --dialog-bg-color: #222226;
   --tab-bg-background-active: #edeef020;
   --tab-bg-background-hover: #edeef010;
   --tabs-border-bottom: #edeef060;
@@ -25,17 +24,6 @@
 
   --sidebar-collapsed-width: 3rem;
   --sidebar-width: 16rem;
-}
-
-*,
-::after,
-::before,
-::backdrop,
-::file-selector-button {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  border: 0 solid;
 }
 
 body {

@@ -8,6 +8,7 @@ pub use dialog_footer::DialogFooter;
 pub use dialog_header::DialogHeader;
 pub use dialog_title::DialogTitle;
 
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
 use crate::components::Modal;
@@ -18,7 +19,7 @@ pub struct DialogProperties {
     pub children: Children,
     pub open: bool,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
     pub on_close: Callback<()>,
@@ -68,9 +69,7 @@ impl Component for Dialog {
         html! {
             <Modal {open} {on_close}>
                 <div
-                    class={classes!("dialog",
-                        class.clone()
-                    )}
+                    class={tw_merge!("flex flex-col rounded-2xl max-h-[calc(100dvh-8rem)] max-w-136 overflow-y-auto text-white bg-neutral-800", class.as_ref())}
                     {style}
                 >
                     { children.clone() }
@@ -85,9 +84,14 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_render_dialog() {
+    fn html_with_all_props() {
         let _ = html! {
-            <Dialog open=true on_close={Callback::noop()}>
+            <Dialog
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+                open=true
+                on_close={Callback::noop()}
+            >
                 <DialogHeader>
                     <DialogTitle>{ "Title" }</DialogTitle>
                 </DialogHeader>

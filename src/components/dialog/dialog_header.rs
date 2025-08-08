@@ -1,20 +1,12 @@
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
-/// The Dialog header has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside.
-///
-/// Optional props:
-///
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
+/// Properties for the [`DialogHeader`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct DialogHeaderProperties {
     pub children: Children,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
@@ -39,13 +31,30 @@ impl Component for DialogHeader {
 
         html! {
             <div
-                class={classes!("dialog-header",
-                    class.clone()
+                class={tw_merge!("flex items-center gap-4 py-4 px-6",
+                    class.as_ref()
                 )}
                 {style}
             >
                 { children.clone() }
             </div>
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn html_with_all_props() {
+        let _ = html! {
+            <DialogHeader
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+            >
+                { "Header" }
+            </DialogHeader>
+        };
     }
 }

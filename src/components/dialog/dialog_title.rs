@@ -1,20 +1,12 @@
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
-/// The Dialog title has the following props:
-///
-/// Required props:
-///
-/// - `children`: The children to be rendered inside.
-///
-/// Optional props:
-///
-/// - `class`: `yew::Classes`
-/// - `style`: The style attribute.
+/// Properties for the [`DialogTitle`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct DialogTitleProperties {
     pub children: Children,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
@@ -39,13 +31,30 @@ impl Component for DialogTitle {
 
         html! {
             <div
-                class={classes!("dialog-title",
-                    class.clone()
+                class={tw_merge!("text-xl",
+                    class.as_ref()
                 )}
                 {style}
             >
                 { children.clone() }
             </div>
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn html_with_all_props() {
+        let _ = html! {
+            <DialogTitle
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+            >
+                { "Title" }
+            </DialogTitle>
+        };
     }
 }
