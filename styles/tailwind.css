@@ -1,4 +1,6 @@
-@import "tailwindcss" source(none);
+@import "tailwindcss" source("../src/**/*.rs");
 @import "tw-animate-css";
 
-@source "../src/**/*.rs";
+@theme {
+  --background-image-lg: linear-gradient(45deg, magenta, rebeccapurple, dodgerblue, green);
+}
