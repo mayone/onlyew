@@ -4,6 +4,7 @@ pub use control_item::ControlItem;
 
 use std::rc::Rc;
 
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
 /// Properties for the [`SegmentedControl`].
@@ -14,7 +15,7 @@ pub struct SegmentedControlProperties {
     #[prop_or_default]
     pub default_value: AttrValue,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
     #[prop_or_default]
@@ -87,12 +88,12 @@ impl Component for SegmentedControl {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            SegmentedControlMessage::Changed(value) => self.handle_change(value, ctx),
+            Self::Message::Changed(value) => self.handle_change(value, ctx),
         }
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let SegmentedControlProperties {
+        let Self::Properties {
             children,
             class,
             style,
@@ -113,7 +114,7 @@ impl Component for SegmentedControl {
             .collect::<Html>();
 
         html! {
-            <div class={classes!("segmented-control-container", class.clone())} {style}>
+            <div class={tw_merge!("bg-neutral-700 rounded-lg p-1 w-fit", class.as_ref())} {style}>
                 { children }
             </div>
         }
@@ -129,8 +130,8 @@ mod tests {
         let _ = html! {
             <SegmentedControl
                 default_value="ControlItem 3"
-                class={classes!("test-class")}
-                style="background-color: red"
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
                 on_change={Callback::from(|value| log::info!("Segmented Control changed to: {value}"))}
             >
                 <ControlItem value="ControlItem 1">{ "ControlItem 1" }</ControlItem>

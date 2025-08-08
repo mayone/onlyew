@@ -1,3 +1,4 @@
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
 /// Properties for the [`ControlItem`].
@@ -13,7 +14,7 @@ pub struct ControlItemProperties {
     #[prop_or_default]
     pub node_ref: NodeRef,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
     #[prop_or_default]
@@ -55,7 +56,7 @@ impl Component for ControlItem {
             <button
                 ref={node_ref}
                 disabled={*disabled}
-                class={classes!("segmented-control-item", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
+                class={tw_merge!("bg-transparent rounded-md text-white cursor-pointer text-sm p-6 animate-in duration-200", is_selected.then_some("bg-primary"), disabled.then_some("cursor-default opacity-40"), class.as_ref())}
                 {style}
                 onclick={on_click}
             >
@@ -76,8 +77,8 @@ mod tests {
                 value="1"
                 disabled=false
                 is_selected=true
-                class={classes!("test-class")}
-                style="color: red"
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
                 on_change={Callback::noop()}
             >
                 { "ControlItem 1" }
