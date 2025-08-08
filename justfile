@@ -12,3 +12,11 @@ run:
 # Run the tests
 test:
     cargo test
+
+# Run RustyWind check
+tw-check:
+    rustywind --check-formatted .
+
+# Run RustyWind fix
+tw-fix:
+    rustywind --write .
