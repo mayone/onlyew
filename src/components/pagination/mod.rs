@@ -1,32 +1,24 @@
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
-/// The Pagination component has the following props:
-///
-/// Required props:
-///
-/// - `total_pages`: The total number of pages.
-///
-/// Optional props:
-///
-/// - `edge_page_count`: To control number of the pages to show on the edge when
-///   ellipsis button is shown, optional with default value `1`.
-/// - `sibling_page_count`: To control number of the pages to show before and
-///   after the current page, optional with default value `2`
-///
-/// Event handlers:
-///
-/// - `on_change`: Callback function, called when the page number changed.
+/// Properties for the [`Pagination`].
 #[derive(Debug, PartialEq, Properties)]
 pub struct PaginationProperties {
-    pub total_pages: Option<usize>,
+    /// To control number of the pages to show on the edge when ellipsis button
+    /// is shown. (default: `1`)
     #[prop_or(1)]
     pub edge_page_count: usize,
-    #[prop_or(1)]
+    /// To control number of the pages to show before and after the current
+    /// page. (default: `2`)
+    #[prop_or(2)]
     pub sibling_page_count: usize,
+    /// The total number of pages.
+    pub total_pages: Option<usize>,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
+    /// Callback function, called when the page number changed.
     #[prop_or_default]
     pub on_change: Callback<usize>,
 }
@@ -65,6 +57,7 @@ impl Pagination {
 
         if page != self.current_page {
             self.current_page = page;
+
             true
         } else {
             false
@@ -82,6 +75,7 @@ impl Pagination {
     pub fn next_page(&mut self) -> bool {
         if self.current_page < self.total_pages {
             self.current_page += 1;
+
             true
         } else {
             false
@@ -91,6 +85,7 @@ impl Pagination {
     pub fn prev_page(&mut self) -> bool {
         if self.current_page > 1 {
             self.current_page -= 1;
+
             true
         } else {
             false
@@ -113,41 +108,46 @@ impl Component for Pagination {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            PaginationMessage::First => {
+            Self::Message::First => {
                 if self.first_page() {
                     ctx.props().on_change.emit(self.current_page);
+
                     true
                 } else {
                     false
                 }
             }
-            PaginationMessage::Last => {
+            Self::Message::Last => {
                 if self.last_page() {
                     ctx.props().on_change.emit(self.current_page);
+
                     true
                 } else {
                     false
                 }
             }
-            PaginationMessage::Next => {
+            Self::Message::Next => {
                 if self.next_page() {
                     ctx.props().on_change.emit(self.current_page);
+
                     true
                 } else {
                     false
                 }
             }
-            PaginationMessage::Prev => {
+            Self::Message::Prev => {
                 if self.prev_page() {
                     ctx.props().on_change.emit(self.current_page);
+
                     true
                 } else {
                     false
                 }
             }
-            PaginationMessage::Set(page) => {
+            Self::Message::Set(page) => {
                 if self.set_page(page) {
                     ctx.props().on_change.emit(self.current_page);
+
                     true
                 } else {
                     false
@@ -184,7 +184,7 @@ impl Component for Pagination {
             html! {
                 <button
                     key={page}
-                    class={classes!(is_active.then_some("active"))}
+                    class={tw_merge!("py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:bg-transparent disabled:cursor-default disabled:text-white/30", is_active.then_some("bg-primary hover:bg-primary/90 active:bg-primary/80"))}
                     onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                 >
                     { page }
@@ -223,14 +223,16 @@ impl Component for Pagination {
         };
 
         html! {
-            <div class={classes!("pagination-container", class.clone())} {style}>
+            <div class={tw_merge!("flex gap-2", class.as_ref())} {style}>
                 <button
+                    class="py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:text-white/30"
                     onclick={ctx.link().callback(|_| Self::Message::First)}
                     disabled={self.current_page <= 1}
                 >
                     { "First" }
                 </button>
                 <button
+                    class="py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:text-white/30"
                     onclick={ctx.link().callback(|_| Self::Message::Prev)}
                     disabled={self.current_page <= 1}
                 >
@@ -239,12 +241,14 @@ impl Component for Pagination {
                 { front_items }
                 { rear_items }
                 <button
+                    class="py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:text-white/30"
                     onclick={ctx.link().callback(|_| Self::Message::Next)}
                     disabled={self.current_page == self.total_pages}
                 >
                     { "Next" }
                 </button>
                 <button
+                    class="py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:text-white/30"
                     onclick={ctx.link().callback(|_| Self::Message::Last)}
                     disabled={self.current_page == self.total_pages}
                 >
@@ -260,8 +264,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_render_no_page() {
-        let _ = html! { <Pagination total_pages=0 /> };
+    fn html_with_all_props() {
+        let _ = html! {
+            <Pagination
+                edge_page_count=1
+                sibling_page_count=2
+                total_pages=24
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+                on_change={|page| log::info!("current page: {page}")}
+            />
+        };
     }
 
     #[test]
