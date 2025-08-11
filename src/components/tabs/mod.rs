@@ -1,3 +1,4 @@
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
 mod tab;
@@ -19,7 +20,7 @@ pub struct TabsProperties {
     #[prop_or_default]
     pub default_value: Option<AttrValue>,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
     /// A callback function that is called when the selected tab changes.
@@ -37,7 +38,7 @@ pub struct TabsProperties {
 /// ```ignore
 ///
 /// html! {
-///     <Tabs on_change={Callback::from(|value| log::info!("Tab changed to: {}", value))}>
+///     <Tabs on_change={Callback::from(|value| log::info!("Tab changed to: {value}"))}>
 ///         <TabList>
 ///             <Tab value="1">{"Tab 1"}</Tab>
 ///             <Tab value="2">{"Tab 2"}</Tab>
@@ -74,7 +75,9 @@ impl Component for Tabs {
 
         html! {
             <TabsProvider {default_value} {on_change}>
-                <div class={classes!("tabs", class.clone())} {style}>{ children.clone() }</div>
+                <div class={tw_merge!("flex flex-col gap-4", class.as_ref())} {style}>
+                    { children.clone() }
+                </div>
             </TabsProvider>
         }
     }
@@ -85,9 +88,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn render_tabs() {
+    fn html_with_all_props() {
         let _ = html! {
-            <Tabs>
+            <Tabs
+                default_value="2"
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+                on_change={Callback::from(|value| log::info!("Tab changed to: {value}"))}
+            >
                 <TabList>
                     <Tab value="1">{ "Tab 1" }</Tab>
                     <Tab value="2">{ "Tab 2" }</Tab>

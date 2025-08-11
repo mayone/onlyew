@@ -1,3 +1,4 @@
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
 use crate::contexts::{TabsAction, TabsContext};
@@ -15,7 +16,7 @@ pub struct TabProperties {
     #[prop_or_default]
     pub node_ref: NodeRef,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
@@ -53,6 +54,7 @@ impl Component for Tab {
             let value = value.clone();
             let is_selected = *is_selected;
             let tabs_context = tabs_context.clone();
+
             Callback::from(move |_| {
                 if !is_selected {
                     tabs_context
@@ -67,7 +69,7 @@ impl Component for Tab {
             <button
                 ref={node_ref}
                 disabled={*disabled}
-                class={classes!("tab", is_selected.then_some("selected"), disabled.then_some("disabled"), class.clone())}
+                class={tw_merge!("border-none py-4 px-6 bg-transparent text-white/60 cursor-pointer transition-colors duration-300 hover:bg-neutral-200/10 active:bg-neutral-200/20", is_selected.then_some("text-white"), disabled.then_some("bg-transparent text-white/30 cursor-default"), class.as_ref())}
                 {style}
                 onclick={on_click}
             >
@@ -82,7 +84,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn render_tab() {
-        let _ = html! { <Tab value="1">{ "Tab 1" }</Tab> };
+    fn html_with_all_props() {
+        let _ = html! {
+            <Tab
+                value="1"
+                disabled=false
+                is_selected=true
+                node_ref={NodeRef::default()}
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+            >
+                { "Tab 1" }
+            </Tab>
+        };
     }
 }

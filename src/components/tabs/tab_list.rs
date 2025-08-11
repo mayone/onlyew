@@ -1,5 +1,6 @@
 use gloo::timers::callback::Timeout;
 use std::{collections::HashMap, rc::Rc};
+use tailwind_fuse::tw_merge;
 use web_sys::HtmlElement;
 use yew::prelude::*;
 
@@ -13,7 +14,7 @@ pub struct TabListProperties {
     #[prop_or_default]
     pub children: ChildrenWithProps<Tab>,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
@@ -89,9 +90,15 @@ impl Component for TabList {
             .collect::<Html>();
 
         html! {
-            <div class={classes!("tab-list", class.clone())} {style}>
+            <div
+                class={tw_merge!("flex relative border-b border-neutral-200/60", class.as_ref())}
+                {style}
+            >
                 { children }
-                <span class={classes!("tabs-indicator")} ref={self.indicator_ref.clone()} />
+                <span
+                    class="absolute bottom-0 left-0 h-0.5 duration-300 bg-primary transition-[transform,width]"
+                    ref={self.indicator_ref.clone()}
+                />
             </div>
         }
     }
@@ -148,9 +155,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn render_tab_list() {
+    fn html_with_all_props() {
         let _ = html! {
-            <TabList>
+            <TabList class={tw_merge!("text-black", "text-white")} style="background-color: gray">
                 <Tab value="1">{ "Tab 1" }</Tab>
                 <Tab value="2">{ "Tab 2" }</Tab>
             </TabList>

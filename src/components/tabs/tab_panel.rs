@@ -1,3 +1,4 @@
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
 use crate::contexts::TabsContext;
@@ -9,7 +10,7 @@ pub struct TabPanelProperties {
     #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
@@ -60,7 +61,7 @@ impl Component for TabPanel {
 
         html! {
             <div
-                class={classes!("tab-panel", (!is_selected).then_some("hidden"), class.clone())}
+                class={tw_merge!("py-4 px-6", (!is_selected).then_some("hidden"), class.as_ref())}
                 {style}
             >
                 { children.clone() }
@@ -74,9 +75,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn render_tab_panel() {
+    fn html_with_all_props() {
         let _ = html! {
-            <TabPanel value="1">
+            <TabPanel
+                value="1"
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+            >
                 <div>{ "Tab 1" }</div>
             </TabPanel>
         };
