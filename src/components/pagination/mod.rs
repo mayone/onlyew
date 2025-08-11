@@ -9,8 +9,8 @@ pub struct PaginationProperties {
     #[prop_or(1)]
     pub edge_page_count: usize,
     /// To control number of the pages to show before and after the current
-    /// page. (default: `2`)
-    #[prop_or(2)]
+    /// page. (default: `1`)
+    #[prop_or(1)]
     pub sibling_page_count: usize,
     /// The total number of pages.
     pub total_pages: Option<usize>,
@@ -184,7 +184,7 @@ impl Component for Pagination {
             html! {
                 <button
                     key={page}
-                    class={tw_merge!("py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:bg-transparent disabled:cursor-default disabled:text-white/30", is_active.then_some("bg-primary hover:bg-primary/90 active:bg-primary/80"))}
+                    class={tw_merge!("p-2 rounded-md transition-colors duration-300 cursor-pointer shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:bg-transparent disabled:cursor-default disabled:opacity-30", is_active.then_some("bg-primary hover:bg-primary/90 active:bg-primary/80"))}
                     onclick={ctx.link().callback(move |_| Self::Message::Set(page))}
                 >
                     { page }
@@ -196,6 +196,7 @@ impl Component for Pagination {
             if is_front_truncated {
                 { (1..=*edge_page_count).map(render_page_button).collect::<Html>() }
                 <button
+                    class="p-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:opacity-30 disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20"
                     onclick={let current_page = self.current_page;
                         ctx.link().callback(move |_| Self::Message::Set(current_page.saturating_sub(5)))}
                 >
@@ -211,6 +212,7 @@ impl Component for Pagination {
             if is_rear_truncated {
                 { (mid_page+1..=mid_page+sibling_page_count).map(render_page_button).collect::<Html>() }
                 <button
+                    class="p-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:opacity-30 disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20"
                     onclick={let current_page = self.current_page;
                     ctx.link().callback(move |_| Self::Message::Set(current_page + 5))}
                 >
@@ -225,14 +227,14 @@ impl Component for Pagination {
         html! {
             <div class={tw_merge!("flex gap-2", class.as_ref())} {style}>
                 <button
-                    class="py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:text-white/30"
+                    class="p-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:opacity-30 disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20"
                     onclick={ctx.link().callback(|_| Self::Message::First)}
                     disabled={self.current_page <= 1}
                 >
                     { "First" }
                 </button>
                 <button
-                    class="py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:text-white/30"
+                    class="p-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:opacity-30 disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20"
                     onclick={ctx.link().callback(|_| Self::Message::Prev)}
                     disabled={self.current_page <= 1}
                 >
@@ -241,14 +243,14 @@ impl Component for Pagination {
                 { front_items }
                 { rear_items }
                 <button
-                    class="py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:text-white/30"
+                    class="p-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:opacity-30 disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20"
                     onclick={ctx.link().callback(|_| Self::Message::Next)}
                     disabled={self.current_page == self.total_pages}
                 >
                     { "Next" }
                 </button>
                 <button
-                    class="py-1 px-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20 disabled:text-white/30"
+                    class="p-2 rounded-md transition-colors duration-300 cursor-pointer disabled:bg-transparent disabled:opacity-30 disabled:cursor-default shrink-0 min-w-10 min-h-10 hover:bg-neutral-200/10 active:bg-neutral-200/20"
                     onclick={ctx.link().callback(|_| Self::Message::Last)}
                     disabled={self.current_page == self.total_pages}
                 >
