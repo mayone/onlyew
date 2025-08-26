@@ -6,7 +6,7 @@ mod contexts;
 mod pages;
 mod route;
 
-use components::{CollapsedMode, Sidebar, SidebarContent, SidebarFooter};
+use components::{Sidebar, SidebarContent, SidebarFooter};
 use components::{SidebarHeader, SidebarToggle};
 use contexts::SidebarProvider;
 
