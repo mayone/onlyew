@@ -19,23 +19,21 @@ fn app() -> Html {
         <BrowserRouter>
             <div id="app-root">
                 <SidebarProvider>
-                    <div style="display: flex">
+                    <div class="flex">
                         <Sidebar>
-                            <SidebarHeader style="padding: 0.5rem;">
-                                <SidebarToggle>{ "Menu" }</SidebarToggle>
+                            <SidebarHeader>
+                                <SidebarToggle>{ "Toggle" }</SidebarToggle>
                             </SidebarHeader>
-                            <SidebarContent collapsible={CollapsedMode::Hidden}>
-                                <div>{ "Content 1" }</div>
-                                <div style="display: flex; gap: 0.5rem">
-                                    <div>{ "I" }</div>
-                                    <div>{ "am" }</div>
-                                    <div>{ "Content" }</div>
-                                    <div>{ "2" }</div>
-                                </div>
+                            <SidebarContent>
+                                <Link<Route> to={Route::Home}>{ "Home" }</Link<Route>>
+                                <Link<Route> to={Route::Pagination}>{ "Pagination" }</Link<Route>>
+                                <Link<Route> to={Route::Dialog}>{ "Dialog" }</Link<Route>>
+                                <Link<Route> to={Route::Tabs}>{ "Tabs" }</Link<Route>>
+                                <Link<Route> to={Route::SegmentedControl}>
+                                    { "Segmented Control" }
+                                </Link<Route>>
                             </SidebarContent>
-                            <SidebarFooter collapsible={CollapsedMode::Hidden}>
-                                { "Footer" }
-                            </SidebarFooter>
+                            <SidebarFooter>{ "Footer" }</SidebarFooter>
                         </Sidebar>
                         <Switch<Route> render={switch} />
                     </div>

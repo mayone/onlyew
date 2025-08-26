@@ -11,6 +11,8 @@ log = "0.4.27"
 wasm-logger = "0.2.0"
 gloo = "0.11.0"
 tailwind_fuse = { version = "0.3.2", features = ["variant"] }
+strum = { version = "0.27", features = ["derive"] }
+strum_macros = "0.27"
 
 # [dev-dependencies]
 # wasm-bindgen-test = "0.3.0"

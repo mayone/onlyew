@@ -1,22 +1,26 @@
 pub mod sidebar_content;
 pub mod sidebar_footer;
 pub mod sidebar_header;
+pub mod sidebar_item;
 pub mod sidebar_toggle;
 
 pub use sidebar_content::SidebarContent;
 pub use sidebar_footer::SidebarFooter;
 pub use sidebar_header::SidebarHeader;
+pub use sidebar_item::SidebarItem;
 pub use sidebar_toggle::SidebarToggle;
 
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
 use crate::contexts::SidebarContext;
 
-#[derive(Debug, Default, PartialEq)]
+#[derive(Debug, strum::Display)]
+#[strum(serialize_all = "lowercase")]
 pub enum CollapsedMode {
-    #[default]
-    Visible,
-    Hidden,
+    Icon,
+    None,
+    Open,
 }
 
 /// Properties for the [`Sidebar`].
@@ -24,7 +28,7 @@ pub enum CollapsedMode {
 pub struct SidebarProperties {
     pub children: Children,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
@@ -34,21 +38,24 @@ pub struct SidebarProperties {
 /// It has the following purposes:
 ///
 /// - To provide the content in a Sidebar.
+/// - Can only be used inside <SidebarProvider>
 ///
 /// Usage:
 /// ```ignore
-/// <Sidebar>
-///     <SidebarHeader>
-///         { "..." }
-///     </SidebarHeader>
-///     <SidebarContent>
-///         { "..." }
-///     </SidebarContent>
-///     // Optional
-///     <SidebarFooter>
-///         { "..." }
-///     </SidebarFooter>
-/// </Sidebar>
+/// <SidebarProvider default_open={true}>
+///     <Sidebar>
+///         <SidebarHeader>
+///             { "..." }
+///         </SidebarHeader>
+///         <SidebarContent>
+///             <SidebarMenuButton />
+///             <SidebarMenuButton />
+///         </SidebarContent>
+///         <SidebarFooter>
+///             { "..." }
+///         </SidebarFooter>
+///     </Sidebar>
+/// </SidebarProvider>
 /// ```
 #[derive(Debug)]
 pub struct Sidebar {
@@ -74,8 +81,6 @@ impl Component for Sidebar {
             .context::<SidebarContext>(Callback::noop())
             .expect("No sidebar context provided");
 
-        let is_open = &sidebar_context.is_open;
-
         let Self::Properties {
             children,
             class,
@@ -83,14 +88,24 @@ impl Component for Sidebar {
             ..
         } = ctx.props();
 
+        let collapsed_mode = if sidebar_context.is_open {
+            CollapsedMode::Open
+        } else {
+            CollapsedMode::Icon
+        };
+
         html! {
             <aside
-                class={classes!("sidebar",
-                    is_open.then_some("expanded"),
-                    class.clone())}
+                class={tw_merge!(
+                    "group w-65 data-[collapsed-mode=icon]:w-16 bg-neutral-800 shrink-0 min-h-svh relative whitespace-nowrap transition-[width] duration-300 overflow-hidden",
+                    class.as_ref()
+                )}
                 {style}
+                data-collapsed-mode={collapsed_mode.to_string()}
             >
-                <div class="sidebar-container">{ children.clone() }</div>
+                <div class="flex absolute top-0 left-0 flex-col justify-between w-full h-dvh">
+                    { children.clone() }
+                </div>
             </aside>
         }
     }
@@ -103,10 +118,10 @@ mod test {
     #[test]
     fn html_with_all_props() {
         let _ = html! {
-            <Sidebar class={classes!("test-class")} style="background-color: red">
+            <Sidebar class={tw_merge!("text-black", "text-white")} style="background-color: gray">
                 <SidebarHeader>{ "Header" }</SidebarHeader>
-                <SidebarContent collapsible={CollapsedMode::Hidden}>{ "Content" }</SidebarContent>
-                <SidebarFooter collapsible={CollapsedMode::Visible}>{ "Footer" }</SidebarFooter>
+                <SidebarContent />
+                <SidebarFooter>{ "Footer" }</SidebarFooter>
             </Sidebar>
         };
     }

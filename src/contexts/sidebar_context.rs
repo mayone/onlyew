@@ -51,7 +51,7 @@ pub fn SidebarProvider(props: &SidebarProviderProperties) -> Html {
     html! {
         <ContextProvider<SidebarContext> context={context.clone()}>
             <div
-                style="outline: none"
+                class="focus-visible:outline-none"
                 tabindex="-1"
                 onkeydown={Callback::from(move |e: KeyboardEvent| {
                     if e.key() == SIDEBAR_KEYBOARD_SHORTCUT && (e.meta_key() || e.ctrl_key()) {

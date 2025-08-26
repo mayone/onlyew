@@ -1,3 +1,4 @@
+use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 
 /// Properties for the [`SidebarHeader`].
@@ -5,7 +6,7 @@ use yew::prelude::*;
 pub struct SidebarHeaderProperties {
     pub children: Children,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
@@ -28,7 +29,11 @@ impl Component for SidebarHeader {
             style,
         } = ctx.props();
 
-        html! { <div class={classes!(class.clone())} {style}>{ children.clone() }</div> }
+        html! {
+            <div class={tw_merge!("flex gap-3 p-3", class.as_ref())} {style}>
+                { children.clone() }
+            </div>
+        }
     }
 }
 
@@ -39,7 +44,10 @@ mod test {
     #[test]
     fn html_with_all_props() {
         let _ = html! {
-            <SidebarHeader class={classes!("test-class")} style="background-color: red">
+            <SidebarHeader
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+            >
                 { "Header" }
             </SidebarHeader>
         };

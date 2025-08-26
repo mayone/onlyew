@@ -8,7 +8,7 @@ pub struct SidebarToggleProperties {
     #[prop_or_default]
     pub children: Children,
     #[prop_or_default]
-    pub class: Classes,
+    pub class: AttrValue,
     #[prop_or_default]
     pub style: Option<AttrValue>,
 }
@@ -40,20 +40,23 @@ impl Component for SidebarToggle {
 
         let on_click = { Callback::from(move |_| sidebar_context.dispatch(SidebarAction::Toggle)) };
 
-        html! {
-            <button class={class.clone()} {style} onclick={on_click}>{ children.clone() }</button>
-        }
+        html! { <button {class} {style} onclick={on_click}>{ children.clone() }</button> }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use tailwind_fuse::tw_merge;
+
     use super::*;
 
     #[test]
     fn html_with_all_props() {
         let _ = html! {
-            <SidebarToggle class={classes!("test-class")} style="background-color: red">
+            <SidebarToggle
+                class={tw_merge!("text-black", "text-white")}
+                style="background-color: gray"
+            >
                 { "Toggle" }
             </SidebarToggle>
         };
