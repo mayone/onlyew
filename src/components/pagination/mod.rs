@@ -108,51 +108,46 @@ impl Component for Pagination {
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Self::Message::First => {
+            Self::Message::First =>
                 if self.first_page() {
                     ctx.props().on_change.emit(self.current_page);
 
                     true
                 } else {
                     false
-                }
-            }
-            Self::Message::Last => {
+                },
+            Self::Message::Last =>
                 if self.last_page() {
                     ctx.props().on_change.emit(self.current_page);
 
                     true
                 } else {
                     false
-                }
-            }
-            Self::Message::Next => {
+                },
+            Self::Message::Next =>
                 if self.next_page() {
                     ctx.props().on_change.emit(self.current_page);
 
                     true
                 } else {
                     false
-                }
-            }
-            Self::Message::Prev => {
+                },
+            Self::Message::Prev =>
                 if self.prev_page() {
                     ctx.props().on_change.emit(self.current_page);
 
                     true
                 } else {
                     false
-                }
-            }
-            Self::Message::Set(page) => {
+                },
+            Self::Message::Set(page) =>
                 if self.set_page(page) {
                     ctx.props().on_change.emit(self.current_page);
 
                     true
                 } else {
                     false
-                }
-            }
+                },
         }
     }
 

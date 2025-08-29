@@ -7,7 +7,6 @@ pub use dialog_content::DialogContent;
 pub use dialog_footer::DialogFooter;
 pub use dialog_header::DialogHeader;
 pub use dialog_title::DialogTitle;
-
 use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 

@@ -1,8 +1,7 @@
 use yew::prelude::*;
 use yew_router::prelude::Link;
 
-use crate::Route;
-use crate::components::*;
+use crate::{Route, components::*};
 
 macro_rules! make_toggle_callbacks {
     ($state:expr) => {{

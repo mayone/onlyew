@@ -19,9 +19,10 @@ impl Reducible for Sidebar {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
-            Self::Action::Toggle => Rc::new(Self {
-                is_open: !self.is_open,
-            }),
+            Self::Action::Toggle =>
+                Rc::new(Self {
+                    is_open: !self.is_open,
+                }),
         }
     }
 }
@@ -44,8 +45,10 @@ pub fn SidebarProvider(props: &SidebarProviderProperties) -> Html {
         ..
     } = props;
 
-    let context = use_reducer(|| Sidebar {
-        is_open: *default_open,
+    let context = use_reducer(|| {
+        Sidebar {
+            is_open: *default_open,
+        }
     });
 
     html! {

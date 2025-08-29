@@ -1,11 +1,10 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-use crate::pages::dialog::DialogPage;
-use crate::pages::home::Home;
-use crate::pages::pagination::PaginationPage;
-use crate::pages::segmented_control::SegmentedControlPage;
-use crate::pages::tabs::TabsPage;
+use crate::pages::{
+    dialog::DialogPage, home::Home, pagination::PaginationPage,
+    segmented_control::SegmentedControlPage, tabs::TabsPage,
+};
 
 #[derive(Clone, Routable, PartialEq)]
 pub enum Route {

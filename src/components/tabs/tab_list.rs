@@ -1,12 +1,12 @@
-use gloo::timers::callback::Timeout;
 use std::{collections::HashMap, rc::Rc};
+
+use gloo::timers::callback::Timeout;
 use tailwind_fuse::tw_merge;
 use web_sys::HtmlElement;
 use yew::prelude::*;
 
-use crate::contexts::{TabsAction, TabsContext};
-
 use super::Tab;
+use crate::contexts::{TabsAction, TabsContext};
 
 /// Properties for the [`TabList`].
 #[derive(Debug, PartialEq, Properties)]

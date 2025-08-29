@@ -1,9 +1,8 @@
 mod control_item;
 
-pub use control_item::ControlItem;
-
 use std::rc::Rc;
 
+pub use control_item::ControlItem;
 use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 

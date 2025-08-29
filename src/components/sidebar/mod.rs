@@ -9,7 +9,6 @@ pub use sidebar_footer::SidebarFooter;
 pub use sidebar_header::SidebarHeader;
 pub use sidebar_item::SidebarItem;
 pub use sidebar_toggle::SidebarToggle;
-
 use tailwind_fuse::tw_merge;
 use yew::prelude::*;
 

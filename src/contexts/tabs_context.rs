@@ -17,9 +17,10 @@ impl Reducible for TabsState {
 
     fn reduce(self: Rc<Self>, action: Self::Action) -> Rc<Self> {
         match action {
-            Self::Action::Select(value) => Rc::new(Self {
-                selected_tab: value,
-            }),
+            Self::Action::Select(value) =>
+                Rc::new(Self {
+                    selected_tab: value,
+                }),
         }
     }
 }
@@ -42,8 +43,10 @@ pub struct TabsProviderProperties {
 
 #[function_component]
 pub fn TabsProvider(props: &TabsProviderProperties) -> Html {
-    let state = use_reducer(|| TabsState {
-        selected_tab: props.default_value.clone().unwrap_or_default(),
+    let state = use_reducer(|| {
+        TabsState {
+            selected_tab: props.default_value.clone().unwrap_or_default(),
+        }
     });
 
     let context = TabsContext {

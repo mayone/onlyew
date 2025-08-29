@@ -6,12 +6,9 @@ mod contexts;
 mod pages;
 mod route;
 
-use components::{Sidebar, SidebarContent, SidebarFooter};
-use components::{SidebarHeader, SidebarToggle};
+use components::{Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarToggle};
 use contexts::SidebarProvider;
-
-use route::Route;
-use route::switch;
+use route::{Route, switch};
 
 #[function_component(App)]
 fn app() -> Html {
